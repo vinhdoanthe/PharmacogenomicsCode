@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 # from django-environ import Env  # new
+# import marshmallow
 # import environ
 # import os
 
@@ -114,7 +115,7 @@ DATABASES = {
         "NAME": "ljw303",
         "USER": "ljw303",
         # "PASSWORD": "postgres",
-        # "HOST": "db",  #comment this out if run in venv
+        # "HOST": "db",  # comment this out if run in venv
         "PORT": 5432,
     }
 }
