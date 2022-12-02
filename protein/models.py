@@ -9,3 +9,6 @@ class Protein(models.Model):
     geneID = models.CharField(max_length=50)  # string values
     entry_name = models.TextField()  # long string values
     protein_name = models.TextField()  # long string values
+
+    def __str__(self):
+        return "Protein with UniProt ID: " + self.uniprot_ID + " and genename: " + self.genename

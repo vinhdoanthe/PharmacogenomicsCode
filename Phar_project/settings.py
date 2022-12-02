@@ -57,9 +57,10 @@ INSTALLED_APPS = [
     "protein.apps.ProteinConfig",  # new
     # "interaction.apps.InteractionConfig",  # new
     "gene.apps.GeneConfig",  # new
-    "variant.apps.VariantConfig",  # new
+    # "variant.apps.VariantConfig",  # new
     "drug.apps.DrugConfig",
     "interaction.apps.InteractionConfig",
+    "variantmarker.apps.VariantmarkerConfig",
 
 
     "build.apps.BuildConfig",  # new
