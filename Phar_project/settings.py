@@ -11,16 +11,28 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+# from django-environ import Env  # new
+# import environ
+# import os
+
+# env = environ.Env()  # new
+print("Printing from the settings.py")
+# from environs import Env # new
+# env = Env()  # new
+
+# env.read_env()  # new
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+DATA_DIR = '/Users/ljw303/Duong_Data/Lab_Projects/PharmacogenomicsDB/Data'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-h9vxd-m=rqgboz)3*4vv^u+8sl$kw%5ppr^f+ds$*l)=@35pmq"
+SECRET_KEY = "django-insecure-hv1(e0r@v4n4m6gqdz%dn(60o=dsy8&@0_lbs8p-v3u^bs4)xl"
+# SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,6 +51,17 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local
     "accounts.apps.AccountsConfig",  # new
+
+    # "drug.apps.DrugConfig",  # new
+    "protein.apps.ProteinConfig",  # new
+    # "interaction.apps.InteractionConfig",  # new
+    "gene.apps.GeneConfig",  # new
+    "variant.apps.VariantConfig",  # new
+    "drug.apps.DrugConfig",
+    "interaction.apps.InteractionConfig",
+
+
+    "build.apps.BuildConfig",  # new
 ]
 ...
 AUTH_USER_MODEL = "accounts.CustomUser"  # new
@@ -58,7 +81,7 @@ ROOT_URLCONF = "Phar_project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],  # new
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -88,10 +111,10 @@ WSGI_APPLICATION = "Phar_project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "db",
+        "NAME": "ljw303",
+        "USER": "ljw303",
+        # "PASSWORD": "postgres",
+        # "HOST": "db",  #comment this out if run in venv
         "PORT": 5432,
     }
 }
