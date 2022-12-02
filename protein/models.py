@@ -9,4 +9,3 @@ class Protein(models.Model):
     geneID = models.CharField(max_length=50)  # string values
     entry_name = models.TextField()  # long string values
     protein_name = models.TextField()  # long string values
-    custome_field = models.TextField()  # something for noting

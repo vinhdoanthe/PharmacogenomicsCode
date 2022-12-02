@@ -120,7 +120,7 @@ class Command(BaseCommand):
                 #     )
                 #     continue
 
-                print("checkpoint 2.1 - start to fetch data to Drugs table")
+                print("checkpoint 2.1 - start to fetch data to Drug table")
                 drug, created = Drug.objects.get_or_create(
                     drug_bankID=drug_bankID,
                     drugtype=drugtype,
