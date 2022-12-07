@@ -11,17 +11,17 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-# from django-environ import Env  # new
+# from django-environ import Env
 # import marshmallow
 # import environ
 # import os
 
-# env = environ.Env()  # new
+# env = environ.Env()
 print("Printing from the settings.py")
-# from environs import Env # new
-# env = Env()  # new
+# from environs import Env
+# env = Env()
 
-# env.read_env()  # new
+# env.read_env()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -51,22 +51,21 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Local
-    "accounts.apps.AccountsConfig",  # new
-
-    # "drug.apps.DrugConfig",  # new
-    "protein.apps.ProteinConfig",  # new
-    # "interaction.apps.InteractionConfig",  # new
-    "gene.apps.GeneConfig",  # new
-    # "variant.apps.VariantConfig",  # new
+    "accounts.apps.AccountsConfig",
+    "protein.apps.ProteinConfig",
+    "gene.apps.GeneConfig",
     "drug.apps.DrugConfig",
     "interaction.apps.InteractionConfig",
     "variantmarker.apps.VariantmarkerConfig",
+    'variantphenocode.apps.VariantphenocodeConfig',
+    'gbvariant.apps.GbvariantConfig',
+    'vep.apps.VepConfig',
+    "build.apps.BuildConfig",
+    "home.apps.HomeConfig",
 
-
-    "build.apps.BuildConfig",  # new
 ]
 ...
-AUTH_USER_MODEL = "accounts.CustomUser"  # new
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -83,7 +82,7 @@ ROOT_URLCONF = "Phar_project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],  # new
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

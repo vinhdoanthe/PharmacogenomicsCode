@@ -10,3 +10,6 @@ class Gene(models.Model):
     inv_normalized = models.CharField(
         max_length=50
     )  # true or false that can ebe encoded
+
+    def __str__(self):
+        return "GeneID: "+self.gene_id + ", gene name: "+self.genename

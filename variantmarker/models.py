@@ -14,4 +14,4 @@ class VariantMarker(models.Model):
     annotation = models.TextField()
 
     def __str__(self):
-        return "GeneID: " + self.geneID.gene_id + " with markerID: " + self.markerID
+        return "GeneID: " + self.geneID.gene_id + ", gene name " + self.geneID.genename + " with markerID: " + self.markerID

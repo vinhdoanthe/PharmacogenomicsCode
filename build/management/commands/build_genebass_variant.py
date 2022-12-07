@@ -3,8 +3,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 
-from variant.models import GenebassVariant
-from gene.models import Gene
+from gbvariant.models import GenebassVariant
+from variantmarker.models import VariantMarker
 
 
 from optparse import make_option
@@ -66,7 +66,7 @@ class Command(BaseCommand):
             filenames = [
                 fn
                 for fn in os.listdir(self.genebassvariantdata_data_dir)
-                if fn.endswith("genebassvariant_data.csv")
+                if fn.endswith("variant.csv")
             ]
             print("checkpoint2")
             print(filenames)
@@ -82,17 +82,11 @@ class Command(BaseCommand):
             print("data length = ", len(data))
             print("data column = ", data.columns)
             for index, row in enumerate(data.iterrows()):
-                gene_ID = data[index: index + 1]["gene_id"].values[0]
-                locus = data[index: index + 1]["locus"].values[0]
-                alleles = data[index: index + 1]["alleles"].values[0]
-
+                # gene_ID = data[index: index + 1]["gene_id"].values[0]
                 markerID = data[index: index + 1]["markerID"].values[0]
-                annotation = data[index: index +
-                                  1]["annotation"].values[0]
                 n_cases = data[index: index + 1]["n_cases"].values[0]
                 n_controls = data[index: index + 1]["n_controls"].values[0]
                 heritability = data[index: index + 1]["heritability"].values[0]
-
                 trait_type = data[index: index + 1]["trait_type"].values[0]
                 phenocode = data[index: index + 1]["phenocode"].values[0]
                 pheno_sex = data[index: index + 1]["pheno_sex"].values[0]
@@ -105,12 +99,6 @@ class Command(BaseCommand):
                                        1]["n_cases_females"].values[0]
                 n_cases_males = data[index: index +
                                      1]["n_cases_males"].values[0]
-
-                description = data[index: index + 1]["description"].values[0]
-                description_more = data[index: index +
-                                        1]["description_more"].values[0]
-                coding_description = data[index: index +
-                                          1]["coding_description"].values[0]
                 category = data[index: index + 1]["category"].values[0]
                 AC = data[index: index + 1]["AC"].values[0]
                 AF = data[index: index + 1]["AF"].values[0]
@@ -123,29 +111,24 @@ class Command(BaseCommand):
                 AC_calstat = data[index: index + 1]["AC_calstat"].values[0]
                 AF_calstat = data[index: index + 1]["AF_calstat"].values[0]
 
-                # fetch gene
+                # fetch variant marker
                 try:
-                    g = Gene.objects.get(gene_id=gene_ID)
-                except Gene.DoesNotExist:
+                    v = VariantMarker.objects.get(markerID=markerID)
+                except VariantMarker.DoesNotExist:
 
                     self.logger.error(
-                        "Gene not found for entry with gene ID {}".format(
-                            gene_ID)
+                        "VariantMarker not found for entry with VariantMarker ID {markerID}".format(
+                        )
                     )
                     continue
 
                 print("checkpoint 2.1 - start to fetch data to genebass variant table")
                 gb_variant, created = GenebassVariant.objects.get_or_create(
-                    gene_id=g,
-                    locus=locus,
-                    alleles=alleles,
-
-                    markerID=markerID,
-                    annotation=annotation,
+                    # gene_id=g,
+                    markerID=v,
                     n_cases=n_cases,
                     n_controls=n_controls,
                     heritability=heritability,
-
                     trait_type=trait_type,
                     phenocode=phenocode,
                     pheno_sex=pheno_sex,
@@ -154,16 +137,12 @@ class Command(BaseCommand):
                     n_cases_both_sexes=n_cases_both_sexes,
                     n_cases_females=n_cases_females,
                     n_cases_males=n_cases_males,
-
-                    description=description,
-                    description_more=description_more,
-                    coding_description=coding_description,
+                    # coding_description=coding_description,
                     category=category,
                     AC=AC,
                     AF=AF,
                     BETA=BETA,
                     SE=SE,
-
                     AF_Cases=AF_Cases,
                     AF_Controls=AF_Controls,
                     Pvalue=Pvalue,

@@ -22,4 +22,4 @@ class Interaction(models.Model):
     ChEMBL = models.TextField()
 
     def __str__(self):
-        return str(self.interaction_id) + " _ " + self.interaction_type
+        return self.uniprot_ID.uniprot_ID + " acts as a " + self.interaction_type + " for drug " + self.drug_bankID.drug_bankID
