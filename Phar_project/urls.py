@@ -16,8 +16,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include  # new
+from protein import urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include("protein.urls")),
+    path("", include("home.urls")),
+    path("", include("drug.urls")),
+    path("", include("gene.urls")),
 
 ]

@@ -14,7 +14,7 @@ from pathlib import Path
 # from django-environ import Env
 # import marshmallow
 # import environ
-# import os
+import os
 
 # env = environ.Env()
 print("Printing from the settings.py")
@@ -27,6 +27,7 @@ print("Printing from the settings.py")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = '/Users/ljw303/Duong_Data/Lab_Projects/PharmacogenomicsDB/Data'
+print("BASE_DIR : ", BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -155,6 +156,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = "static/"
+# STATIC_URL = "/static/"
+# STATIC_ROOT = "static/"
+# STATICFILES_DIRS = (os.sep.join([BASE_DIR, "static"]),)
+STATICFILES_DIRS = (
+    '/Users/ljw303/Duong_Data/Lab_Projects/PharmacogenomicsDB/Project/static',)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

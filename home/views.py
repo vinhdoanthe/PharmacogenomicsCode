@@ -1,3 +1,38 @@
-from django.shortcuts import render
+import hashlib
+import itertools
+import json
+import re
+import time
+import pandas as pd
+import urllib
+
+from random import SystemRandom
+from copy import deepcopy
+from collections import defaultdict, OrderedDict
+
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.views.generic import TemplateView, DetailView
+
+from django.db.models import Q, Count, Subquery, OuterRef
+from django.views.decorators.csrf import csrf_exempt
+
+from django.core.cache import cache
+
+
+from protein.models import Protein
+
 
 # Create your views here.
+
+
+class Home(TemplateView):
+
+    template_name = 'index_pharmcodb.html'
+    context = {}
+
+
+class Draft(TemplateView):
+
+    template_name = 'draft2.html'
+    context = {}

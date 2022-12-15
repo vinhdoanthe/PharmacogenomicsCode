@@ -35,30 +35,29 @@ class ProteinBrowser(TemplateView):
         context = super().get_context_data(**kwargs)
 
         browser_columns = ["uniprot_ID", "genename",
-                           "geneID", "entry_name", "protein_name"]
+                           "geneID", "protein_name"]
 
         table = pd.DataFrame(columns=browser_columns)
-        # receptor_id
+
         protein_data = Protein.objects.all().values_list(
             "uniprot_ID",
             "genename",
             "geneID",
-            "entry_name",
             "protein_name"
         ).distinct()
 
         for data in protein_data:
 
             data_subset = {}
-            data_subset['uniprot_ID'] = data[0].replace('Class ', '')
+            data_subset['uniprot_ID'] = data[0]
             data_subset['genename'] = data[1]
             data_subset['geneID'] = data[2]
-            data_subset['entry_name'] = data[3]
-            data_subset['protein_name'] = data[4]
+            data_subset['protein_name'] = data[3]
 
             table = table.append(data_subset, ignore_index=True)
 
         table.fillna('', inplace=True)
         # context = dict()
+        print(table.head(3))
         context['Array'] = table.to_numpy()
         return context
