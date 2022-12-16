@@ -6,11 +6,6 @@
 
 
 <style type="text/css">
-	
-
-	
-
-
 	{% comment %} #overlay {
 		top: 0px;
 		position: absolute;
@@ -68,12 +63,13 @@
 	table, th, td {
 		border: 1px solid;
 		border-collapse: collapse;
-		padding: 15px;
+		padding: 2px;
 	}
 	tr:hover {background-color: coral;}
 </style>
 
 {% endblock %}
+
 
 {% block content %}
 {% autoescape off %}
@@ -136,8 +132,42 @@
 		</tbody>
 	</table>
 
+	<br>
+	<p>Total number of variants: <span style="color:blue;">{{length}}</span></p>
+
+	
+	<p>Total number of missense_variant: <span style="color:red;">{{missense_variant}}</span></p>
+
+	
+	<p>Total number of upstream_gene_variant: <span style="color:red;">{{upstream_gene_variant}}</span></p>
+
+	
+	<p>Total number of intron_variant: <span style="color:red;">{{intron_variant}}</span></p>
+
+	
+	<p>Total number of non_coding_transcript_variant: <span style="color:red;">{{non_coding_transcript_variant}}</span></p>
+
+	
+	<p>Total number of synonymous_variant: <span style="color:red;">{{synonymous_variant}}</span></p>
+
+	
+	<p>Total number of incomplete_terminal_codon_variant: <span style="color:red;">{{incomplete_terminal_codon_variant}}</span></p>
+
+	
+	<p>Total number of coding_sequence_variant: <span style="color:red;">{{coding_sequence_variant}}</span></p>
+
+	
+	<p>Total number of downstream_gene_variant: <span style="color:red;">{{downstream_gene_variant}}</span></p>
+
+	
+	<p>Total number of stop_gained variant: <span style="color:red;">{{stop_gained}}</span></p>
+
+	{% include 'consequence_piechart.html' %}
+
 </div>
 <br>
 {% endautoescape %}
 {% endblock %}
+
+
 

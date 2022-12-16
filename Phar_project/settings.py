@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "build.apps.BuildConfig",
     "home.apps.HomeConfig",
 
+
 ]
 ...
 AUTH_USER_MODEL = "accounts.CustomUser"

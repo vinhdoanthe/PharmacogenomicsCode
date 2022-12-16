@@ -26,7 +26,10 @@ from vep.models import Vep
 from gene.models import Gene
 from gbvariant.models import GenebassVariant
 
+
 # Create your views here.
+
+
 
 
 class GeneBrowser(TemplateView):
@@ -46,12 +49,12 @@ class GeneBrowser(TemplateView):
                            "codons",
                            "consequence",
                            "impact",
+                           "phenocode",
                            "SIFT",
                            "Polyphen2_HDIV",
                            "Polyphen2_HVAR",
                            "FATHMM",
                            "DEOGEN2",
-                           "phenocode"
                            ]
 
         table = pd.DataFrame(columns=browser_columns)
@@ -94,23 +97,42 @@ class GeneBrowser(TemplateView):
 
                 data_subset["Variant"] = marker
                 data_subset["Source"] = "Ensemble"
-                data_subset["CDS_position"] = vep_score[0]
-                data_subset["protein_position"] = vep_score[1]
-                data_subset["amino_acids"] = vep_score[2]
-                data_subset["codons"] = vep_score[3]
-                data_subset["consequence"] = vep_score[4]
-                data_subset["impact"] = vep_score[5]
-                data_subset["SIFT"] = vep_score[6]
-                data_subset["Polyphen2_HDIV"] = vep_score[7]
-                data_subset["Polyphen2_HVAR"] = vep_score[8]
+                data_subset["cDNA_position"] = vep_score[0]
+                data_subset["CDS_position"] = vep_score[1]
+                data_subset["protein_position"] = vep_score[2]
+                data_subset["amino_acids"] = vep_score[3]
+                data_subset["codons"] = vep_score[4]
+                data_subset["consequence"] = vep_score[5]
+                data_subset["impact"] = vep_score[6]
+                data_subset["SIFT"] = vep_score[7]
+                data_subset["Polyphen2_HDIV"] = vep_score[8]
+                data_subset["Polyphen2_HVAR"] = vep_score[9]
                 data_subset["FATHMM"] = vep_score[10]
                 data_subset["DEOGEN2"] = vep_score[11]
 
                 table = table.append(data_subset, ignore_index=True)
 
         table.fillna('', inplace=True)
+        length = len(table)
+        # consequence = table["consequence"].unique()
+        # consequence_set = set()
+        # for con in consequence:
+        #     values = con.split(",")
+        #     for value in values:
+        #         consequence_set.add(value)
+        consequence_dict = {}
+        for i in range(length):
+            values = table["consequence"][i].split(",")
+            for value in values:
+                consequence_dict[value] = consequence_dict.get(value, 0)+1
+
         # context = dict()
         print(table.head(3))
-
+        print("*************** ", consequence_dict)
         context['Array'] = table.to_numpy()
+        context['length'] = length
+        for key in consequence_dict.keys():
+            context[key] = consequence_dict.get(key)
+        # context["qs"] = Editors.objects.all()
+        context["qs"] = consequence_dict
         return context

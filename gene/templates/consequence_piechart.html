@@ -1,0 +1,57 @@
+{% extends 'base.html'%}
+
+{%block scripts%}
+<script>
+$(document).ready(function(){
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [{%for data in qs%}'{{data}}',{%endfor%}],
+                datasets: [{
+                    label: '# of users',
+                    data: [{%for value in qs.values%}{{value}},{%endfor%}],
+                    backgroundColor: [
+                        
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(53, 74, 12, 0.2)',
+                        'rgba(233, 201, 87, 0.2)',
+                        'rgba(154, 40, 152, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 143, 139, 0.2)'
+                    ],
+                    borderColor: [
+                        
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(53, 74, 12, 0.5)',
+                        'rgba(233, 201, 87, 0.5)',
+                        'rgba(154, 40, 152, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 143, 139, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+});
+    });
+</script>
+{%endblock scripts%}
+
+{%block content%}
+<h2>This is from chart.html</h2>
+<canvas id="myChart" width="400" height="100" borderColor="black"></canvas>  
+<h3>Why canvas not show up???</h3>
+{%endblock content%}

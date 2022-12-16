@@ -25,4 +25,5 @@ urlpatterns = [
     path("", include("drug.urls")),
     path("", include("gene.urls")),
 
+
 ]

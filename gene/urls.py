@@ -6,6 +6,6 @@ from .views import GeneBrowser
 urlpatterns = [
 
     path('gene',
-         (GeneBrowser.as_view()), name='gene'),
-
+         GeneBrowser.as_view(), name='gene'),
+    
 ]
