@@ -1,0 +1,29 @@
+# base2.html
+{% load static %}
+
+<!doctype html>
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <style>
+      .content{
+        color: red;
+      }
+    </style>
+    
+    <div class="content">
+      {% block content %}
+      <h2>This is from base2.html</h2>
+      {% endblock content %}
+      {% comment %} {% if addon_js %}{{ addon_js|safe }}{% endif %}
+      {% if scripts %}{{ scripts|safe }}{% endif %} {% endcomment %}
+      {% block addon_js %}
+      {% endblock addon_js %}
+
+      {% block scripts %}
+      {% endblock scripts %}
+    </div>
+  </body>
+</html>

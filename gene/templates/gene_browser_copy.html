@@ -1,0 +1,425 @@
+{% extends "home/base.html" %} 
+{% load static %} 
+{% csrf_token %} 
+{% block addon_css %}
+
+<link rel="stylesheet" href="{% static 'home/css/bootstrap2-toggle.min.css' %}" type="text/css" />
+<link rel="stylesheet" href="{% static 'home/css/yadcf_bootstrap_version.css' %}" type="text/css" />
+<link rel="stylesheet" href="{% static 'home/css/select2.css' %}" type="text/css" />
+<link rel="stylesheet" href="{% static 'home/css/modal.css' %}" type="text/css" />
+<!--This is for the filter, min max, pagination styling -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.css" />
+<link rel="stylesheet" href="{% static 'home/css/construct_browser.css' %}" type="text/css" />
+
+<style>
+
+  .dataTables_scrollHeadInner {
+		margin-top: 20px;
+	}
+
+	table.dataTable thead th,
+	table.dataTable tbody td {
+		max-width: 65px;
+		word-break: break-all;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	table.dataTable thead .sorting {
+		background-position: right;
+	}
+
+	.select2-container select2-container-multi {
+		width: 75%;
+	}
+
+	.select2-container-multi .select2-choices .select2-search-field input {
+		max-width: 50px;
+	}
+
+	.yadcf-filter-wrapper {
+		position: center;
+		display: flex;
+		white-space: nowrap;
+		margin-top: 7px;
+		width: 50% !important;
+	}
+
+	.yadcf-filter-wrapper-inner {
+		white-space: normal;
+	}
+
+	.select2-results {
+		background-color: white;
+		border: gray;
+		width: 150px !important;
+	}
+
+	.yadcf-filter-range {
+		grid-auto-columns: auto;
+		max-width: 50px !important;
+		font-family: sans-serif;
+		font-size: 80%;
+		font-weight: bold;
+		margin: auto;
+		margin-top: 10%;
+		min-width: 40px;
+	}
+
+	table.dataTable.compact tbody th,
+	table.dataTable.compact tbody td {
+		padding: 5px 10px 5px 0px !important;
+		/* width: 0px; */
+	}
+
+	table.dataTable.compact thead th,
+	table.dataTable.compact thead td {
+		padding: 5px 10px 5px 0px;
+		/* width: 0px; */
+	}
+
+	table.dataTable.compact thead tr.over_header th {
+		border-bottom: 1px solid #ccc;
+	}
+
+	table.dataTable.compact thead th.leftborder {
+		border-left: 1px solid;
+	}
+
+	table.dataTable.compact thead th.rightborder {
+		border-right: 1px solid;
+	}
+
+	.yadcf-filter-range {
+		grid-auto-columns: auto;
+		max-width: 50px !important;
+		font-family: sans-serif;
+		font-size: 80%;
+		font-weight: bold;
+		margin: auto;
+		margin-top: 10%;
+		min-width: 40px;
+	}
+
+	.yadcf-filter-range {
+		max-width: 40px !important;
+		font-family: sans-serif;
+		font-size: 80%;
+		font-weight: bold;
+		min-width: 40px;
+	}
+
+	#overlay {
+		top: 0px;
+		position: absolute;
+		background: #f8f8f8;
+		/*border: 1px solid #333;*/
+		-webkit-box-shadow: 5px 0 2px -2px #888;
+		box-shadow: 5px 0 2px -2px #888;
+	}
+
+	.container {
+		width: 90%;
+		/* display:flex;
+            flex-direction: column; */
+	}
+
+	.wrapper {
+		overflow-x: scroll;
+		overflow-y: hidden;
+	}
+
+	#overlay tbody tr {
+		background-color: #f8f8f8;
+	}
+
+	#count_row th {
+		font-size: 11px;
+		text-align: center;
+	}
+
+	.border-left {
+		padding-left: 3px;
+	}
+
+	.name {
+		width: 100px;
+		text-overflow: ellipsis;
+		cursor: pointer;
+		word-break: break-all;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.name:hover {
+		overflow: visible;
+		white-space: normal;
+
+	}
+
+	.toolbar_data_css {
+		width: 250px;
+		margin-right: auto;
+		margin-left: 0px;
+		/* border: 1px solid; */
+		font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
+		font-weight: normal;
+		font-size: 120%;
+		line-height: 1.625;
+	}
+
+	.toolbar_data_css.td {
+		height: 15px;
+		max-width: 150px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+  
+  table,
+  th,
+  td {
+    
+    border-collapse: collapse;
+    padding: 2px;
+  }
+  tr:hover {
+    background-color: rgb(237, 237, 233);
+  }
+  #variant_consquence_statistics{
+    margin-top: 10px;
+    display: flex;
+    {% comment %} background-color: lavender; {% endcomment %}
+    justify-content: space-between;
+    border: 1px solid grey;
+		flex-direction: column;
+  }
+
+  #variant_consquence_statistics_in_words{
+    margin-top: 50px;
+    margin-left: 10px;
+  }
+
+  #structures_scrollable_table{
+    margin-top: 10px;
+    max-width: 100%;
+  }
+
+</style>
+{% endblock addon_css %} 
+
+
+{% block content %} 
+{% autoescape off %}
+
+<div style="padding-top: 0px; font-size: 14px; white-space: nowrap; overflow-y:hidden; width: 100%">
+  <br />
+
+  <div style="font-size: 12px">
+    <p>
+      Data showed in this table is collected from the
+      <a href="https://www.ensembl.org" target="_blank">Ensembl</a> database and
+      <a href="https://gnomad.broadinstitute.org/" target="_blank">Gnomad</a>
+    </p>
+  </div>
+  <a id="dlink" style="display: none"></a>
+  <div id="excel_table" style2="display:none;"></div>
+
+  <button
+    onclick="tableToExcel('structures_scrollable', 'Families data', 'EndogenousData.xls')"
+    type="button"
+    class="btn btn-primary"
+    style="margin-top: 10px; margin-top: 3px"
+  >
+    Export to Excel
+  </button>
+
+  <button
+    id="reset"
+    type="button"
+    class="btn btn-primary"
+    style="margin-top: 10px; margin-top: 3px"
+  >
+    Reset filters
+  </button>
+
+  <button
+    id="statistics"
+    type="button"
+    class="btn btn-primary"
+    style="margin-top: 10px; margin-top: 3px"
+  >
+    Show statistics
+  </button>
+
+  <div id="structures_scrollable_table">
+    <table class="display compact text-nowrap" id="structures_scrollable" style="width: 100%; margin-top: 10px; font-size: 12px;">
+      <thead id="headers">
+        <tr class="header-spans">
+          <th style="text-align:left" colspan="6">Position</th>
+          <th style="border-left: 1px solid black; text-align:left" colspan="3" style="">Impact</th>
+          <th style="border-left: 1px solid black; text-align:left" colspan="5"> Predicted effect scores</th>
+        </tr>
+
+        <tr class="table-filter-dropdown">
+          <!-- Position block -->
+          <th class="pathways" style="text-align: left">Variant</th>
+          {% comment %} <th style="text-align: left">Source</th> {% endcomment %}
+          <th class="pathways" style="text-align: left">cDNA_position</th>
+          <th class="pathways" style="text-align: left">CDS_position</th>
+          <th class="pathways" style="text-align: left">Protein_position</th>
+          <th class="pathways" style="text-align: left">Amino_acids</th>
+          <th class="pathways" style="text-align: left">Codons</th>
+          <!-- Impact block -->
+          <th class="pathways" style="text-align: left">Consequence</th>
+          <th class="pathways" style="text-align: left">Impact</th>
+          <th class="pathways" style="text-align: left">Phenocode</th>
+          <!-- Score block -->
+          <th class="color-column" style="text-align: left">#SIFT</th>
+          <th class="color-column" style="text-align: left">#Polyphen2_HDIV</th>
+          <th class="color-column" style="text-align: left">#Polyphen2_HVAR</th>
+          <th class="color-column" style="text-align: left">#FATHMM</th>
+          <th class="color-column" style="text-align: left">#DEOGEN2</th>
+        </tr>
+
+      </thead>
+      <tbody id='structures_scrollable_body'>
+        {% for value in Array %}
+        <tr>
+          <td style="text-align: left">{{value.0}}</td>
+          {% comment %} <td style="text-align: left">{{value.1}}</td> {% endcomment %}
+          <td style="text-align: left">{{value.2}}</td>
+          <td style="text-align: left">{{value.3}}</td>
+          <td style="text-align: left">{{value.4}}</td>
+          <td style="text-align: left">{{value.5}}</td>
+          <td style="text-align: left">{{value.6}}</td>
+          <td style="text-align: left">{{value.7}}</td>
+          <td style="text-align: left">{{value.8}}</td>
+          <td style="text-align: left">{{value.9}}</td>
+          <td style="text-align: left">{{value.10}}</td>
+          <td style="text-align: left">{{value.11}}</td>
+          <td style="text-align: left">{{value.12}}</td>
+          <td style="text-align: left">{{value.13}}</td>
+          <td style="text-align: left">{{value.14}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br />
+  </div>
+
+	<div id="variant_consquence_statistics">
+    <div id="variant_consquence_statistics_in_words">
+      <p>Total number of variants: <span style="color: blue">{{length}}</span></p>
+		<p>
+			Total number of missense_variant:
+			<span style="color: red">{{missense_variant}}</span>
+		</p>
+		<p>
+			Total number of upstream_gene_variant:
+			<span style="color: red">{{upstream_gene_variant}}</span>
+		</p>
+		<p>
+			Total number of intron_variant:
+			<span style="color: red">{{intron_variant}}</span>
+		</p>
+		<p>
+			Total number of non_coding_transcript_variant:
+			<span style="color: red">{{non_coding_transcript_variant}}</span>
+		</p>
+		<p>
+			Total number of synonymous_variant:
+			<span style="color: red">{{synonymous_variant}}</span>
+		</p>
+		<p>
+			Total number of incomplete_terminal_codon_variant:
+			<span style="color: red">{{incomplete_terminal_codon_variant}}</span>
+		</p>
+		<p>
+			Total number of coding_sequence_variant:
+			<span style="color: red">{{coding_sequence_variant}}</span>
+		</p>
+		<p>
+			Total number of downstream_gene_variant:
+			<span style="color: red">{{downstream_gene_variant}}</span>
+		</p>
+		<p>
+			Total number of stop_gained variant:
+			<span style="color: red">{{stop_gained}}</span>
+		</p>
+    </div>
+    
+    <div id="gene_piechart">
+      {% include "consequence_piechart.html" %}
+    </div>
+
+		<div id="gene_variant_heatmap">
+			{% include "variant_heatmap.html" %}
+		</div>
+
+		
+	</div>  
+</div>
+{% endautoescape %} 
+{% endblock content%}
+{% block scripts %}
+  <script>
+  
+    $(document).ready(function() {
+      
+      $("#structures_scrollable").show();
+      oTable1 = $("#structures_scrollable").DataTable({
+        //deferRender: true,
+        scrollY: true,
+        scrollX: true,
+        //scrollCollapse: true,
+        //scroller: true,
+        paging: true,
+        //bSortCellsTop: false, //prevent sort arrows going on bottom row
+        //aaSorting: [],
+        //autoWidth: true,
+        //bInfo: true,
+        //order: [[7, "asc"]],
+        pagingType: 'full_numbers',
+        lengthMenu: [
+            [10, 25, 50, 100, 200, -1],
+            [10, 25, 50, 100, 200, 'All'],
+        ],
+      })
+
+      let column_filters = [];
+      // Consequence
+      column_filters = column_filters.concat(createYADCFfilters(6, 1, "multi_select", "select2", "Consequence", false, null, null, "80px"));
+
+      // Impact 
+      column_filters = column_filters.concat(createYADCFfilters(7, 1, "multi_select", "select2", "Impact", false, null, null, "80px"));
+
+      yadcf.init(oTable1.draw(), column_filters, {
+        cumulative_filtering: false
+      });
+      yadcf.exFilterColumn(oTable1, [[7, ["HIGH"]]], true);
+
+      //gray_scale_table($("#structures_scrollable"));
+
+      $("#reset").click(function() {
+        yadcf.exResetAllFilters(oTable1);
+      });
+
+      });
+  </script>
+{% endblock scripts %}
+{% block addon_js %}
+<script src="{% static 'home/js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'home/js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'home/js/datatables.min.js' %}"> </script>
+<script src="{% static 'home/js/jquery.dataTables.min.js' %}"> </script>
+<script src="{% static 'home/js/bootstrap2-toggle.min.js' %}"></script>
+<script src="{% static 'home/js/jquery.dataTables.yadcf.js' %}"> </script>
+<script src="{% static 'home/js/dataTables.buttons.min.js' %}"> </script>
+<script src="{% static 'home/js/select2.js' %}"> </script>
+<script src="{% static 'home/js/grayscale.js' %}"></script>
+<script src="{% static 'home/js/gpcrdb.js' %}"></script>
+<script src="{% static 'home/js/signprot-multitabtable.js' %}"></script>
+{% endblock addon_js %}  

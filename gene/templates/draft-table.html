@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <table class="display compact text-nowrap" id='structures_scrollable' style="width: 100%">
+		<thead id="headers">
+			<tr class="header-spans">
+				<th style="text-align:left" colspan="5">Receptor</th>
+				<th style="border-left: 1px solid black; text-align:left" colspan="4" style="">Endogenous ligands</th>
+				<th style="border-left: 1px solid black; text-align:left" colspan="3">pEC50</th>
+        <th style="border-left: 1px solid black; text-align:left" colspan="3">pKi</th>
+        <th style="border-left: 1px solid black; text-align:left" colspan="1">References</th>
+			</tr>
+			<tr class="table-filter-dropdown">
+        <!-- Receptor block -->
+				<th>Class</th>
+				<th>Receptor family</th>
+				<th>UniProt</th>
+				<th>IUPHAR</th>
+        <th>Species</th>
+        <!-- ligand block -->
+				<th class="pathways">Ligand</th>
+				<th class="pathways">GtP<br />Classification</th>
+				<th class="pathways">Potency<br />Ranking</th>
+				<th class="pathways">Type</th>
+				<!-- pEC50 block  -->
+				<th class="color-column">Min</th>
+				<th class="color-column">Mid</th>
+				<th class="color-column">Max</th>
+        <!-- pKi block -->
+        <th class="color-column">Min</th>
+        <th class="color-column">Mid</th>
+        <th class="color-column">Max</th>
+        <!-- Reference block  -->
+				<th></th>
+			</tr>
+		</thead>
+		<tbody id='structures_scrollable_body'>
+				{% for value in Array %}
+				<tr>
+					<!-- Receptor block -->
+					<td style="text-align:right">{{value.0}}</td>
+					<td style="text-align:right">{{value.1}}</td>
+					<td style="text-align:right">{{value.2}}</td>
+          <td style="text-align:right">{{value.3}}</td>
+          <td style="text-align:right">{{value.4}}</td>
+
+					<!-- ligand block -->
+          <td style="text-align:left"><a href='/ligand/{{value.17}}/info' target='_blank'>{{value.5|title}}</a></td>
+					<td style="text-align:left">{{value.7|title}}</td>
+					<td style="text-align:left" class="pathway">{{value.8|floatformat:0}}</td>
+					<td style="text-align:left" class="pathway ">{{value.9}}</td>
+
+					<!-- pEC50 block  -->
+					<td style="text-align:right" class="color-column" id="lbf_p2_p1">{{value.10|floatformat:1}}</td>
+					<td style="text-align:right" class="color-column" id="lbf_p3_p1">{{value.11|floatformat:1}}</td>
+					<td style="text-align:right" class="color-column" id="lbf_p4_p1">{{value.12|floatformat:1}}</td>
+
+					<!-- pKi block -->
+					<td style="text-align:right" class="color-column" id="dee_p2_p1">{{value.13|floatformat:1}}</td>
+					<td style="text-align:right" class="color-column" id="dee_p3_p1">{{value.14|floatformat:1}}</td>
+					<td style="text-align:right" class="color-column" id="dee_p4_p1">{{value.15|floatformat:1}}</td>
+
+					<!-- Reference -->
+					<!-- <td class="name"><a href='#' onClick="javascript:reference_list('{{value.16|safe}}');">References</a></td> -->
+					{% if value.16|safe != 'empty' %}
+	          <td class="name" style="text-align:center"><a href="#references" data-toggle="modal" data-book-id="{{value.16|safe}}"> Refs</a></td>
+					{% else %}
+						<td class="name" style="text-align:center"></td>
+					{% endif %}
+				</tr>
+				{% endfor %}
+		</tbody>
+	</table>
+  
+</body>
+</html>

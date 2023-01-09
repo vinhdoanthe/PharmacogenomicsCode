@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../Courses/WebVanillaJavascriptProjects"
+		},
+		{
+			"path": "../../.."
+		},
+		{
+			"path": "../../../../../Courses/Django"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "WebVanillaJavascriptProjects"
+	}
+}

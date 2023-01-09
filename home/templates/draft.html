@@ -1,135 +1,69 @@
-{% comment %} <html>
- <head>
-    <style>
-    {
-        box-sizing: border-box;
-    }
-    /* Set additional styling options for the columns */
-    .column {
-    float: left;
-    }
-
-    /* Set width length for the left, right and middle columns */
-    .left {
-    width: 20%;
-    }
-
-    .middle {
-    width: 30%;
-    }
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script    
     
-    .right {
-    width: 50%;
-    }
+</head>
+<body>
+    <h2>This is from chart.html</h2>
+    <h3 style="color:red;">Inside myChart div</h3>
+    <div id="myPlotlyPieChart"></div>
 
-    .row:after {
-    content: "";
-    display: table;
-    clear: both;
-    }
-    </style>
- </head>
- <body>
-    <div class="row">
-        <div class="column left" style="background-color:#FFB695;">
-            <h2>Column 1</h2>
-            <p>Data..</p>
-        </div>
-        <div class="column middle" style="background-color:#96D1CD;">
-            <h2>Column 2</h2>
-            <p>Data..</p>
-        </div>
-        <div class="column right" style="background-color:#74C3E1;">
-            <h2>Column 3</h2>
-            <p>Data..</p>
-        </div>
-    </div>
- </body>
-</html> {% endcomment %}
-<style type="text/css">
-	
-	table, th, td {
-		border: 1px solid;
-		border-collapse: collapse;
-		padding: 15px;
-        box-sizing: border-box;
-	}
-	tr:hover {background-color: coral;}
-</style>
-
-
-
-<div style='padding-top: 0px; font-size: 14px;   width:100%;'>
-  <br />
-  <div style='font-size: 12px;'>
-  <p> Data showed in this table is collected from the <a href='//go.drugbank.com/' target='_blank'>Drugbank</a> database and <a href='https://www.uniprot.org/' target='_blank'>UniProt</a>  </p>
-  </div>
-	<a id="dlink" style="display:none;"></a>
-	<div id="excel_table" style2="display:none;"></div>
-	
-	<button onclick="tableToExcel('structures_scrollable', 'Families data', 'EndogenousData.xls')" type="button" class="btn btn-primary" style="margin-top:10px;margin-top:3px"> Export to Excel </button>
-	
-	<button id="reset" type="button" class="btn btn-primary" style="margin-top:10px;margin-top:3px"> Reset filters </button>
-
-	<table  style="width: 100%; margin-top: 10px; ">
-		<thead >
+		<script>
+			alert("Does this show?");
+			var data = [{
+					values: [16, 15, 12, 6, 5, 4, 42],
+					labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
+					domain: {column: 0},
+					name: 'GHG Emissions',
+					hoverinfo: 'label+percent+name',
+					hole: .4,
+					type: 'pie'
+			},{
+					values: [27, 11, 25, 8, 1, 3, 25],
+					labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
+					text: 'CO2',
+					textposition: 'inside',
+					domain: {column: 1},
+					name: 'CO2 Emissions',
+					hoverinfo: 'label+percent+name',
+					hole: .4,
+					type: 'pie'
+			}];
 			
-			<tr >
-        <!-- Protein block -->
-				<th style="text-align:center;">Drugbank_ID</th>
-				<th style="text-align:center;">Drug type</th>
-				<th style="text-align:center;">Drug name</th>
-        <th style="text-align:center;">Group</th>
-				<th style="text-align:center;">Category</th>
-				<th style="color:blue; text-align:center; width:300px; ">Drug description</th>
-				<th style="text-align:center;">Aliases</th>
-				<th style="text-align:center;">Kingdom</th>
-				<th style="text-align:center;">Superclass</th>
-				<th style="text-align:center;">Classname</th>
-				<th style="text-align:center;">Subclass</th>
-				<th style="text-align:center;">Direct parent</th>
-				<th style="text-align:center;">Indication</th>
-				<th style="text-align:center;">Pharmacodynamics</th>
-				<th style="text-align:center;">Moa</th>
-				<th style="text-align:center;">Absorption</th>
-				<th style="text-align:center;">Toxicity</th>
-				<th style="text-align:center;">Halflife</th>
-				<th style="text-align:center;">Distribution volume</th>
-				<th style="text-align:center;">Protein binding</th>
-				<th style="text-align:center;">Dosages</th>
-				<th style="text-align:center;">Properties</th> 
-			</tr>
-		</thead>
-		<tbody  style="font-size:14px;">
-				
-				<tr>
-					<td style="text-align:left">{{10}}</td>
-					<td style="text-align:left">{{11}}</td>
-					<td style="text-align:left; word-wrap: normal;">{{12}}</td>
-                    <td style="text-align:left">{{13}}</td>
-					<td style="text-align:left">{{14}}</td>
-					<td style="color:blue; text-align:left; ">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam aliquid possimus, veritatis aliquam nihil delectus repellat laborum, deserunt et error commodi ab sit, tempora voluptatem dolorum. Dolorem inventore quia temporibus!</td>
-					<td style="text-align:left; word-wrap: normal;">{{16}}</td>
-                    <td style="text-align:left">{{17}}</td>
-					<td style="text-align:left">{{18}}</td>
-					<td style="text-align:left">{{19}}</td>
-					<td style="text-align:left">{{110}}</td>
-                    <td style="text-align:left">{{111}}</td>
-					<td style="text-align:left">{{112}}</td>
-					<td style="text-align:left">{{113}}</td> 
-					<td style="text-align:left">{{114}}</td>
-                    <td style="text-align:left">{{115}}</td>
-                    <td style="text-align:left">{{116}}</td>
-                    <td style="text-align:left">{{117}}</td>
-					<td style="text-align:left">{{118}}</td>
-					<td style="text-align:left">{{119}}</td>
-					<td style="text-align:left">{{120}}</td>
-                    <td style="text-align:left">{{121}}</td> 
-				</tr>
-				
-		</tbody>
-	</table>
-</div>
-<br>
-
-
+			var layout = {
+					title: 'Global Emissions 1990-2011',
+					annotations: [
+					{
+							font: {
+							size: 20
+							},
+							showarrow: false,
+							text: 'GHG',
+							x: 0.17,
+							y: 0.5
+					},
+					{
+							font: {
+							size: 20
+							},
+							showarrow: false,
+							text: 'CO2',
+							x: 0.82,
+							y: 0.5
+					}
+					],
+					height: 400,
+					width: 600,
+					showlegend: false,
+					grid: {rows: 1, columns: 2}
+			};
+			alert("Does this show again?");
+			console.log(data[0]["values"]);
+			Plotly.newPlot("myPlotlyPieChart", data, layout);
+	</script>  
+</body>
+</html>

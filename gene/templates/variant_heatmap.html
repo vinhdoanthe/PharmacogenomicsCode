@@ -1,0 +1,50 @@
+{% comment %} {% extends 'home/base.html'%}  {% endcomment %}
+{% comment %} {%for data in qs%} {% endcomment %}
+
+{%block content%}
+    <div id="myPlotlyHeatmap"></div>
+{%endblock content%}
+
+{% comment %} {% block addon_js %}
+    <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
+{% endblock addon_js %} {% endcomment %}
+
+{% block scripts %}
+    <script>
+      var data = [
+      {
+        z: [[30, 60, 1, -10, 20, 1, null, 30, 50, 1, 20, 13, 4, 12, 6], [1, null, 30, 50, 1, 20, 1, 20, 13, 4, 12, 6, 60, 80, 30], [30, 60, 1, -10, 20, 1, null, 30, 50, 1, 20, 13, 4, 12, 6]],
+        x: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'L', 'M', 'N', 'O', 'P', 'Q'],
+        y: ['Morning', 'Afternoon', 'Evening'],
+        type: 'heatmap',
+        hoverongaps: false
+      }
+      ];
+
+      var layout = {
+        title: 'Variant Effect Heatmap',
+        annotations: [
+        {
+            font: {
+            size: 20
+            },
+            showarrow: false,
+            text:"",
+            x: 0.17,
+            y: 0.5
+        }
+        ],
+        height: 400,
+        width: 1500,
+        showlegend: true,
+        grid: {rows: 1, columns: 2},
+        plot_bgcolor: 'lavender',
+      };
+
+
+      Plotly.newPlot("myPlotlyHeatmap", data, layout);
+    </script>  
+
+{% endblock scripts %}
+
+

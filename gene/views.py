@@ -25,16 +25,20 @@ from variantphenocode.models import VariantPhenocode
 from vep.models import Vep
 from gene.models import Gene
 from gbvariant.models import GenebassVariant
-
+from django.views.generic import ListView
 
 # Create your views here.
 
 
-
-
 class GeneBrowser(TemplateView):
 
-    template_name = 'gene_browser.html'
+    # template_name = 'gene_browser.html'
+    template_name = 'gene_browser_copy.html'
+    # template_name = 'heatmap-plotly.html'
+    # template_name = "connected-graph.html"
+    # template_name = "connected-graph-plotly.html"
+    # template_name = 'consequence_piechart.html'
+    # paginate_by = 20
 
     def get_context_data(self, **kwargs):
 
@@ -114,12 +118,7 @@ class GeneBrowser(TemplateView):
 
         table.fillna('', inplace=True)
         length = len(table)
-        # consequence = table["consequence"].unique()
-        # consequence_set = set()
-        # for con in consequence:
-        #     values = con.split(",")
-        #     for value in values:
-        #         consequence_set.add(value)
+        
         consequence_dict = {}
         for i in range(length):
             values = table["consequence"][i].split(",")
@@ -133,6 +132,8 @@ class GeneBrowser(TemplateView):
         context['length'] = length
         for key in consequence_dict.keys():
             context[key] = consequence_dict.get(key)
+        print("************ Type of array ", type(context['Array']))
+        print("************ Elements of array ", context['Array'][:5])
         # context["qs"] = Editors.objects.all()
-        context["qs"] = consequence_dict
+        context["consequence_dict"] = consequence_dict
         return context
