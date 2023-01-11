@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'vep.apps.VepConfig',
     "build.apps.BuildConfig",
     "home.apps.HomeConfig",
+    "common.apps.CommonConfig",
     "draft.apps.DraftConfig",
     "blog.apps.BlogConfig",
 

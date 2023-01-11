@@ -32,6 +32,10 @@ from variantmarker.models import VariantMarker
 class DrugBrowser(TemplateView):
 
     template_name = 'drug_browser copy.html'
+    # template_name = "drugstatistics.html"
+    # template_name = "alignment.html"
+    # template_name = "isoforms.html"
+    # template_name = "designselection.html"
 
     def get_context_data(self, **kwargs):
 
@@ -57,7 +61,7 @@ class DrugBrowser(TemplateView):
             drugtype = "Biotech"
         else:
             drugtype = "Small molecule"
-        objList=[]
+      
         for data in interaction_data:
             data_subset = {}
             data_subset["uniprot_ID"] = data[0]
@@ -80,7 +84,7 @@ class DrugBrowser(TemplateView):
             data_subset["#variants"]=len(markers)
 
             table = table.append(data_subset, ignore_index=True)
-            objList.append(data_subset)
+            
 
         table.fillna('', inplace=True)
         # context = dict()
@@ -92,9 +96,6 @@ class DrugBrowser(TemplateView):
         context['drugname'] = drugname
         context['drugID'] = 'DB00002'
         context['length'] = length
-        context['objList'] = objList
-        print(objList)
 
-        print("BLABLABLA ----- ", objList[0].get("gene_name"))
         
         return context
