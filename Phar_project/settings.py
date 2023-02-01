@@ -118,6 +118,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "ljw303",
+        # "NAME": "gpcrdb", --> just for testing
         "USER": "ljw303",
         # "PASSWORD": "postgres",
         # "HOST": "db",  # comment this out if run in venv

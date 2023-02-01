@@ -137,3 +137,37 @@ class GeneBrowser(TemplateView):
         # context["qs"] = Editors.objects.all()
         context["consequence_dict"] = consequence_dict
         return context
+
+
+#@cache_page(60 * 60 * 24 * 7)
+def detail(request, slug):
+    # get protein
+    slug = slug.upper()
+
+    print("SLUGGGGGGGGGGGGG", slug)
+    print("SLUGGGGGGGGGGGGG", slug)
+    print("SLUGGGGGGGGGGGGG", slug)
+    print("SLUGGGGGGGGGGGGG", slug)
+    try:
+        if Gene.objects.filter(gene_id=slug).exists():
+            p = Gene.objects.get(gene_id=slug)
+            print("p --------- ",p)
+        
+    except:
+        context = {'gene_no_found': slug}
+        return render(request, 'gene_detail.html', context)
+
+    # context_list=[]
+    # for p in ps:
+
+    # get family list
+    gene_id = p.gene_id
+    genename = p.genename
+
+
+    context = {'gene_id': gene_id, 'genename': genename}
+
+        # context_list.append(dic)
+
+
+    return render(request, 'gene_detail.html', context)

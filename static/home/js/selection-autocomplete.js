@@ -20,8 +20,11 @@ $.widget( "custom.catcomplete", $.ui.autocomplete, {
     }
   });
 var redirect_on_select_new_scope = redirect_on_select;
+// once the DOM is fully loaded
 $(function() {
+    //selects the element with the ID "selection-autocomplete" and initializes the custom "catcomplete" widget on it.
     $("#selection-autocomplete").catcomplete({
+        //The "source" option is set to a URL that includes query parameters "selection_only_receptors" and "type_of_selection"
         source: "/protein/autocomplete?selection_only_receptors="+selection_only_receptors+"&type_of_selection=" + type_of_selection,
         minLength: 2,
         autoFocus: true,

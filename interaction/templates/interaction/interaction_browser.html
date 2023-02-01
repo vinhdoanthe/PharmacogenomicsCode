@@ -12,10 +12,6 @@
 <link rel="stylesheet" href="{% static 'home/css/construct_browser.css' %}" type="text/css" />
 
 {% endblock addon_css %} 
-
-
-
-
 {% block content %} 
 {% autoescape off %}
 
@@ -48,7 +44,7 @@
     Reset filters
   </button>
 
-  <p style="margin-top:10px;margin-bottom:10px;color:#014F86">Interactions for {{drugname}} (drugbank ID =  {{drugID}})</p>
+  <p style="margin-top:10px;margin-bottom:10px;color:#014F86">Using the filters to browse the drug-target interaction </p>
 
   <div id="structures_scrollable_table">
     <table class="display compact text-nowrap" id='structures_scrollable' style="width: 100%">
@@ -147,100 +143,7 @@
 		});
 	}
 	); //End of $(document).ready(function()
-	// Script for network plot using D3
-		var width = 500,
-		height = 500;
-
-		// Set the radius of the center node
-		var centerNodeRadius = 70;
-
-		// Set the radius of the other nodes
-		var nodeRadius = 50;
-
-		// Set the distance between the center node and the other nodes
-		var nodeDistance = 170;
-
-		// Set the number of nodes
-		var numNodes = {{length}};
-
-		console.log("centerNodeRadius ",centerNodeRadius);
-		console.log("centerNodeRadius ",centerNodeRadius);
-		console.log("centerNodeRadius ",centerNodeRadius);
-		console.log("centerNodeRadius ",centerNodeRadius);
-		console.log("centerNodeRadius ",centerNodeRadius);
-		console.log("centerNodeRadius ",centerNodeRadius);
-		console.log("centerNodeRadius ",centerNodeRadius);
-
-		// Set the container element and its background color
-		var container = d3.select("body")
-									.append("div")
-									.attr("class", "interaction_container")
-									.style("width", 700)
-									.style("height", 700);
-
-		// Create a svg element to draw the nodes
-		var svg = container.append("svg")
-										.attr("width", width)
-										.attr("height", height);
-
-		// Create the links between the center node and the other nodes
-		var links = svg.selectAll(".link")
-							.data(d3.range(numNodes))
-							.enter()
-							.append("line")
-							.attr("class", "link")
-							.style("stroke", "black");
-
-		// Set the position of the links
-		links.attr("x1", width / 2)
-		.attr("y1", height / 2)
-		.attr("x2", function(d, i) {
-			return width / 2 + nodeDistance * Math.cos(2 * Math.PI * i / numNodes);
-		})
-		.attr("y2", function(d, i) {
-			return height / 2 + nodeDistance * Math.sin(2 * Math.PI * i / numNodes);
-		});
-
-		// Create the center node
-		//console.log({{drugname}}); 
-		var centerNode = svg.append("ellipse")
-										.attr("cx", width / 2)
-										.attr("cy", height / 2)
-										.attr("rx", centerNodeRadius)
-										.attr("ry", centerNodeRadius / 2)
-										.style("fill", "#73D2DE");
-										
-		svg.append("text")
-			.attr("x",width / 2-30)
-			.attr("y",height / 2+5)
-			.text('{{drugname}}');
-										
-		// Create the other nodes
-		var nodes = svg.selectAll(".node")
-							.data(d3.range(numNodes))
-							.enter()
-							.append("ellipse")
-							.attr("class", "node")
-							.attr("rx", nodeRadius)
-							.attr("ry", nodeRadius/2)
-							.style("fill", "#FFBC42");
-							
-		// Set the position of the other nodes
-		nodes.attr("cx", function(d, i) {
-		return width / 2 + nodeDistance * Math.cos(2 * Math.PI * i / numNodes);
-		})
-		.attr("cy", function(d, i) {
-		return height / 2 + nodeDistance * Math.sin(2 * Math.PI * i / numNodes);
-		});
-
-		var array_list = {{ test|safe }};
-		for (i=0; i < array_list.length; i++) 
-		{
-			svg.append("text")
-				.attr("x", width / 2 + nodeDistance * Math.cos(2 * Math.PI * i / numNodes)-20)
-				.attr("y", height / 2 + nodeDistance * Math.sin(2 * Math.PI * i / numNodes)+5)
-				.text(array_list[i]['gene_name']); 
-		} 
+	
 
 
 </script>

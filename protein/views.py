@@ -18,14 +18,10 @@ from django.db.models import Q, Count, Subquery, OuterRef
 from django.views.decorators.csrf import csrf_exempt
 
 from django.core.cache import cache
-
-
 from protein.models import Protein
 
 
 # Create your views here.
-
-
 class ProteinBrowser(TemplateView):
 
     template_name = 'protein_browser.html'
