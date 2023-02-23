@@ -2,7 +2,7 @@
 {% load static %} 
 {% csrf_token %} 
 {% block addon_css %}
-
+<link rel="stylesheet" href="{% static 'home/css/jquery.dataTables.min.css' %}" type="text/css" />
 <link rel="stylesheet" href="{% static 'home/css/bootstrap2-toggle.min.css' %}" type="text/css" />
 <link rel="stylesheet" href="{% static 'home/css/yadcf_bootstrap_version.css' %}" type="text/css" />
 <link rel="stylesheet" href="{% static 'home/css/select2.css' %}" type="text/css" />
@@ -254,54 +254,133 @@
   </button>
 
   <div id="structures_scrollable_table">
-    <table class="display compact text-nowrap" id="structures_scrollable" style="width: 100%; margin-top: 10px; font-size: 12px;">
+    <table class="display compact text-nowrap" id="structures_scrollable" style="width: 100%; margin-top: 10px; font-size: 10px;">
       <thead id="headers">
         <tr class="header-spans">
-          <th style="text-align:left" colspan="6">Position</th>
-          <th style="border-left: 1px solid black; text-align:left" colspan="3" style="">Impact</th>
-          <th style="border-left: 1px solid black; text-align:left" colspan="5"> Predicted effect scores</th>
+          <th style="text-align:left" colspan="8">Position</th>
+          <th style="border-left: 1px solid black; text-align:left" colspan="2" style="">Impact</th>
+          <th style="border-left: 1px solid black; text-align:left" colspan="40"> Predicted effect scores</th>
         </tr>
 
         <tr class="table-filter-dropdown">
           <!-- Position block -->
           <th class="pathways" style="text-align: left">Variant</th>
-          {% comment %} <th style="text-align: left">Source</th> {% endcomment %}
-          <th class="pathways" style="text-align: left">cDNA_position</th>
-          <th class="pathways" style="text-align: left">CDS_position</th>
-          <th class="pathways" style="text-align: left">Protein_position</th>
-          <th class="pathways" style="text-align: left">Amino_acids</th>
+          <th class="pathways" style="text-align: left">Transcript</th>
+          <th class="pathways" style="text-align: left">cDNA_</br>position</th>
+          <th class="pathways" style="text-align: left">CDS_</br>position</th>
+          <th class="pathways" style="text-align: left">Protein_</br>position</th>
+          <th class="pathways" style="text-align: left">Amino_</br>acids</th>
           <th class="pathways" style="text-align: left">Codons</th>
+          <th class="pathways" style="text-align: left">Strand</th>
           <!-- Impact block -->
-          <th class="pathways" style="text-align: left">Consequence</th>
+          <th class="pathways" style="text-align: left">Conse_</br>quence</th>
           <th class="pathways" style="text-align: left">Impact</th>
-          <th class="pathways" style="text-align: left">Phenocode</th>
           <!-- Score block -->
-          <th class="color-column" style="text-align: left">#SIFT</th>
-          <th class="color-column" style="text-align: left">#Polyphen2_HDIV</th>
-          <th class="color-column" style="text-align: left">#Polyphen2_HVAR</th>
-          <th class="color-column" style="text-align: left">#FATHMM</th>
-          <th class="color-column" style="text-align: left">#DEOGEN2</th>
+          <th class="color-column" style="text-align: left">BayesDel_</br>addAF_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">BayesDel_</br>noAF_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">CADD_</br>raw_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">ClinPred_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">DANN_</br>rankscore</th>
+
+					<th class="color-column" style="text-align: left">DEOGEN2_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">Eigen_PC_</br>raw_coding_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">Eigen_raw_</br>coding_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">FATHMM_</br>converted_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">GERP_RS_</br>rankscore</th>
+
+					<th class="color-column" style="text-align: left">GM12878_</br>fitCons_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">Geno</br>Canyon_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">H1_hESC_</br>fitCons_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">HUVEC_</br>fitCons_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">LIST_S2_</br>rankscore</th>
+
+					<th class="color-column" style="text-align: left">LRT_</br>converted_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">M_CAP_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">MPC_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">MVP_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">MetaLR_</br>rankscore</th>
+
+					<th class="color-column" style="text-align: left">MetaRNN_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">MetaSVM_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">MutPred_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">Mutation</br>Assessor_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">Mutation</br>Taster_</br>converted_</br>rankscore</th>
+
+					<th class="color-column" style="text-align: left">PROVEAN_</br>converted_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">Polyphen2_</br>HDIV_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">Polyphen2_</br>HVAR_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">PrimateAI_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">REVEL_</br>rankscore</th>
+
+					<th class="color-column" style="text-align: left">SIFT4G_</br>converted_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">SIFT_</br>converted_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">SiPhy_</br>29way_</br>logOdds_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">VEST4_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">bStatistic</br>converted_</br>rankscore</th>
+
+					<th class="color-column" style="text-align: left">Fathmm_</br>MKL_coding_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">Fathmm_XF</br>_coding_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">Integrated_</br>fitCons_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">PhastCons</br>30way_</br>mammalian_</br>rankscore</th>
+					<th class="color-column" style="text-align: left">Phylo_</br>P30way_</br>mammalian_</br>rankscore</th>
         </tr>
 
       </thead>
       <tbody id='structures_scrollable_body'>
-        {% for value in Array|slice:":10" %}
+        {% comment %} {% for value in array|slice:":50" %} {% endcomment %}
+        {% for value in array %}
         <tr>
           <td style="text-align: left">{{value.0}}</td>
-          {% comment %} <td style="text-align: left">{{value.1}}</td> {% endcomment %}
-          <td style="text-align: left">{{value.2}}</td>
-          <td style="text-align: left">{{value.3}}</td>
-          <td style="text-align: left">{{value.4}}</td>
-          <td style="text-align: left">{{value.5}}</td>
-          <td style="text-align: left">{{value.6}}</td>
-          <td style="text-align: left">{{value.7}}</td>
-          <td style="text-align: left">{{value.8}}</td>
-          <td style="text-align: left">{{value.9}}</td>
-          <td style="text-align: left">{{value.10}}</td>
-          <td style="text-align: left">{{value.11}}</td>
-          <td style="text-align: left">{{value.12}}</td>
-          <td style="text-align: left">{{value.13}}</td>
-          <td style="text-align: left">{{value.14}}</td>
+					<td style="text-align: left">{{value.1}}</td>
+					<td style="text-align: left">{{value.3}}</td>
+					<td style="text-align: left">{{value.4}}</td>
+					<td style="text-align: left">{{value.5}}</td>
+					<td style="text-align: left">{{value.6}}</td>
+					<td style="text-align: left">{{value.7}}</td>
+					<td style="text-align: left">{{value.9}}</td>
+					<td style="text-align: left">{{value.2}}</td>
+					<td style="text-align: left">{{value.8}}</td>
+					<td style="text-align: left">{{value.10}}</td>
+					<td style="text-align: left">{{value.11}}</td>
+					<td style="text-align: left">{{value.12}}</td>
+					<td style="text-align: left">{{value.13}}</td>
+					<td style="text-align: left">{{value.14}}</td>
+					<td style="text-align: left">{{value.15}}</td>
+					<td style="text-align: left">{{value.16}}</td>
+					<td style="text-align: left">{{value.17}}</td>
+					<td style="text-align: left">{{value.18}}</td>
+					<td style="text-align: left">{{value.19}}</td>
+					<td style="text-align: left">{{value.20}}</td>
+					<td style="text-align: left">{{value.21}}</td>
+					<td style="text-align: left">{{value.22}}</td>
+					<td style="text-align: left">{{value.23}}</td>
+					<td style="text-align: left">{{value.24}}</td>
+					<td style="text-align: left">{{value.25}}</td>
+					<td style="text-align: left">{{value.26}}</td>
+					<td style="text-align: left">{{value.27}}</td>
+					<td style="text-align: left">{{value.28}}</td>
+					<td style="text-align: left">{{value.29}}</td>
+					<td style="text-align: left">{{value.30}}</td>
+					<td style="text-align: left">{{value.31}}</td>
+					<td style="text-align: left">{{value.32}}</td>
+					<td style="text-align: left">{{value.33}}</td>
+					<td style="text-align: left">{{value.34}}</td>
+					<td style="text-align: left">{{value.35}}</td>
+					<td style="text-align: left">{{value.36}}</td>
+					<td style="text-align: left">{{value.37}}</td>
+					<td style="text-align: left">{{value.38}}</td>
+					<td style="text-align: left">{{value.39}}</td>
+					<td style="text-align: left">{{value.40}}</td>
+					<td style="text-align: left">{{value.41}}</td>
+					<td style="text-align: left">{{value.42}}</td>
+					<td style="text-align: left">{{value.43}}</td>
+					<td style="text-align: left">{{value.44}}</td>
+					<td style="text-align: left">{{value.45}}</td>
+					<td style="text-align: left">{{value.46}}</td>
+					<td style="text-align: left">{{value.47}}</td>
+					<td style="text-align: left">{{value.48}}</td>
+					<td style="text-align: left">{{value.49}}</td>
+				
         </tr>
         {% endfor %}
       </tbody>
@@ -386,16 +465,16 @@
 		
 		$("#structures_scrollable").show();
 		oTable1 = $("#structures_scrollable").DataTable({
-			//deferRender: true,
+			deferRender: true,
 			scrollY: true,
 			scrollX: true,
-			//scrollCollapse: true,
-			//scroller: true,
+			scrollCollapse: true,
+			scroller: true,
 			paging: true,
-			//bSortCellsTop: false, //prevent sort arrows going on bottom row
-			//aaSorting: [],
-			//autoWidth: true,
-			//bInfo: true,
+			bSortCellsTop: false, //prevent sort arrows going on bottom row
+			aaSorting: [],
+			autoWidth: true,
+			bInfo: true,
 			//order: [[7, "asc"]],
 			pagingType: 'full_numbers',
 			lengthMenu: [
@@ -404,23 +483,51 @@
 			],
 		})
 
+		
+
+		
 		let column_filters = [];
+
+		// Variant
+		column_filters = column_filters.concat(createYADCFfilters(0, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+
+		// Transcript
+		column_filters = column_filters.concat(createYADCFfilters(1, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+
+		// cDNA_position
+		column_filters = column_filters.concat(createYADCFfilters(2, 1, "multi_select", "select2", 'Select', false, null, null, "80px"));
+
+		// CDS_position
+		column_filters = column_filters.concat(createYADCFfilters(3, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+
+		// Protein_position
+		column_filters = column_filters.concat(createYADCFfilters(4, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+
+		// Amino_acids
+		column_filters = column_filters.concat(createYADCFfilters(5, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+
+		// Codons
+		column_filters = column_filters.concat(createYADCFfilters(6, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+
 		// Consequence
-		column_filters = column_filters.concat(createYADCFfilters(6, 1, "multi_select", "select2", "Consequence", false, null, null, "80px"));
+		column_filters = column_filters.concat(createYADCFfilters(8, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
 
 		// Impact 
-		column_filters = column_filters.concat(createYADCFfilters(7, 1, "multi_select", "select2", "Impact", false, null, null, "80px"));
+		column_filters = column_filters.concat(createYADCFfilters(9, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+
+		// BayesDel_addAF_rankscore 
+		column_filters = column_filters.concat(createYADCFfilters(10, 40, "range_number", null, ["Min", "Max"], false, null, null, "40px"))
 
 		yadcf.init(oTable1.draw(), column_filters, {
 			cumulative_filtering: false
 		});
-		yadcf.exFilterColumn(oTable1, [[7, ["HIGH"]]], true);
 
-		//gray_scale_table($("#structures_scrollable"));
+		yadcf.exFilterColumn(oTable1, [[8, ["mis"]]], true);
 
 		$("#reset").click(function() {
 			yadcf.exResetAllFilters(oTable1);
 		});
+		
 
 		});
 </script>

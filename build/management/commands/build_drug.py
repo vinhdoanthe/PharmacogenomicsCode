@@ -67,6 +67,21 @@ class Command(BaseCommand):
             print("checkpoint2")
             print(filenames)
 
+        #process drug encoded data - to reduce data, some columns are encoded and this is for decoded
+        # col_map = {"0":"drugtype",
+        #             "1":"name",
+        #             "2":"superclass",
+        #             "3":"classname",
+        #             "4":"subclass",
+        #             "5":"direct_parent",
+        #             "6":"groups",
+        #             "7":"categories",
+        #             "8":"pubChemCompound",
+        #             "9":"interaction_type"
+        #             }
+            
+            
+        #read the drug data
         for filename in filenames:
 
             filepath = os.sep.join([self.drugdata_data_dir, filename])
@@ -76,7 +91,7 @@ class Command(BaseCommand):
 
             for index, row in enumerate(data.iterrows()):
 
-                drug_bankID = data[index: index + 1]["pk"].values[0]
+                drug_bankID = data[index: index + 1]["drugbank_id"].values[0]
                 drugtype = data[index: index + 1]["drugtype"].values[0]
                 name = data[index: index + 1]["name"].values[0]
                 # drugalias = [
@@ -89,7 +104,7 @@ class Command(BaseCommand):
                 categories = data[index: index + 1]["categories"].values[0]
                 description = data[index: index + 1]["description"].values[0]
                 aliases = data[index: index + 1]["aliases"].values[0]
-                kingdom = data[index: index + 1]["kingdom"].values[0]
+                # kingdom = data[index: index + 1]["kingdom"].values[0]
                 superclass = data[index: index + 1]["superclass"].values[0]
                 classname = data[index: index + 1]["classname"].values[0]
                 subclass = data[index: index + 1]["subclass"].values[0]
@@ -108,7 +123,13 @@ class Command(BaseCommand):
                                        1]["protein_binding"].values[0]
                 dosages = data[index: index + 1]["dosages"].values[0]
                 properties = data[index: index + 1]["properties"].values[0]
+                atc_codes = data[index: index + 1]["atc_codes"].values[0]
+                atc_code_detail = data[index: index + 1]["ATC_codes_description"].values[0] 
 
+                chEMBL = data[index: index + 1]["chEMBL"].values[0] 
+                pubChemCompound = data[index: index + 1]["pubChemCompound"].values[0] 
+                pubChemSubstance = data[index: index + 1]["pubChemSubstance"].values[0] 
+                
                 # # fetch protein
                 # try:
                 #     p = Protein.objects.get(entry_name=entry_name)
@@ -129,7 +150,7 @@ class Command(BaseCommand):
                     categories=categories,
                     description=description,
                     aliases=aliases,
-                    kingdom=kingdom,
+                    # kingdom=kingdom,
                     superclass=superclass,
                     classname=classname,
                     subclass=subclass,
@@ -144,7 +165,13 @@ class Command(BaseCommand):
                     protein_binding=protein_binding,
 
                     dosages=dosages,
-                    properties=properties)
+                    properties=properties,
+                    atc_codes=atc_codes,
+                    atc_code_detail=atc_code_detail,
+                    chEMBL = chEMBL, 
+                    pubChemCompound = pubChemCompound, 
+                    pubChemSubstance = pubChemSubstance, 
+                    )
                 drug.save()
                 print("a record is saved")
 

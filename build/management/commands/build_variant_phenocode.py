@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 
-from variantphenocode.models import VariantPhenocode
+from variant.models import VariantPhenocode
 
 
 from optparse import make_option
@@ -65,7 +65,7 @@ class Command(BaseCommand):
             filenames = [
                 fn
                 for fn in os.listdir(self.variantphenocodedata_data_dir)
-                if fn.endswith("phenocode.csv")
+                if fn.endswith("phenocode_data.csv")
             ]
             print("checkpoint2")
             print(filenames)
@@ -85,6 +85,8 @@ class Command(BaseCommand):
                 description = data[index: index + 1]["description"].values[0]
                 description_more = data[index: index +
                                         1]["description_more"].values[0]
+                pheno_sex = data[index: index +
+                                        1]["pheno_sex"].values[0]
 
                 print(
                     "checkpoint 2.1 - start to fetch data to genebass variant table")
@@ -92,7 +94,8 @@ class Command(BaseCommand):
                 ph, created = VariantPhenocode.objects.get_or_create(
                     phenocode=phenocode,
                     description=description,
-                    description_more=description_more
+                    description_more=description_more,
+                    pheno_sex=pheno_sex
                 )
                 print("checkpoint")
                 ph.save()

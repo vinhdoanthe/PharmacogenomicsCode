@@ -57,3 +57,38 @@ class ProteinBrowser(TemplateView):
         print(table.head(3))
         context['Array'] = table.to_numpy()
         return context
+
+
+#@cache_page(60 * 60 * 24 * 7)
+def detail(request, slug):
+    # get protein
+    slug = slug.upper()
+
+    print("SLUGGGGGGGGGGGGG", slug)
+    print("SLUGGGGGGGGGGGGG", slug)
+    print("SLUGGGGGGGGGGGGG", slug)
+    print("SLUGGGGGGGGGGGGG", slug)
+    try:
+        if Protein.objects.filter(uniprot_ID=slug).exists():
+            p = Protein.objects.get(uniprot_ID=slug)
+            print("p --------- ",p)
+        
+    except:
+        context = {'protein_no_found': slug}
+        return render(request, 'protein_detail.html', context)
+
+    # context_list=[]
+    # for p in ps:
+
+    # get family list
+    uniprot_ID = p.uniprot_ID
+    protein_name = p.protein_name
+
+
+    context = {'uniprot_ID': uniprot_ID, 'protein_name': protein_name}
+
+
+        # context_list.append(dic)
+
+
+    return render(request, 'protein_detail.html', context)

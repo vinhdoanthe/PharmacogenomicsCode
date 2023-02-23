@@ -57,17 +57,11 @@ INSTALLED_APPS = [
     "gene.apps.GeneConfig",
     "drug.apps.DrugConfig",
     "interaction.apps.InteractionConfig",
-    "variantmarker.apps.VariantmarkerConfig",
-    'variantphenocode.apps.VariantphenocodeConfig',
-    'gbvariant.apps.GbvariantConfig',
-    'vep.apps.VepConfig',
+    # "variant.apps.VariantConfig",
     "build.apps.BuildConfig",
     "home.apps.HomeConfig",
     "common.apps.CommonConfig",
-    "draft.apps.DraftConfig",
-    "blog.apps.BlogConfig",
-
-
+    "variant"
 ]
 ...
 AUTH_USER_MODEL = "accounts.CustomUser"

@@ -17,9 +17,7 @@ class Interaction(models.Model):
     interaction_type = models.CharField(
         max_length=100
     )  # being one of several values: transporter, enzyme, target, carrier
-    atc_codes = models.TextField()
-    pubmed_ids = models.TextField()
-    ChEMBL = models.TextField()
+    pubmed_ids = models.TextField(default="None")
 
     def __str__(self):
         return self.uniprot_ID.uniprot_ID + " acts as a " + self.interaction_type + " for drug " + self.drug_bankID.drug_bankID

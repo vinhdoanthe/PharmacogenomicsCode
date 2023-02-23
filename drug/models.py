@@ -16,9 +16,9 @@ class Drug(models.Model):
     # SMILES = models.CharField(max_length=200)
     # InChIKey = models.CharField(max_length=200)
     aliases = models.TextField()  # similar to name
-    kingdom = models.CharField(
-        max_length=50, default="None"
-    )  # being one of several values: 'Organic Compounds' 'Organic compounds' 'None' 'Inorganic compounds'
+    # kingdom = models.CharField(
+    #     max_length=50, default="None"
+    # )  # being one of several values: 'Organic Compounds' 'Organic compounds' 'None' 'Inorganic compounds'
     superclass = models.CharField(
         max_length=50, default="None"
     )  # chars of numbers for encoded values
@@ -44,8 +44,20 @@ class Drug(models.Model):
     dosages = models.TextField()  # long string values
     properties = models.TextField()  # long string values
 
+    atc_codes = models.TextField(default="None")
+    atc_code_detail = models.TextField(default="None")
+
+    chEMBL = models.CharField(
+        max_length=250, default="None"
+    ) 
+    pubChemCompound = models.TextField(default="None")
+    pubChemSubstance = models.TextField(default="None")
+    
+
+
     def __str__(self):
         return "Drugname: " + self.name + " with drugbank ID: " + self.drug_bankID
 
     # class Meta():
     #     db_table = 'drugs'
+

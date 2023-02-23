@@ -21,7 +21,7 @@ from django.core.cache import cache
 from drug.models import Drug
 from interaction.models import Interaction
 from protein.models import Protein
-from variantmarker.models import VariantMarker
+from variant.models import Variant
 
 # Create your views here.
 

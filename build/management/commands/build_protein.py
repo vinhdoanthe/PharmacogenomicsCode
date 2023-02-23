@@ -76,12 +76,12 @@ class Command(BaseCommand):
 
             for index, row in enumerate(data.iterrows()):
 
-                uniprot_ID = data[index: index + 1]["pk"].values[0]
-                genename = data[index: index + 1]["GeneName"].values[0]
-                geneID = data[index: index + 1]["GeneID"].values[0]
+                uniprot_ID = data[index: index + 1]["uniprotID"].values[0]
+                genename = data[index: index + 1]["geneName"].values[0]
+                geneID = data[index: index + 1]["geneID"].values[0]
 
-                entry_name = data[index: index + 1]["EntryName"].values[0]
-                protein_name = data[index: index + 1]["ProteinName"].values[0]
+                entry_name = data[index: index + 1]["entryName"].values[0]
+                protein_name = data[index: index + 1]["proteinName"].values[0]
 
                 # # fetch protein
                 # try:

@@ -1,12 +1,8 @@
 # build_genebass_variant.py
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
-
-
-from variantmarker.models import VariantMarker
+from variant.models import Variant
 from gene.models import Gene
-
-
 from optparse import make_option
 import logging
 import csv
@@ -50,8 +46,8 @@ class Command(BaseCommand):
     def purge_variant_marker(self):
         print("checkpoint 1.2 inside purge_variant_marker function ")
         try:
-            VariantMarker.objects.all().delete()
-        except VariantMarker.DoesNotExist:
+            Variant.objects.all().delete()
+        except Variant.DoesNotExist:
             self.logger.warning(
                 "VariantMarker mod not found: nothing to delete.")
 
@@ -66,7 +62,7 @@ class Command(BaseCommand):
             filenames = [
                 fn
                 for fn in os.listdir(self.variantmarkerdata_data_dir)
-                if fn.endswith("marker.csv")
+                if fn.endswith("variant_marker_data.csv")
             ]
             print("checkpoint2")
             print(filenames)
@@ -78,17 +74,14 @@ class Command(BaseCommand):
 
             data = pd.read_csv(filepath, low_memory=False,
                                encoding="ISO-8859-1", sep=";")
+            data.drop_duplicates(subset=["VariantMarker"], inplace=True)
 
             print("data length = ", len(data))
             print("data column = ", data.columns)
             for index, row in enumerate(data.iterrows()):
-                geneID = data[index: index + 1]["gene_id"].values[0]
-                locus = data[index: index + 1]["locus"].values[0]
-                alleles = data[index: index + 1]["alleles"].values[0]
-
-                markerID = data[index: index + 1]["markerID"].values[0]
-                annotation = data[index: index +
-                                  1]["annotation"].values[0]
+                geneID = data[index: index + 1]["GeneID"].values[0]
+                markerID = data[index: index + 1]["VariantMarker"].values[0]
+               
 
                 # fetch gene
                 try:
@@ -102,14 +95,11 @@ class Command(BaseCommand):
                     continue
 
                 print("checkpoint 2.1 - start to fetch data to genebass variant table")
-                marker, created = VariantMarker.objects.get_or_create(
-                    geneID=g,
-                    locus=locus,
-                    alleles=alleles,
-                    markerID=markerID,
-                    annotation=annotation
+                marker, created = Variant.objects.get_or_create(
+                    Gene_ID=g,
+                    VariantMarker=markerID,
                 )
                 marker.save()
-                print("a record is saved")
+                print(index, "th record is saved")
 
         self.logger.info("COMPLETED CREATING VARIANT MARKER DATA")

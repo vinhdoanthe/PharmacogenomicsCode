@@ -82,16 +82,14 @@ class Command(BaseCommand):
             print("data column = ", data.columns)
             for index, row in enumerate(data.iterrows()):
 
-                drug_bankID = data[index: index + 1]["drug_bankID"].values[0]
-                uniprot_ID = data[index: index + 1]["uniprot_ID"].values[0]
+                drug_bankID = data[index: index + 1]["drugbank_id"].values[0]
+                uniprot_ID = data[index: index + 1]["uniprotID"].values[0]
                 actions = data[index: index + 1]["actions"].values[0]
 
                 known_action = data[index: index + 1]["known_action"].values[0]
                 interaction_type = data[index: index +
                                         1]["interaction_type"].values[0]
-                atc_codes = data[index: index + 1]["atc_codes"].values[0]
                 pubmed_ids = data[index: index + 1]["pubmed_ids"].values[0]
-                ChEMBL = data[index: index + 1]["ChEMBL"].values[0]
 
                 # fetch drug
 
@@ -123,9 +121,9 @@ class Command(BaseCommand):
                     actions=actions,
                     known_action=known_action,
                     interaction_type=interaction_type,
-                    atc_codes=atc_codes,
+                    # atc_codes=atc_codes,
                     pubmed_ids=pubmed_ids,
-                    ChEMBL=ChEMBL,
+                    # ChEMBL=ChEMBL,
                 )
                 interaction.save()
                 print("a record is saved")

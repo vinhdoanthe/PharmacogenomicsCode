@@ -3,8 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 
-from gbvariant.models import GenebassVariant
-from variantmarker.models import VariantMarker
+from variant.models import GenebassVariant, Variant, VariantPhenocode
 
 
 from optparse import make_option
@@ -31,14 +30,14 @@ class Command(BaseCommand):
     genebassvariantdata_data_dir = os.sep.join(
         [settings.DATA_DIR, "genebass_variant_data"])
 
-    print("checkpoint1")
+    # print("checkpoint1")
 
     def handle(self, *args, **options):
         if options["filename"]:
             filenames = options["filename"]
         else:
             filenames = False
-        print("checkpoint 1.1, filenames = ", filenames)
+        # print("checkpoint 1.1, filenames = ", filenames)
 
         try:
             self.purge_GB_Variant()
@@ -48,14 +47,14 @@ class Command(BaseCommand):
             self.logger.error(msg)
 
     def purge_GB_Variant(self):
-        print("checkpoint 1.2 inside purge_GB_Variant function ")
+        # print("checkpoint 1.2 inside purge_GB_Variant function ")
         try:
             GenebassVariant.objects.all().delete()
         except GenebassVariant.DoesNotExist:
             self.logger.warning(
                 "GenebassVariant mod not found: nothing to delete.")
 
-        print("checkpoint 1.3 end of purge_GB_Variant function ")
+        # print("checkpoint 1.3 end of purge_GB_Variant function ")
 
     def create_GB_Variant_data(self, filenames=False):
         print("checkpoint 1.4 start of create_GB_Variant_data function ")
@@ -66,9 +65,9 @@ class Command(BaseCommand):
             filenames = [
                 fn
                 for fn in os.listdir(self.genebassvariantdata_data_dir)
-                if fn.endswith("variant.csv")
+                if fn.endswith(".csv")
             ]
-            print("checkpoint2")
+            # print("checkpoint2")
             print(filenames)
 
         for filename in filenames:
@@ -79,18 +78,14 @@ class Command(BaseCommand):
             data = pd.read_csv(filepath, low_memory=False,
                                encoding="ISO-8859-1", sep=";")
 
-            print("data length = ", len(data))
-            print("data column = ", data.columns)
+            print("filename ", filename, " is processing ")
             for index, row in enumerate(data.iterrows()):
-                # gene_ID = data[index: index + 1]["gene_id"].values[0]
                 markerID = data[index: index + 1]["markerID"].values[0]
+                
                 n_cases = data[index: index + 1]["n_cases"].values[0]
                 n_controls = data[index: index + 1]["n_controls"].values[0]
-                heritability = data[index: index + 1]["heritability"].values[0]
-                trait_type = data[index: index + 1]["trait_type"].values[0]
                 phenocode = data[index: index + 1]["phenocode"].values[0]
-                pheno_sex = data[index: index + 1]["pheno_sex"].values[0]
-                coding = data[index: index + 1]["coding"].values[0]
+                
                 n_cases_defined = data[index: index +
                                        1]["n_cases_defined"].values[0]
                 n_cases_both_sexes = data[index: index +
@@ -105,34 +100,54 @@ class Command(BaseCommand):
                 BETA = data[index: index + 1]["BETA"].values[0]
                 SE = data[index: index + 1]["SE"].values[0]
 
-                AF_Cases = data[index: index + 1]["AF.Cases"].values[0]
-                AF_Controls = data[index: index + 1]["AF.Controls"].values[0]
+                AF_Cases = data[index: index + 1]["AF_Cases"].values[0]
+                AF_Controls = data[index: index + 1]["AF_Controls"].values[0]
                 Pvalue = data[index: index + 1]["Pvalue"].values[0]
-                AC_calstat = data[index: index + 1]["AC_calstat"].values[0]
-                AF_calstat = data[index: index + 1]["AF_calstat"].values[0]
+                
 
                 # fetch variant marker
-                try:
-                    v = VariantMarker.objects.get(markerID=markerID)
-                except VariantMarker.DoesNotExist:
+                # try:
+                #     print(filename, " , markerID = " , markerID)
+                #     v = Variant.objects.get(VariantMarker=markerID)
+                # except Variant.DoesNotExist:
 
+                #     self.logger.error(
+                #         "Variant not found for entry with VariantMarker ID {markerID}".format(
+                #         )
+                #     )
+                #     continue
+
+                try:
+                    print(filename, " , markerID = " , markerID)
+                    v = Variant.objects.get(VariantMarker=markerID)
+                except Exception as e:
                     self.logger.error(
-                        "VariantMarker not found for entry with VariantMarker ID {markerID}".format(
+                        "Error retrieving variant for entry with VariantMarker ID {markerID}: {error}".format(
+                            markerID=markerID, error=str(e)
                         )
                     )
                     continue
 
-                print("checkpoint 2.1 - start to fetch data to genebass variant table")
+
+                # fetch variant phenocode
+                try:
+                    print(filename, ", phenocode = " , phenocode)
+                    p = VariantPhenocode.objects.get(phenocode=phenocode.title())
+                except VariantPhenocode.DoesNotExist:
+
+                    self.logger.error(
+                        "VariantPhenocode not found for entry with phenocode {phenocode}".format(
+                        )
+                    )
+                    continue
+                # print("we are here too")
+
+                # print("checkpoint 2.1 - start to fetch data to genebass variant table")
                 gb_variant, created = GenebassVariant.objects.get_or_create(
-                    # gene_id=g,
                     markerID=v,
                     n_cases=n_cases,
                     n_controls=n_controls,
-                    heritability=heritability,
-                    trait_type=trait_type,
-                    phenocode=phenocode,
-                    pheno_sex=pheno_sex,
-                    coding=coding,
+                    phenocode=p,
                     n_cases_defined=n_cases_defined,
                     n_cases_both_sexes=n_cases_both_sexes,
                     n_cases_females=n_cases_females,
@@ -146,10 +161,8 @@ class Command(BaseCommand):
                     AF_Cases=AF_Cases,
                     AF_Controls=AF_Controls,
                     Pvalue=Pvalue,
-                    AC_calstat=AC_calstat,
-                    AF_calstat=AF_calstat,
                 )
                 gb_variant.save()
-                print("a record is saved")
+                # print(filename, " a record is saved")
 
         self.logger.info("COMPLETED CREATING GENEBASS VARIANT DATA")
