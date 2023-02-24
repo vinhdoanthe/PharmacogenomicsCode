@@ -121,6 +121,6 @@ class Drug(models.Model):
     def __str__(self):
         return "Drugname: " + self.name + " with drugbank ID: " + self.drug_bankID
 
-    # class Meta():
-    #     db_table = 'drug'
+    class Meta():
+        db_table = 'drug'
 

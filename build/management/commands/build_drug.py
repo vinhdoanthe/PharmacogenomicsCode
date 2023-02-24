@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 
-from drug.models import Drug
+from drug.models import Drug, DrugCategory, DrugClass, DrugGroup, DrugName, DrugParent, DrugPubChemCompound, DrugSubclass, DrugSuperclass, DrugType
 
 from optparse import make_option
 import logging
@@ -93,23 +93,17 @@ class Command(BaseCommand):
 
                 drug_bankID = data[index: index + 1]["drugbank_id"].values[0]
                 drugtype = data[index: index + 1]["drugtype"].values[0]
-                name = data[index: index + 1]["name"].values[0]
-                # drugalias = [
-                #     "" if str(drugalias_raw) == "nan" else ", " +
-                #     str(drugalias_raw)
-                # ]
-                # # trialadd = ['' if str(trialname) == drugname else ' ('+str(trialname)+')']
-                # drugname = drugname + drugalias[0]
-                groups = data[index: index + 1]["groups"].values[0]
-                categories = data[index: index + 1]["categories"].values[0]
+                drugname = data[index: index + 1]["name"].values[0]
+                druggroup = data[index: index + 1]["groups"].values[0]
+                drugcategory = data[index: index + 1]["categories"].values[0]
+                drugsuperclass = data[index: index + 1]["superclass"].values[0]
+                drugclass = data[index: index + 1]["classname"].values[0]
+                drugsubclass = data[index: index + 1]["subclass"].values[0]
+                drugparent = data[index: index +
+                                     1]["direct_parent"].values[0]
+                drugcompound = data[index: index + 1]["pubChemCompound"].values[0] 
                 description = data[index: index + 1]["description"].values[0]
                 aliases = data[index: index + 1]["aliases"].values[0]
-                # kingdom = data[index: index + 1]["kingdom"].values[0]
-                superclass = data[index: index + 1]["superclass"].values[0]
-                classname = data[index: index + 1]["classname"].values[0]
-                subclass = data[index: index + 1]["subclass"].values[0]
-                direct_parent = data[index: index +
-                                     1]["direct_parent"].values[0]
                 indication = data[index: index + 1]["indication"].values[0]
                 pharmacodynamics = data[index: index +
                                         1]["pharmacodynamics"].values[0]
@@ -127,34 +121,120 @@ class Command(BaseCommand):
                 atc_code_detail = data[index: index + 1]["ATC_codes_description"].values[0] 
 
                 chEMBL = data[index: index + 1]["chEMBL"].values[0] 
-                pubChemCompound = data[index: index + 1]["pubChemCompound"].values[0] 
                 pubChemSubstance = data[index: index + 1]["pubChemSubstance"].values[0] 
                 
-                # # fetch protein
-                # try:
-                #     p = Protein.objects.get(entry_name=entry_name)
-                # except Protein.DoesNotExist:
+                # fetch drugtype
+                try:
+                    drugtype = DrugType.objects.get(drugtype=drugtype)
+                except DrugType.DoesNotExist:
 
-                #     self.logger.error(
-                #         "Protein not found for entry_name {}".format(
-                #             entry_name)
-                #     )
-                #     continue
+                    self.logger.error(
+                        "DrugType not found for drugtype {}".format(
+                            drugtype)
+                    )
+                    continue
+
+                # fetch drugname
+                try:
+                    drugname = DrugName.objects.get(drugname=drugname)
+                except DrugName.DoesNotExist:
+
+                    self.logger.error(
+                        "DrugName not found for drugname {}".format(
+                            drugname)
+                    )
+                    continue
+
+                # fetch druggroup
+                try:
+                    druggroup = DrugGroup.objects.get(druggroup=druggroup)
+                except DrugGroup.DoesNotExist:
+
+                    self.logger.error(
+                        "DrugGroup not found for druggroup {}".format(
+                            druggroup)
+                    )
+                    continue
+
+                # fetch drugclass
+                try:
+                    drugclass = DrugClass.objects.get(drugclass=drugclass)
+                except DrugClass.DoesNotExist:
+
+                    self.logger.error(
+                        "DrugClass not found for drugclass {}".format(
+                            drugclass)
+                    )
+                    continue
+
+                # fetch drugsubclass
+                try:
+                    drugsubclass = DrugSubclass.objects.get(drugsubclass=drugsubclass)
+                except DrugSubclass.DoesNotExist:
+
+                    self.logger.error(
+                        "DrugSubclass not found for drugsubclass {}".format(
+                            drugsubclass)
+                    )
+                    continue
+
+                # fetch drugsuperclass
+                try:
+                    drugsuperclass = DrugSuperclass.objects.get(drugsuperclass=drugsuperclass)
+                except DrugSuperclass.DoesNotExist:
+
+                    self.logger.error(
+                        "DrugSuperclass not found for drugsuperclass {}".format(
+                            drugsuperclass)
+                    )
+                    continue
+
+                # fetch drugparent
+                try:
+                    drugparent = DrugParent.objects.get(drugparent=drugparent)
+                except DrugParent.DoesNotExist:
+
+                    self.logger.error(
+                        "DrugParent not found for drugparent {}".format(
+                            drugparent)
+                    )
+                    continue
+
+                # fetch drugcategory
+                try:
+                    drugcategory = DrugCategory.objects.get(drugcategory=drugcategory)
+                except DrugCategory.DoesNotExist:
+
+                    self.logger.error(
+                        "DrugCategory not found for drugcategory {}".format(
+                            drugcategory)
+                    )
+                    continue
+
+                # fetch drugcompound
+                try:
+                    drugcompound = DrugPubChemCompound.objects.get(compound=drugcompound)
+                except DrugPubChemCompound.DoesNotExist:
+
+                    self.logger.error(
+                        "DrugPubChemCompound not found for drugcompound {}".format(
+                            drugcompound)
+                    )
+                    continue
 
                 print("checkpoint 2.1 - start to fetch data to Drug table")
                 drug, created = Drug.objects.get_or_create(
                     drug_bankID=drug_bankID,
                     drugtype=drugtype,
-                    name=name,
-                    groups=groups,
-                    categories=categories,
+                    name=drugname,
+                    groups=druggroup,
+                    categories=drugcategory,
                     description=description,
                     aliases=aliases,
-                    # kingdom=kingdom,
-                    superclass=superclass,
-                    classname=classname,
-                    subclass=subclass,
-                    direct_parent=direct_parent,
+                    superclass=drugsuperclass,
+                    classname=drugclass,
+                    subclass=drugsubclass,
+                    direct_parent=drugparent,
                     indication=indication,
                     pharmacodynamics=pharmacodynamics,
                     moa=moa,
@@ -163,13 +243,12 @@ class Command(BaseCommand):
                     halflife=halflife,
                     distribution_volume=distribution_volume,
                     protein_binding=protein_binding,
-
                     dosages=dosages,
                     properties=properties,
                     atc_codes=atc_codes,
                     atc_code_detail=atc_code_detail,
                     chEMBL = chEMBL, 
-                    pubChemCompound = pubChemCompound, 
+                    pubChemCompound = drugcompound, 
                     pubChemSubstance = pubChemSubstance, 
                     )
                 drug.save()

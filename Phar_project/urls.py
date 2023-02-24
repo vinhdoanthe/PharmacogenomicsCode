@@ -24,7 +24,7 @@ urlpatterns = [
     path("", include("home.urls")),
     path("", include("drug.urls")),
     path("", include("gene.urls")),
-    path("", include("interaction.urls")),
+    # path("", include("interaction.urls")),
     
 
 

@@ -21,7 +21,7 @@ from django.core.cache import cache
 from django.conf import settings
 from drug.models import Drug
 from gene.models import Gene
-# from interaction.models import Interaction
+from interaction.models import Interaction
 from protein.models import Protein
 from variant.models import Variant
 from django.core.cache import cache
