@@ -196,11 +196,17 @@ function getColor(value, scale, reverse = false) {
     b: 255
   };
 
+  // color = {
+  //   r: Math.round(255 - (255 - 153) * scale),
+  //   g: Math.round(255 - (255 - 153) * scale),
+  //   b: Math.round(255 - (255 - 153) * scale)
+  // }; //gray
+
   color = {
-    r: Math.round(255 - (255 - 153) * scale),
-    g: Math.round(255 - (255 - 153) * scale),
-    b: Math.round(255 - (255 - 153) * scale)
-  }; //gray
+    r: 255,
+    g: 255,
+    b: Math.round(255 - 255 * scale)
+  }; //blue
 
   return color;
 }
@@ -258,6 +264,7 @@ function colorGradient(fraction, reverse, color1, color2, color3) {
  *  @colorSetIds: An array of color-set[int] class name strings
  */
 function gray_scale_table(table, colorSetIds = []) {
+  console.log("calling gray_scale_table");
   // Collect values for columns and sets
   var cols = [];
   var sets = {};

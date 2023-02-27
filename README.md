@@ -1,0 +1,1 @@
+PGx is a one-stop shop for looking up human genetic variants and their effects.
