@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 
-from drug.models import Drug, DrugCategory, DrugClass, DrugGroup, DrugName, DrugParent, DrugPubChemCompound, DrugSubclass, DrugSuperclass, DrugType
+from drug.models import Drug, DrugCategory, DrugClass, DrugGroup, DrugParent, DrugPubChemCompound, DrugSubclass, DrugSuperclass, DrugType, DrugChembl, DrugPubChemSubstance
 
 from optparse import make_option
 import logging
@@ -67,6 +67,7 @@ class Command(BaseCommand):
             print("checkpoint2")
             print(filenames)
 
+        #predecated
         #process drug encoded data - to reduce data, some columns are encoded and this is for decoded
         # col_map = {"0":"drugtype",
         #             "1":"name",
@@ -101,7 +102,7 @@ class Command(BaseCommand):
                 drugsubclass = data[index: index + 1]["subclass"].values[0]
                 drugparent = data[index: index +
                                      1]["direct_parent"].values[0]
-                drugcompound = data[index: index + 1]["pubChemCompound"].values[0] 
+                drugcompound = data[index: index + 1]["PubChemCompound"].values[0] 
                 description = data[index: index + 1]["description"].values[0]
                 aliases = data[index: index + 1]["aliases"].values[0]
                 indication = data[index: index + 1]["indication"].values[0]
@@ -117,14 +118,13 @@ class Command(BaseCommand):
                                        1]["protein_binding"].values[0]
                 dosages = data[index: index + 1]["dosages"].values[0]
                 properties = data[index: index + 1]["properties"].values[0]
-                atc_codes = data[index: index + 1]["atc_codes"].values[0]
-                atc_code_detail = data[index: index + 1]["ATC_codes_description"].values[0] 
 
-                chEMBL = data[index: index + 1]["chEMBL"].values[0] 
-                pubChemSubstance = data[index: index + 1]["pubChemSubstance"].values[0] 
+                chEMBL = data[index: index + 1]["ChEMBL"].values[0] 
+                pubChemSubstance = data[index: index + 1]["PubChemSubstance_ID"].values[0] 
                 
                 # fetch drugtype
                 try:
+                    print("i am here")
                     drugtype = DrugType.objects.get(drugtype=drugtype)
                 except DrugType.DoesNotExist:
 
@@ -134,17 +134,7 @@ class Command(BaseCommand):
                     )
                     continue
 
-                # fetch drugname
-                try:
-                    drugname = DrugName.objects.get(drugname=drugname)
-                except DrugName.DoesNotExist:
-
-                    self.logger.error(
-                        "DrugName not found for drugname {}".format(
-                            drugname)
-                    )
-                    continue
-
+               
                 # fetch druggroup
                 try:
                     druggroup = DrugGroup.objects.get(druggroup=druggroup)
@@ -222,6 +212,28 @@ class Command(BaseCommand):
                     )
                     continue
 
+                # fetch DrugPubChemSubstance
+                try:
+                    pubChemSubstance = DrugPubChemSubstance.objects.get(drugpubchemblsubstance=pubChemSubstance)
+                except DrugPubChemSubstance.DoesNotExist:
+                        
+                    self.logger.error(
+                            "DrugPubChemSubstance not found for DrugPubChemSubstance {}".format(
+                                pubChemSubstance)
+                        )
+                    continue
+
+                # fetch DrugChembl
+                try:
+                    chEMBL = DrugChembl.objects.get(drugchembl=chEMBL)
+                except DrugChembl.DoesNotExist:
+                            
+                    self.logger.error(
+                            "DrugChembl not found for DrugChembl {}".format(
+                                chEMBL)
+                        )
+                    continue
+
                 print("checkpoint 2.1 - start to fetch data to Drug table")
                 drug, created = Drug.objects.get_or_create(
                     drug_bankID=drug_bankID,
@@ -245,8 +257,6 @@ class Command(BaseCommand):
                     protein_binding=protein_binding,
                     dosages=dosages,
                     properties=properties,
-                    atc_codes=atc_codes,
-                    atc_code_detail=atc_code_detail,
                     chEMBL = chEMBL, 
                     pubChemCompound = drugcompound, 
                     pubChemSubstance = pubChemSubstance, 

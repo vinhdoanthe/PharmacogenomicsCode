@@ -1,0 +1,62 @@
+<div><h1>Ask Alex-Jimmy - 19-Dec-2022</h1></div>
+<div><br></div>
+<div><br></div>
+<div>-How to do pagination on data that involves more than one model? Can not just specify: model = Classname (model name)</div>
+<div>-Can we just not need pagination? GPCRDB has no pagination</div>
+<div>-Can not search to trace back css style being applied</div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div>-Chart</div>
+<div>  + D3</div>
+<div>  +Plotly</div>
+<div><br></div>
+<div>-GPCRDB pagination</div>
+<div><br></div>
+<div>Pathway effect</div>
+<div><br></div>
+<div>bias_browser_pathways.html</div>
+<div><br></div>
+<div>Yadcf</div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div>-cache page —&gt in view of common app</div>
+<div>-django clear-cache command</div>
+<div>-LingandtoPinInfoView</div>
+<div><br></div>
+<div>-jquery.dataTables.yadcf.js</div>
+<div>-dataTables.buttons.min.js</div>
+<div>-GPCRDB.js</div>
+<div>-DataTable of Jquery</div>
+<div><br></div>
+<div><br></div>
+<div>-Datatables.net</div>
+<div>-createYADCFFilters</div>
+<div><br></div>
+<div><br></div>
+<div>-Select2</div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div>-Search function from the homepage:</div>
+<div><br></div>
+<ul class="Apple-dash-list">
+<li>Protein app</li>
+<ul class="Apple-dash-list">
+<li>SelectionAutocomplete or SelectionLigandName.html</li>
+<li>id= selection-autocomplete</li>
+</ul>
+</ul>
+<div><br></div>
+<div>-Heatmap:</div>
+<div>	-ligand_statistics.html</div>
+<div>	-Phylo_tree.js</div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div>-d3-graph-galerry.com<br></div>
+<div><br></div>
+<div>-AddEventListener from table js</div>
+<div><br></div>
+<div>-getbootstrap + breakpoint</div>

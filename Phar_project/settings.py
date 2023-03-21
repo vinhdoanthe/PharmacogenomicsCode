@@ -41,6 +41,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+DOCUMENTATION_URL = 'https://docs.gpcrdb.org/'
+
 
 # Application definition
 
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "debug_toolbar",
     # Local
     "accounts.apps.AccountsConfig",
     "protein.apps.ProteinConfig",
@@ -61,12 +64,16 @@ INSTALLED_APPS = [
     "build.apps.BuildConfig",
     "home.apps.HomeConfig",
     "common.apps.CommonConfig",
-    "variant"
+    "structure.apps.StructureConfig",
+    "variant",
+    "sitesearch",
+    "temp"
 ]
 ...
 AUTH_USER_MODEL = "accounts.CustomUser"
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -165,3 +172,7 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+ALLOWED_HOSTS = ['*', '0.0.0.0']
+
+INTERNAL_IPS = ["127.0.0.1",]

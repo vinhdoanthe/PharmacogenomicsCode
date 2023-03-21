@@ -1,0 +1,6 @@
+<div><h1>Coding skill improvements</h1></div>
+<div><br></div>
+<div>Pandas</div>
+<div>https://www.dataquest.io/blog/pandas-cheat-sheet/</div>
+<div><u><h2>Pandas Cheat Sheet — Python for Data Science – Dataquest</h2></u><u><h2><br></h2></u></div>
+<div><u><br></u></div>

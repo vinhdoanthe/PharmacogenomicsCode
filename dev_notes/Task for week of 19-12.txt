@@ -1,0 +1,15 @@
+<div><h1>Task for week of 19-12</h1></div>
+<div><br></div>
+<div><br></div>
+<div>-Check again the connection —&gt still not ok</div>
+<div>-Compare VEP - Genebass - Gnomad — which are mising —&gt generating it</div>
+<div>-Build pagnition function</div>
+<div>-Build search function</div>
+<div>-CSS for page —&gt range of data looks like those from GPCRDB - ligand /endogenenous page</div>
+<div>-Chuẩn bị câu hỏi cho cuộc họp</div>
+<div>-Xem lại các VEP score -&gt confirm với Alex</div>
+<div>-Làm tiếp heatmap</div>
+<div>-Xem hình network của protein-drug</div>
+<div>-Cấu trúc 3D lấy data từ đâu?</div>
+<div>-Xem template của Django</div>
+<div>-Lục lọi xem Django của w3c có dễ hiểu ko</div>

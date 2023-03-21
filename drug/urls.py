@@ -1,16 +1,15 @@
 from django.urls import path, re_path
 from django.views.decorators.cache import cache_page
-from .views import DrugBrowser, SelectionAutocomplete, detail, DrugStatistics
+from .views import SelectionAutocomplete, DrugStatistics, drug_detail
 from  . import views
-
+from .views import search_drugs
 
 urlpatterns = [
-    path('drugbrowser', views.drugbrowser, name='drugbrowser'),
-    path('drug', (DrugBrowser.as_view()), name='drug'),
-    path('drugstatistic', (DrugStatistics.as_view()), name='drug'),
+    path('search_drugs', views.search_drugs, name='search_drugs'),
+    path('drugbrowser', views.drugbrowser, name='drugbrowser'), #load all the drugs - cached but still slow - might need to remove
+    path('drugstatistic', (DrugStatistics.as_view()), name='drug'), # okie but with dummy data
     path('drug/autocomplete', (SelectionAutocomplete), name='autocomplete'),
-    re_path(r'^drug/(?P<slug>[\w-]+)/$', views.detail, name='detail'),
-
+    path('drug/<str:drugbank_id>/', drug_detail, name='drug_detail'), # still ok but template does not have much info
 ]
 
 

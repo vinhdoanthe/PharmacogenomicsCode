@@ -31,8 +31,3 @@ class Home(TemplateView):
     template_name = 'index_pharmcodb.html'
     context = {}
 
-
-class Draft(TemplateView):
-
-    template_name = 'draft2.html'
-    context = {}

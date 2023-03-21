@@ -82,8 +82,8 @@ class Command(BaseCommand):
             print("data column = ", data.columns)
             for index, row in enumerate(data.iterrows()):
 
-                drug_bankID = data[index: index + 1]["drugbank_id"].values[0]
-                uniprot_ID = data[index: index + 1]["uniprotID"].values[0]
+                drug_bankID = data[index: index + 1]["drug_bankID"].values[0]
+                uniprot_ID = data[index: index + 1]["uniprot_ID"].values[0]
                 actions = data[index: index + 1]["actions"].values[0]
 
                 known_action = data[index: index + 1]["known_action"].values[0]

@@ -1,0 +1,19 @@
+<div><h1>20221001-Hoi The Anh</h1></div>
+<div><br></div>
+<div>Contact Ensembl for help</div>
+<div>http://www.ensembl.org/info/about/contact/index.html</div>
+<div><u><h2>Contact Us (ensembl.org)</h2></u><u><h2><br></h2></u></div>
+<div><br></div>
+<div><br></div>
+<div>Certificate là gì?</div>
+<div><br></div>
+<div>https://lists.ensembl.org/pipermail/dev_ensembl.org/2020-September/008745.html</div>
+<div><u><h2>[ensembl-dev] REST GRCH37 expired certificate</h2></u><u><h2><br></h2></u></div>
+<div><u><br></u></div>
+<div><u><br></u></div>
+<div><u>Làm sao để tăng size cho máy ảo ubuntu trên parallel?</u></div>
+<div><u><br></u></div>
+<div>https://kb.parallels.com/en/113972#:~:text=Increasing%20virtual%20hard%20disk%20size%201%20Start%20Parallels,virtual%20hard%20disk%20and%20click%20Apply.%20More%20items</div>
+<div><u><h2>How to give more hard disk space to a Windows virtual machine (parallels.com)</h2></u><u><h2><br></h2></u></div>
+<div><u><br></u></div>
+<div><u><br></u></div>

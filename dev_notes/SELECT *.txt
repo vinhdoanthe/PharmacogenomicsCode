@@ -1,0 +1,5 @@
+<div><b><u>SELECT</u></b> * </div>
+<div>FROM variant_genebassvariant gbv</div>
+<div>INNER JOIN variant_variant v ON gbv.markerID = v.VariantMarker </div>
+<div>INNER JOIN gene_gene g ON v.Gene_ID_id = g.gene_id </div>
+<div>WHERE g.genename = 'AADAT';</div>

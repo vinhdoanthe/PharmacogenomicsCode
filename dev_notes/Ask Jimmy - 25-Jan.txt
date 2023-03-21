@@ -1,0 +1,60 @@
+<div><h1>Ask Jimmy - 25-Jan</h1></div>
+<div><br></div>
+<div><br></div>
+<div>-Why “kill:9” error for GPCRDB on the laptop?</div>
+<div><br></div>
+<div>-How to generalise this? —&gt search by any protein (name, id) or drug (name, id)</div>
+<div><br></div>
+<div>-Can not get search term from the autocomplete and transfer to drug_detail.html</div>
+<div><br></div>
+<div><br></div>
+<div>	+Enter the search term —&gt recognise the term but return http://127.0.0.1:8000/drug/undefined/</div>
+<div><u>UnboundLocalError at /drug/undefined/</u><u> when:</u></div>
+<div><u>		</u>- click on search button</div>
+<div>		- enter in the input</div>
+<div>		-choose a value in the autocomplete dropdown list</div>
+<div><br></div>
+<div><br></div>
+<div>-Why no action and method in this form?</div>
+<div><br></div>
+<div>&ltform <i>class</i>=&quotnavbar-form navbar-right&quot <i>role</i>=&quotsearch&quot&gt</div>
+<div>        &ltdiv <i>class</i>=&quotinput-group&quot&gt</div>
+<div>          <i>&lt!-- &ltinput class=&quotform-control&quot name=&quotsrch-term&quot id=&quotsrch-term&quot&gt --&gt</i><br></div>
+<div>          &ltinput <i>type</i>=&quottext&quot id=&quotnav-selection-autocomplete&quot <i>class</i>=&quotoptional form-control ui-autocomplete-input&quot <i>size</i>=&quot15&quot <i>autocomplete</i>=&quoton&quot <i>placeholder</i>=&quotQuick search&quot&gt</div>
+<div>          &ltdiv <i>class</i>=&quotinput-group-btn&quot&gt</div>
+<div>            &ltbutton <i>class</i>=&quotbtn btn-default&quot <i>type</i>=&quotsubmit&quot&gt&lti <i>class</i>=&quotglyphicon glyphicon-search&quot&gt&lt/i&gt&lt/button&gt</div>
+<div>          &lt/div&gt</div>
+<div>        &lt/div&gt</div>
+<div> &lt/form&gt</div>
+<div>-Do we use RequireJS to manage JS dependencies?</div>
+<div><br></div>
+<div>-When the /drug/autocomplete is requested?</div>
+<div>-ui-autocomplete-category: no element with this class</div>
+<div>-Why in the selection-autocomplete.js, we repeat the code for create the custom.catcomplete again?</div>
+<div>-narbar-autocomplete lấy drug info bằng cách nào? nếu search protein thì lấy được ko?</div>
+<div>-def SelectionAutocomplete(request): được viết trong view của drug, còn với protein thì sao?</div>
+<div>-Nếu viết riêng:</div>
+<div>path('drug/autocomplete', (SelectionAutocomplete), name='autocomplete'),</div>
+<div>path(‘protein/autocomplete', (SelectionAutocomplete), name='autocomplete'),</div>
+<div>thì khi search trên trang chủ, làm sao biết search cái nào? Drug hay protein?</div>
+<div>—&gt trong GPCRDB chỉ viết có 1 lần cho protein, còn mình thì ntn?</div>
+<div>-Giải thích narbar-autocomplete code</div>
+<div>-Selection.py để làm gì?</div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div>-Could you tell me which part from the Django documentation/Jquery/JS that I need to read?</div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div>-request.GET.get(“name”)</div>
+<div>-return redicrect(“showProduct”)</div>
+<div><br></div>
+<div>3.6.2 Built-in class-based generic views (page 390)</div>
+<div>Models and request.user - page 401</div>
+<div><br></div>
+<div><br></div>

@@ -1,0 +1,193 @@
+<div><h1>Gnomad fields</h1></div>
+<div><br></div>
+<div>Global fields:</div>
+<div>    'rf': struct {</div>
+<div>        variants_by_type: dict&ltstr, int32&gt, </div>
+<div>        feature_medians: dict&ltstr, struct {</div>
+<div>            variant_type: str, </div>
+<div>            n_alt_alleles: int32, </div>
+<div>            qd: float64, </div>
+<div>            pab_max: float64, </div>
+<div>            info_MQRankSum: float64, </div>
+<div>            info_SOR: float64, </div>
+<div>            info_InbreedingCoeff: float64, </div>
+<div>            info_ReadPosRankSum: float64, </div>
+<div>            info_FS: float64, </div>
+<div>            info_QD: float64, </div>
+<div>            info_MQ: float64, </div>
+<div>            info_DP: int32</div>
+<div>        }&gt, </div>
+<div>        test_intervals: array&ltinterval&ltlocus&ltGRCh37&gt&gt&gt, </div>
+<div>        test_results: array&ltstruct {</div>
+<div>            rf_prediction: str, </div>
+<div>            rf_label: str, </div>
+<div>            n: int32</div>
+<div>        }&gt, </div>
+<div>        features_importance: dict&ltstr, float64&gt, </div>
+<div>        features: array&ltstr&gt, </div>
+<div>        vqsr_training: bool, </div>
+<div>        no_transmitted_singletons: bool, </div>
+<div>        adj: bool, </div>
+<div>        rf_hash: str, </div>
+<div>        rf_snv_cutoff: struct {</div>
+<div>            bin: int32, </div>
+<div>            min_score: float64</div>
+<div>        }, </div>
+<div>        rf_indel_cutoff: struct {</div>
+<div>            bin: int32, </div>
+<div>            min_score: float64</div>
+<div>        }</div>
+<div>    } </div>
+<div>    'freq_meta': array&ltdict&ltstr, str&gt&gt </div>
+<div>    'freq_index_dict': dict&ltstr, int32&gt </div>
+<div>    'popmax_index_dict': dict&ltstr, int32&gt </div>
+<div>    'age_index_dict': dict&ltstr, int32&gt </div>
+<div>    'faf_index_dict': dict&ltstr, int32&gt </div>
+<div>----------------------------------------</div>
+<div>Row fields:</div>
+<div>    'locus': locus&ltGRCh37&gt </div>
+<div>    'alleles': array&ltstr&gt </div>
+<div>    'freq': array&ltstruct {</div>
+<div>        AC: int32, </div>
+<div>        AF: float64, </div>
+<div>        AN: int32, </div>
+<div>        homozygote_count: int32</div>
+<div>    }&gt </div>
+<div>    'vep': struct {</div>
+<div>        assembly_name: str, </div>
+<div>        allele_string: str, </div>
+<div>        ancestral: str, </div>
+<div>        colocated_variants: array&ltstruct {</div>
+<div>            aa_allele: str, </div>
+<div>            aa_maf: float64, </div>
+<div>            afr_allele: str, </div>
+<div>            afr_maf: float64, </div>
+<div>            allele_string: str, </div>
+<div>            amr_allele: str, </div>
+<div>            amr_maf: float64, </div>
+<div>            clin_sig: array&ltstr&gt, </div>
+<div>            end: int32, </div>
+<div>            eas_allele: str, </div>
+<div>            eas_maf: float64, </div>
+<div>            ea_allele: str, </div>
+<div>            ea_maf: float64, </div>
+<div>            eur_allele: str, </div>
+<div>            eur_maf: float64, </div>
+<div>            exac_adj_allele: str, </div>
+<div>            exac_adj_maf: float64, </div>
+<div>            exac_allele: str, </div>
+<div>            exac_afr_allele: str, </div>
+<div>            exac_afr_maf: float64, </div>
+<div>            exac_amr_allele: str, </div>
+<div>            exac_amr_maf: float64, </div>
+<div>            exac_eas_allele: str, </div>
+<div>            exac_eas_maf: float64, </div>
+<div>            exac_fin_allele: str, </div>
+<div>            exac_fin_maf: float64, </div>
+<div>            exac_maf: float64, </div>
+<div>            exac_nfe_allele: str, </div>
+<div>            exac_nfe_maf: float64, </div>
+<div>            exac_oth_allele: str, </div>
+<div>            exac_oth_maf: float64, </div>
+<div>            exac_sas_allele: str, </div>
+<div>            exac_sas_maf: float64, </div>
+<div>            id: str, </div>
+<div>            minor_allele: str, </div>
+<div>            minor_allele_freq: float64, </div>
+<div>            phenotype_or_disease: int32, </div>
+<div>            pubmed: array&ltint32&gt, </div>
+<div>            sas_allele: str, </div>
+<div>            sas_maf: float64, </div>
+<div>            somatic: int32, </div>
+<div>            start: int32, </div>
+<div>            strand: int32</div>
+<div>        }&gt, </div>
+<div>        context: str, </div>
+<div>        end: int32, </div>
+<div>        id: str, </div>
+<div>        input: str, </div>
+<div>        intergenic_consequences: array&ltstruct {</div>
+<div>            allele_num: int32, </div>
+<div>            consequence_terms: array&ltstr&gt, </div>
+<div>            impact: str, </div>
+<div>            minimised: int32, </div>
+<div>            variant_allele: str</div>
+<div>        }&gt, </div>
+<div>        most_severe_consequence: str, </div>
+<div>        motif_feature_consequences: array&ltstruct {</div>
+<div>            allele_num: int32, </div>
+<div>            consequence_terms: array&ltstr&gt, </div>
+<div>            high_inf_pos: str, </div>
+<div>            impact: str, </div>
+<div>            minimised: int32, </div>
+<div>            motif_feature_id: str, </div>
+<div>            motif_name: str, </div>
+<div>            motif_pos: int32, </div>
+<div>            motif_score_change: float64, </div>
+<div>            strand: int32, </div>
+<div>            variant_allele: str</div>
+<div>        }&gt, </div>
+<div>        regulatory_feature_consequences: array&ltstruct {</div>
+<div>            allele_num: int32, </div>
+<div>            biotype: str, </div>
+<div>            consequence_terms: array&ltstr&gt, </div>
+<div>            impact: str, </div>
+<div>            minimised: int32, </div>
+<div>            regulatory_feature_id: str, </div>
+<div>            variant_allele: str</div>
+<div>        }&gt, </div>
+<div>        seq_region_name: str, </div>
+<div>        start: int32, </div>
+<div>        strand: int32, </div>
+<div>        transcript_consequences: array&ltstruct {</div>
+<div>            allele_num: int32, </div>
+<div>            amino_acids: str, </div>
+<div>            biotype: str, </div>
+<div>            canonical: int32, </div>
+<div>            ccds: str, </div>
+<div>            cdna_start: int32, </div>
+<div>            cdna_end: int32, </div>
+<div>            cds_end: int32, </div>
+<div>            cds_start: int32, </div>
+<div>            codons: str, </div>
+<div>            consequence_terms: array&ltstr&gt, </div>
+<div>            distance: int32, </div>
+<div>            domains: array&ltstruct {</div>
+<div>                db: str, </div>
+<div>                name: str</div>
+<div>            }&gt, </div>
+<div>            exon: str, </div>
+<div>            gene_id: str, </div>
+<div>            gene_pheno: int32, </div>
+<div>            gene_symbol: str, </div>
+<div>            gene_symbol_source: str, </div>
+<div>            hgnc_id: str, </div>
+<div>            hgvsc: str, </div>
+<div>            hgvsp: str, </div>
+<div>            hgvs_offset: int32, </div>
+<div>            impact: str, </div>
+<div>            intron: str, </div>
+<div>            lof: str, </div>
+<div>            lof_flags: str, </div>
+<div>            lof_filter: str, </div>
+<div>            lof_info: str, </div>
+<div>            minimised: int32, </div>
+<div>            polyphen_prediction: str, </div>
+<div>            polyphen_score: float64, </div>
+<div>            protein_end: int32, </div>
+<div>            protein_start: int32, </div>
+<div>            protein_id: str, </div>
+<div>            sift_prediction: str, </div>
+<div>            sift_score: float64, </div>
+<div>            strand: int32, </div>
+<div>            swissprot: str, </div>
+<div>            transcript_id: str, </div>
+<div>            trembl: str, </div>
+<div>            uniparc: str, </div>
+<div>            variant_allele: str</div>
+<div>        }&gt, </div>
+<div>        variant_class: str</div>
+<div>    } </div>
+<div>----------------------------------------</div>
+<div>Key: ['locus', 'alleles']</div>
+<div>----------------------------------------</div>

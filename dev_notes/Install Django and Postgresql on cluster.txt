@@ -1,0 +1,64 @@
+<div><h1>Install Django and Postgresql on cluster</h1></div>
+<div>(Source: https://gist.github.com/gwangjinkim/f13bf596fefa7db7d31c22efd1627c7a</div>
+<div><u><h2>How to install and run postgresql in conda (</h2></u><u><h2>github.com</h2></u><u><h2>)</h2></u><u><h2>)</h2></u><h2><br></h2></div>
+<div><br></div>
+<div>module avail</div>
+<div>module load miniconda/4.12.0</div>
+<div>conda create -n django_postgres</div>
+<div>conda activate django_postgres</div>
+<div><br></div>
+<div><br></div>
+<div>conda install django</div>
+<div><br></div>
+<div>conda install -c anaconda postgresql</div>
+<div><br></div>
+<div>cd /projects/ilfgrid/data/</div>
+<div>mkdir Alex_group/DjangoDB</div>
+<div>mkdir Alex_group Alex_group/DjangoDB</div>
+<div>cd Alex_group/DjangoDB/</div>
+<div><br></div>
+<div>initdb -D drug_db --no-locale --encoding=UTF8 —&gt tạo db trong folder hiện tại</div>
+<div>pg_ctl -D drug_db -l logfile start</div>
+<div>createuser --encrypted --pwprompt yang</div>
+<div><br></div>
+<div><br></div>
+<div>Sql —help để xem cách dùng postgresql terminal</div>
+<div>Các lệnh bắt đầu bằng \ là các lệnh ko phải sql để chạy trong psql</div>
+<div><br></div>
+<div><br></div>
+<div><h2>Các lệnh hữu ích trên psql:</h2></div>
+<div><br></div>
+<div>-psql -l: liệt kê các database và owner</div>
+<div>-psql -d db_name: sử dụng 1 db có tên db_name —&gt thay đổi dấu nhắc</div>
+<div>-show data_directory;</div>
+<div>-\! psql -V —&gt show postgres version</div>
+<div>-SELECT NOW();</div>
+<div><br></div>
+<div><br></div>
+<div><h2>Ví dụ về chạy psql trong shell script</h2></div>
+<div><br></div>
+<div>#!/bin/bash</div>
+<div>#module load miniconda/4.12.0</div>
+<div>#conda  list</div>
+<div>#services start postgresql</div>
+<div>pg_ctl<b> -D</b> /projects/ilfgrid/data/Alex_group/DjangoDB/drug_db <b> -l</b> logfile start</div>
+<div>psql<b> -l</b><br></div>
+<div>psql<b> -d</b> drugbank</div>
+<div>database=<b>&quotdrugbank&quot</b><br></div>
+<div>psql<b> -d</b> <b>$database -c</b> &quotCREATE TABLE drug(drug_id SERIAL NOT NULL PRIMARY KEY,</div>
+<div>drugbank_id VARCHAR(500) NOT NULL,</div>
+<div>type VARCHAR(5000),</div>
+<div>name VARCHAR(5000),</div>
+<div>description VARCHAR(10000),</div>
+<div>smiles VARCHAR(5000),</div>
+<div>InChIKey VARCHAR(5000),</div>
+<div>kingdom VARCHAR(1000),</div>
+<div>superclass VARCHAR(5000),</div>
+<div>class VARCHAR(5000),</div>
+<div>subclass VARCHAR(5000),</div>
+<div>direct_parent VARCHAR(5000),</div>
+<div>indication VARCHAR(5000) );&quot</div>
+<div><b>echo</b> <b>&quotfinish&quot</b></div>
+<div><b><br></b></div>
+<div>https://towardsdatascience.com/automate-sample-big-data-generation-with-faker-and-postgresql-for-django-projects-e95343ae93e</div>
+<div><u><h2>Automate sample Big data generation with Faker and PostgreSQL for Django Projects | by Pravin M J | Towards Data Science</h2></u><h2><br></h2></div>

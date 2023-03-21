@@ -1,0 +1,19 @@
+<div><h1>Best and must use practices</h1></div>
+<div><br></div>
+<div><br></div>
+<div><b>Shell</b><br></div>
+<div><br></div>
+<div>-Use the absolute paths in Shell scripts</div>
+<div><br></div>
+<div><br></div>
+<div><b>Python</b><br></div>
+<div><br></div>
+<div>-String: combine “” and ‘’</div>
+<div><br></div>
+<div><br></div>
+<div><b>General</b></div>
+<div><br></div>
+<div>-Filename: date-name_with_capitalized_words_separated_by_underscore</div>
+<div>Ex: 20230205-Extract_All_Drug_Targets.py</div>
+<div><br></div>
+<div>-Take a small step first and scale</div>

@@ -1,0 +1,18 @@
+<div><h1>Django - note 10-Feb</h1></div>
+<div><br></div>
+<div><br></div>
+<div>Khái niệm serialization trong Django:</div>
+<div><br></div>
+<div>+ Là quá trình convert complex data structures, nhưng Django models, thành format mà có thể dễ save và load sau này</div>
+<div>+ Cho phép transfer data giữa những phần khác nhau của application, hoặc giữa các application, và làm thống nhất dữ liệu across requests</div>
+<div>+Trong Django, cách làm là sử dụng django.core.serializers module vì class này cung cấp cách serialize Django model thành các format khác nhau như JSON, XML, YAML và có thể deserialize data back into Django model</div>
+<div><br></div>
+<div><br></div>
+<div>Khái niệm session:</div>
+<div><br></div>
+<div>+ Là cách để lưu data mà có thể persist across multiple requests </div>
+<div>+Cho phép ta maintain state trong ứng dụng và track hoạt động của 1 người dùng cụ thể</div>
+<div>Ví dụ, ta dùng session để lưu thông tin người dùng (ví dụ giỏ hàng) lên server rồi retrive nó trong những request tiếp theo</div>
+<div><br></div>
+<div>Bằng cách kế hợp cả hai, ta có thể xây dựng ứng dụng phức tạp và dynamic trong Django, và duy trì state giữa các request.</div>
+<div><br></div>

@@ -48,6 +48,9 @@
     Reset filters
   </button>
 
+	<a href="{% url 'search_drugs' %}?q={{ search_query }}">Search for drugs</a>
+
+
   <p style="margin-top:10px;margin-bottom:10px;color:#014F86">Interactions for {{drugname}} (drugbank ID =  {{drugID}})</p>
 
   <div id="structures_scrollable_table">

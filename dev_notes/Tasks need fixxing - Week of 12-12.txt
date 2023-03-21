@@ -1,0 +1,9 @@
+<div><h1>Tasks need fixxing - Week of 12-12</h1></div>
+<div><br></div>
+<div><br></div>
+<div><h2><br></h2></div>
+<div><h2>Best practice for Django folder structure:</h2></div>
+<div>https://www.delftstack.com/howto/django/django-project-structure/#:~:text=The%20root%20folder%2C%20Project%20Folder%2C%20contains%20Django%20projects,license%2C%20README%2C%20environment%2C%20requirements.txt%2C.gitignore%2C%20and%20Documentation%20or%20Docs.</div>
+<div><u><h2>Best Practices for a Django Working Directory Structure | Delft Stack</h2></u><u><h2><br></h2></u></div>
+<div><u><br></u></div>
+<div><u><br></u></div>

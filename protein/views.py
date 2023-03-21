@@ -21,6 +21,18 @@ from django.core.cache import cache
 from protein.models import Protein
 
 
+# from common.views import AbsBrowseSelection
+
+
+# class BrowseSelection(AbsBrowseSelection):
+#     title = 'SELECT A RECEPTOR (FAMILY)'
+#     description = 'Select a target or family by searching or browsing in the right column.'
+#     description = 'Select a receptor (family) by searching or browsing in the middle. The selection is viewed to' \
+#                   + ' the right.'
+#     docs = 'receptors.html'
+#     target_input=False
+
+
 # Create your views here.
 class ProteinBrowser(TemplateView):
 

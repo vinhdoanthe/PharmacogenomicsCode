@@ -12,3 +12,14 @@ class Protein(models.Model):
 
     def __str__(self):
         return "Protein with UniProt ID: " + self.uniprot_ID + " and genename: " + self.genename
+    
+
+class Species(models.Model):
+    latin_name = models.CharField(max_length=100, unique=True)
+    common_name = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return self.latin_name
+
+    class Meta():
+        db_table = 'species'

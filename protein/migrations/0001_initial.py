@@ -4,7 +4,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-    print("printing from protein 0001_initial")
+    # print("printing from protein 0001_initial")
     initial = True
 
     dependencies = [

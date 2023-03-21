@@ -1,0 +1,17 @@
+<div><h1>Alessandro</h1></div>
+<div><br></div>
+<div>VEP geneID needed</div>
+<div><br></div>
+<div>ENSG00000213145 CRIP1</div>
+<div>ENSG00000188822 CNR2. —&gt ok</div>
+<div>ENSG00000181773 GPR3</div>
+<div>ENSG00000146360 GPR6</div>
+<div>ENSG00000132975 GPR12 —&gt ok</div>
+<div>ENSG00000125245 GPR18</div>
+<div>ENSG00000135898 GPR55 —&gt ok</div>
+<div>ENSG00000147262 GPR119</div>
+<div>ENSG00000170989 S1PR1 —&gt ok</div>
+<div>ENSG00000267534 S1PR2 —&gt ok</div>
+<div>ENSG00000213694 S1PR3</div>
+<div>ENSG00000125910 S1PR4</div>
+<div>ENSG00000180739 S1PR5</div>

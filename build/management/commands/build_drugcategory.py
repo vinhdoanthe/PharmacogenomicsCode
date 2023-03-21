@@ -32,7 +32,7 @@ class Command(BaseCommand):
             filenames = options["filename"]
         else:
             filenames = False
-        print("checkpoint 1.1, filenames = ", filenames)
+        # print("checkpoint 1.1, filenames = ", filenames)
 
         try:
             self.purge_drugcategory()
@@ -55,7 +55,7 @@ class Command(BaseCommand):
             filenames = [
                 fn
                 for fn in os.listdir(self.drugdata_data_dir)
-                if fn.endswith("encoded_drug_data.txt")
+                if fn.endswith("categories.csv")
             ]
             print(filenames)
         
@@ -64,10 +64,9 @@ class Command(BaseCommand):
             with open(filepath, "r") as f:
                 lines = f.readlines()
                 for line in lines:
-                    if line[0]=="7":
-                        values=line[:-1].split(":")
-                        drugcategory = values[0].split("-")[1]
-                        category_detail = values[1]
+                        values=line[:-1].split(";")
+                        drugcategory = values[0]
+                        category_detail = values[1][1:-1]
 
 
                         c, created = DrugCategory.objects.get_or_create(
@@ -75,6 +74,6 @@ class Command(BaseCommand):
                             category_detail=category_detail,
                             )
                         c.save()
-                        print("a record is saved")
+                        # print("a record is saved")
 
         self.logger.info("COMPLETED CREATING DRUGCATEGORY DATA")

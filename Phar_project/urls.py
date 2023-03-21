@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include  # new
 from protein import urls
+import debug_toolbar
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -24,7 +25,10 @@ urlpatterns = [
     path("", include("home.urls")),
     path("", include("drug.urls")),
     path("", include("gene.urls")),
+    path("", include("sitesearch.urls")),
+    path("", include("temp.urls")),
     # path("", include("interaction.urls")),
+    path("__debug__/", include(debug_toolbar.urls)),
     
 
 

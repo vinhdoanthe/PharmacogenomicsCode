@@ -1,0 +1,89 @@
+<div><h1>20 Vanilla JS projects</h1></div>
+<div><h1><br></h1></div>
+<div>Useful visual studio code extention:</div>
+<div>+ Auto rename tag</div>
+<div>+ Bracket pair colorizer</div>
+<div>+ JavaScript (ES6) code snippets</div>
+<div>+ Live server</div>
+<div><br></div>
+<div>Shortcut in VS Code</div>
+<div><br></div>
+<div>-Shift-Option-Down: copy a block of code down</div>
+<div>-Bôi đen 1 đoạn text rồi chọn Ctrl-D để chọn đoạn text y chẳng tiếp theo, Ctrl-D lần nữa để chọn đoạn tiếp nữa</div>
+<div>-Command-B để tắt mở File explorer trên VS code</div>
+<div>-Command-Option-I: để bật tắt Inspect element</div>
+<div><br></div>
+<div><h2>1.Form validator</h2></div>
+<div><br></div>
+<div>-Một html element có thể vừa có class, vừa có ID. ID để dùng cho javascript còn class để style</div>
+<div><br></div>
+<div>-Google font: lấy từ standard thì bỏ vào html. lấy import thì bỏ vào CSS</div>
+<div>-Search keyword để tìm code cho email validation: js email regex </div>
+<div><br></div>
+<div><h2>2.Movie seat selector</h2></div>
+<div><br></div>
+<div><b>HTML,CSS note:</b><br></div>
+<div>-display: flex —&gt biến div thành 1 flex-box và các item bên trong là flexible. Mặc định thì các element được hiển thị theo hàng ngang (rơ). Các thuộc tính chỉ có hữu hiệu khi nó là flex: align-items, flex-direction, justify-content</div>
+<div>-box-sizing: border-box: giúp cho khi tính kích thước của 1 đối tượng thì cộng luôn cả padding và border vào</div>
+<div>-Thứ tự của các giá trị margin là top/right/bottom/left</div>
+<div>-Đơn vị độ dài vh</div>
+<div>-Ta có thể dùng các giá trị border-top-left-radius, border-radius…</div>
+<div>-Một số css selector cần chú ý:</div>
+<div>	+.seat:nth-of-type(2)</div>
+<div>	+.seat:nth-last-of-type(2)</div>
+<div><br></div>
+<div><br></div>
+<div><b>JS note:</b><br></div>
+<div><br></div>
+<div>-Đưa dấu + trước 1 chuỗi số sẽ biến nó thành số, ví dụ +movie.value</div>
+<div>-typeof biến —&gt cho biết biến đó thuộc kiểu gì</div>
+<div>-Khi cần thao tác và tính toán với thông tin từ các đối tượng trong container, ta nên chọn container trước rồi add event listener trên đó (hành động click vào các đối tượng bên trong và bản thân container).</div>
+<div>-forEach syntax</div>
+<div>-spread syntax</div>
+<div>-map function</div>
+<div>Ví dụ: const seatsIndex = [...selectedSeats].map(seat =&gt [...seats].indexOf(seat));</div>
+<div><br></div>
+<div>-Local storage để lưu thông tin lựa chọn của người dùng rồi render cho đù người dùng có refresh the page</div>
+<div><br></div>
+<div>-e —&gt e.target (nói đến đối tượng bị tác động bởi sự kiện)</div>
+<div>-e.target.classLisst.contain()</div>
+<div>-e.target.classList.toggle(“selected”)</div>
+<div>-element.classList.add(“selected”)</div>
+<div>-!: not, &amp&amp: and</div>
+<div>-.innerText hoặc .innerHTML</div>
+<div>-Arrow function</div>
+<div>-const dùng cho giá trị ko thay đổi, let cho có thay đổi</div>
+<div>-if (arr!=null): check nếu arr có phần tử</div>
+<div>-Local storage: là builtin library của browser nên khi dùng ko cần import</div>
+<div>   +<b>localStorage.setItem</b>('selectedSeats', <b>JSON.stringify</b>(seatsIndex));</div>
+<div>   +localStorage.setItem('selectedMovieIndex', movieIndex);</div>
+<div>   +localStorage.setItem('selectedMoviePrice', moviePrice);</div>
+<div>   +const selectedSeats = <b>JSON.parse</b>(<b>localStorage.getItem</b>('selectedSeats'));</div>
+<div><br></div>
+<div>-Trong JS, một hàm có thể được định nghĩa ở trên và dùng ở dưới</div>
+<div><br></div>
+<div><h2>3.Customed video player</h2></div>
+<div><br></div>
+<div><b>HTML, CSS note:</b></div>
+<div>-Cách add một video element và các thuộc tính liên quan như poster và controls</div>
+<div>-Cách dùng fontawsome —&gt làm sao để tăng kích cỡ của nó</div>
+<div>-Cách sử dụng input với type là “range” để làm progressbar của video</div>
+<div>-Sử dụng thẻ span làm timestamp</div>
+<div>-Cách dùng media query để làm cho trang web look more responsive</div>
+<div>-Cách dùng !important</div>
+<div>-Cách dùng cursor là pointer</div>
+<div>-Cách set background là transparent</div>
+<div>-Button: focus: outlint =0</div>
+<div><br></div>
+<div><b><h2>4.Exchange rate app</h2></b><h2><br></h2></div>
+<div><br></div>
+<div><b>HTML, CSS note:</b></div>
+<div>-Cách dùng select element</div>
+<div>-Cần tự tìm hiểu -moz-appearance, —webkit-appearance và appearance</div>
+<div>-justify-content là space-between</div>
+<div>-JSON object</div>
+<div>-fetch function với JSON</div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div><br></div>

@@ -1,0 +1,68 @@
+<div><h1>Checklist for PGx</h1></div>
+<div><br></div>
+<div>-General:</div>
+<div>	-Autocomplete should be in each views (protein, drug, gene)? --&gt currently in drug</div>
+<div>	-Should add a short name for protein?</div>
+<div><br></div>
+<div><br></div>
+<div>-Home page</div>
+<div>	+Main menu not show dropdown list when hover</div>
+<div>	+Slider image: sizes not equal</div>
+<div>	+</div>
+<div><br></div>
+<div>-Gene page</div>
+<div>	+Consequence column: multiple value —&gt list them all?</div>
+<div>	+Why so many data missing for column cDNA-position, CDS-position, Protein position, Amino acids, Codons —&gt should be removed?</div>
+<div>	+Phenocode need processed, some are dummy data</div>
+<div>	+Phenocode also contains string, I.e: FH_Heart_disease_custom, not only number</div>
+<div>	+Did we process the VEP scores correctly? — &gt change to rank score</div>
+<div>	+Should we organize the page like this? —&gt YES </div>
+<div>	https://gpcrdb.org/protein/isoforms<br></div>
+<div>	No need for a heatmap —&gt we use color spectrum in the vep scores. —&gt YES</div>
+<div>	The left of the page is for statistics —&gt add some button to filter</div>
+<div>		+Interactive pie/donut chart? (Ref: https://gpcrdb.org/drugs/drugstatistics)</div>
+<div>		+Statistics breakdown: consequence —&gt impact —&gt how many phenocode?</div>
+<div>	Should we change “Interacting protein” to “Interacting protein (gene)”? —&gt add one more column for protein name</div>
+<div><br></div>
+<div>-Drug page</div>
+<div>	Compare to this page from GPCRDB, we miss these columns:</div>
+<div>		+Clinical status</div>
+<div>		+Year of approval</div>
+<div>		+Phase</div>
+<div>		+Status</div>
+<div>		+Target level</div>
+<div>		+Class</div>
+<div>		+Family</div>
+<div>		+Mechanism of action</div>
+<div>		+References</div>
+<div>	Filter based on drug status (See ref from GPCRDB https://gpcrdb.org/drugs/drugstatistics) </div>
+<div>	Drug-protein network</div>
+<div>	Add link to corresponding protein page for each protein in the interaction protein </div>
+<div><br></div>
+<div>-Do we need a variant page?</div>
+<div>-Quick search: not available</div>
+<div>-Collect all data - waiting for response from IT department</div>
+<div>-Put more files for sample data for dev</div>
+<div>-Process data again —&gt check mapping between concerned drug targets and VEP and genebass; reduce data to only contain coding variants</div>
+<div>-Way to organise the data file —&gt not only for development but also for scaling </div>
+<div><br></div>
+<div>-Need to check why not all the input genebass VEP files have VEP results</div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div>-Focus on: synonymous_variant, stop_gained, coding_sequence_variant, missense_variant —&gt refine the database . Chú ý: genebass data là từ exome sequencing nên variants người ta quan Tâm là pLoF variants, missense variants and synonymous variants </div>
+<div>-Hiearchy of ATC codes</div>
+<div><br></div>
+<div><br></div>
+<div>-Data</div>
+<div>	+The number of drug target we have filtered from Drugbank is 3013</div>
+<div>	+The number of genebass variant gene-based files: 2948 </div>
+<div>	+List of genes that were retrieved but not in drug target list (required) (11 genes)</div>
+<div>	['C4B', 'CKMT1A', 'CKMT1B', 'H2BC10', 'H2BC4', 'H2BC6', 'H2BC7', 'H2BC8', 'HBA1', 'HBA2', 'LGALS7B']</div>
+<div>	+List of gene required but not retrieved (77 genes):</div>
+<div>	[‘FCGR1BP', 'C4B; C4B_2', '', 'HARS1', 'DARS1', 'ADSS2', 'QARS1', 'MARS1', 'GRIK5', 'EPRS1', 'GSTM1', 'GSTT1', 'CKMT1A; CKMT1B', 'LARS1', 'WARS1', 'GFUS', 'MT-ND2', 'MT-ND3', 'MT-ND4', 'MT-ND1', 'MT-ND4L', 'NDUFA7', 'MT-ND6', 'MT-ND5', 'VARS1', 'GET3', 'PRODH', 'NARS1', 'CHRM2', 'OGA', 'PTPRE', 'GNRHR2', 'PDE4C', 'IGKV2-30', 'MT-ATP6', 'HBA1; HBA2', 'LTA4H', 'C1S', 'IGHA1', 'IGHM', 'IGKV1-17', 'IGKV3-20', 'IGLV3-21', 'IGHG1', 'IGKC', 'ACYP2', 'LGALS7; LGALS7B', 'DHRS4L1', 'MT-CO1', 'MT-CO2', 'MT-CO3', 'TRAC', 'TRBC1', 'IGHG2', 'IGLV2-8', 'KCNMB2', 'ELSPBP1', 'GSTT2', 'MT-CYB', 'IGKV1D-33', 'IGHV3-23', 'IGHA2', 'IGHV1-2', 'IGLV7-43', 'IGHV3-30', 'PSMA2', 'IGKV2D-28', 'CES1P1', 'SIK1', 'H2BC4; H2BC6; H2BC7; H2BC8; H2BC10', 'IGHG4', 'MRC1', 'IGHE', 'PAK6', 'SGK3', 'PHB1']</div>
+<div><br></div>
+<div>	+Cần regenerate vì có trên genebass - nhóm này separator là ;; : C4B, HARS1, DARS1, ADSS2, QARS1, MARS1, GRIK5, EPRS1, GSTM1, GSTT1, CKMT1A, CKMT1B, LARS1, WARS1, MT-ND2, MT-ND3, MT-ND4, MT-ND1, MT-ND4L, NDUFA7, MT-ND6, MT-ND5, VARS1, GET3, PRODH, NARS1, CHRM2, OGA, PTPRE, GNRHR2, PDE4C, IGKV2-30, MT-ATP6, HBA1, HBA2, LTA4H, C1S, IGHA1, IGHM, IGKV1-17, IGKV3-20, IGLV3-21, IGHG1, IGKC, ACYP2, LGALS7, LGALS7B, DHRS4L1, MT-CO1, MT-CO2, MT-CO3, TRAC, TRBC1, IGHG2, IGLV2-8, KCNMB2, ELSPBP1, GSTT2, MT-CYB, IGKV1D-33, IGHV3-23, IGHA2, IGHV1-2, IGLV7-43, IGHV3-30, PSMA2, IGKV2D-28, CES1P1, SIK1, H2BC4, H2BC6, H2BC7, H2BC8, H2BC10, IGHG4, MRC1, IGHE, PAK6, SGK3</div>
+<div>	+Number of VEP: 2486</div>
+<div><br></div>
+<div>	</div>

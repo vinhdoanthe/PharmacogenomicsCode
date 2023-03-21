@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 import hashlib
@@ -19,9 +19,10 @@ from django.db.models import Q, Count, Subquery, OuterRef
 from django.views.decorators.csrf import csrf_exempt
 from django.core.cache import cache
 from django.conf import settings
-from drug.models import Drug
+from drug.models import Drug, DrugAtcAssociation, AtcAnatomicalGroup, AtcTherapeuticGroup, AtcPharmacologicalGroup, AtcChemicalGroup
 from gene.models import Gene
-# from interaction.models import Interaction
+from interaction.models import Interaction
+from django.db.models import Count
 from protein.models import Protein
 from variant.models import Variant
 from django.core.cache import cache
@@ -29,96 +30,46 @@ from django.views.decorators.cache import cache_page
 
 
 # Create your views here.
-# class DrugAndTargetBrowser(TemplateView):
+from django.http import JsonResponse
+from .models import Drug, DrugAtcAssociation
 
-#     template_name = 'drug_browser copy.html'
-#     # template_name = 'drugstatistics copy.html'
 
-#     def get_context_data(self, **kwargs):
+def search_drugs(request):
+    #extracts the search query parameter named 'q' from the GET request's query parameters. If 'q' is not present, the variable query is assigned the value None
+    query = request.GET.get('q')
 
-#         context = super().get_context_data(**kwargs)
+    # This line filters the Drug model's objects based on the search query. It uses the icontains lookup to perform a case-insensitive search on both the name and aliases fields, using the '|' (OR) operator to combine the two queries.
+    drugs = Drug.objects.filter(Q(name__icontains=query) | Q(aliases__icontains=query))
 
-#         browser_columns = ["gene_name",
-#                            "interaction_type",
-#                            "drugtype",
-#                            "uniprot_ID",
-#                            "geneID",
-#                            "#variants"
-#                            ]
-#         table = pd.DataFrame(columns=browser_columns)
+    # creates a list of distinct drug names from the queryset drugs. The values_list method retrieves a list of tuples containing the 'name' field values, and the flat=True argument turns it into a flat list. The distinct() method ensures that only unique drug names are included.
+    drug_names = drugs.values_list('name', flat=True).distinct()
 
-#         interaction_data = Interaction.objects.filter(drug_bankID='DB00002').values_list(
-#             "uniprot_ID", "interaction_type")
-#         drug_data = Drug.objects.filter(
-#             drug_bankID='DB00002').values_list("drugtype", "name")
-#         drug_data = Drug.objects.all().values_list("drugtype", "name")
-#         drugname=drug_data[0][1]
+    # Get related ATC codes and associated drugs for each drug
+    drug_info = []
+    for drug in drugs:
+        #filters the DrugAtcAssociation model's objects based on the drug's ATC associations. It selects objects whose 'atc_id' is included in the drug's related ATC associations.
+        drug_atc_associations = DrugAtcAssociation.objects.filter(atc_id__in=drug.drugatcassociation.all())
+        atc_codes = drug_atc_associations.values_list('atc_id__id', flat=True).distinct()
 
-#         if drug_data[0][0] == 1:
-#             drugtype = "Biotech"
-#         else:
-#             drugtype = "Small molecule"
-      
-#         for data in interaction_data:
-#             data_subset = {}
-#             data_subset["uniprot_ID"] = data[0]
-#             data_subset["interaction_type"] = data[1].title()
-#             data_subset["drugtype"] = drugtype
+        atc_drug_map = {}
+        for atc_code in atc_codes:
+            associated_drugs = Drug.objects.filter(drugatcassociation__atc_id__id=atc_code)
+            atc_drug_map[atc_code] = associated_drugs
 
-#             # Retrieve protein name
-#             genename = Protein.objects.filter(
-#                 uniprot_ID=data[0]).values_list("genename")[0][0]
-#             data_subset["gene_name"] = genename
+        drug_info.append({
+            'name': drug.name,
+            'related_atc_codes': atc_codes,
+            'atc_drug_map': atc_drug_map,
+        })
 
-#             # Retrieve gene ID
-#             geneID = Protein.objects.filter(
-#                 uniprot_ID=data[0]).values_list("geneID")[0][0]
-#             data_subset["geneID"] = geneID
+    # Pass the list of drug names and related drug information to the template for rendering
+    context = {
+        'drug_names': drug_names,
+        'query': query,
+        'drug_info': drug_info,
+    }
+    return render(request, 'drug_search_results.html', context)
 
-#             # Retrieve number of variant
-#             markers = Variant.objects.filter(
-#                 Gene_ID=geneID).values_list("VariantMarker")
-#             data_subset["#variants"]=len(markers)
-
-#             table = table.append(data_subset, ignore_index=True)
-            
-
-#         table.fillna('', inplace=True)
-#         # context = dict()
-#         print(table.head(3))
-#         print("--------------------  drug_data[0][0]: ", drug_data[0][0])
-#         length = len(table)
-#         context['Array'] = table.to_numpy()
-#         context['test'] = table.to_json(orient='records')
-#         context['drugname'] = drugname
-#         context['drugID'] = 'DB00002'
-#         context['length'] = length
-
-#         return context
-
-#Create a dictionary for looking up encoded_term
-drugdata_dic = {}
-drugdata_data_dir = os.sep.join([settings.DATA_DIR, "drug_data"])
-filepath = os.sep.join([drugdata_data_dir, "encoded_drug_data.txt"])
-with open(filepath, "r") as f:
-    lines = f.readlines()
-    for line in lines:
-        drugdata_dic[line[:-1].split(":")[0]] = line[:-1].split(":")[1]
-# print(drugdata_dic)
-
-def decode_drug_data(category, sub_cate):
-    encoded_data_dict={'drugtype':"0", 
-                       'name':"1",
-                       'superclass':"2", 
-                       'classname':"3", 
-                       'subclass':"4", 
-                       'direct_parent':"5",
-                       'groups':"6", 
-                       'categories':"7",
-                       'pubChemCompound':"8",}
-    encoded_term = encoded_data_dict.get(category)+"-"+str(sub_cate)
-    
-    return drugdata_dic.get(encoded_term)
 
     
 @cache_page(60 * 60 * 24 * 28)
@@ -136,16 +87,64 @@ def drugbrowser(request):
 
         for drug in drugs:
             drug_bankID = drug.drug_bankID
-            drugtype = decode_drug_data("drugtype", drug.drugtype)
-            drugname = decode_drug_data("name", drug.name)
-            groups = decode_drug_data("groups", drug.groups)
-            categories = decode_drug_data("categories", drug.categories)
+
+            #retrieve drugtype
+            drug = Drug.objects.select_related('drugtype').filter(drug_bankID=drug_bankID).first()
+            if drug:
+                drugtype = drug.drugtype.type_detail
+            else:
+                drugtype = None
+
+            #retrieve drugname
+            drugname = drug.name
+
+            #retrieve groups
+            drug = Drug.objects.select_related('groups').filter(drug_bankID=drug_bankID).first()
+            if drug:
+                groups = drug.groups.group_detail
+            else:
+                groups = None
+
+            #retrieve categories
+            drug = Drug.objects.select_related('categories').filter(drug_bankID=drug_bankID).first()
+            if drug:
+                categories = drug.categories.category_detail
+            else:
+                categories = None
+
+            #retrieve description
+            description = drug.description
+
+            #retrieve superclass
+            drug = Drug.objects.select_related('superclass').filter(drug_bankID=drug_bankID).first()
+            if drug:
+                superclass = drug.superclass.superclass_detail
+            else:
+                superclass = None
+
+            #retrieve classname
+            drug = Drug.objects.select_related('classname').filter(drug_bankID=drug_bankID).first()
+            if drug:
+                classname = drug.classname.class_detail
+            else:
+                classname = None
+            
+            #retrieve subclass
+            drug = Drug.objects.select_related('subclass').filter(drug_bankID=drug_bankID).first()
+            if drug:
+                subclass = drug.subclass.subclass_detail
+            else:
+                subclass = None
+
+            #retrieve direct_parent
+            drug = Drug.objects.select_related('direct_parent').filter(drug_bankID=drug_bankID).first()
+            if drug:
+                direct_parent = drug.direct_parent.parent_detail
+            else:
+                direct_parent = None
+
             description = drug.description
             aliases = drug.aliases
-            superclass = decode_drug_data("superclass", drug.superclass)
-            classname = decode_drug_data("classname", drug.classname)
-            subclass = decode_drug_data("subclass", drug.subclass)
-            direct_parent = decode_drug_data("direct_parent", drug.direct_parent)
             indication = drug.indication
             pharmacodynamics = drug.pharmacodynamics
             moa = drug.moa
@@ -156,10 +155,15 @@ def drugbrowser(request):
             protein_binding = drug.protein_binding
             dosages = drug.dosages
             properties = drug.properties
-            atc_codes = drug.atc_codes
-            atc_code_detail = drug.atc_code_detail
             chEMBL = drug.chEMBL
-            pubChemCompound = decode_drug_data("pubChemCompound", drug.pubChemCompound)
+
+            # retrieve pubChemCompound
+            drug = Drug.objects.select_related('pubChemCompound').filter(drug_bankID=drug_bankID).first()
+            if drug:
+                pubChemCompound = drug.pubChemCompound.compound_detail
+            else:
+                pubChemCompound = None
+
             pubChemSubstance = drug.pubChemSubstance
 
             jsondata = {'drug_bankID':drug_bankID, 'drugtype':drugtype, 'drugname': drugname, 'groups':groups, 
@@ -167,7 +171,7 @@ def drugbrowser(request):
                         'classname':classname, 'subclass':subclass, 'direct_parent':direct_parent, 'indication':indication, 
                         'pharmacodynamics':pharmacodynamics, 'moa':moa, 'absorption':absorption, 'toxicity':toxicity, 
                         'halflife':halflife, 'distribution_volume':distribution_volume, 'protein_binding':protein_binding, 'dosages':dosages, 
-                        'properties':properties, 'atc_codes':atc_codes, 'atc_code_detail':atc_code_detail, 'chEMBL':chEMBL, 
+                        'properties':properties, 'chEMBL':chEMBL, 
                         'pubChemCompound':pubChemCompound, 'pubChemSubstance':pubChemSubstance}
             context.append(jsondata)
 
@@ -175,117 +179,9 @@ def drugbrowser(request):
 
     return render(request, 'drug_browser copy.html', {'drugdata': context})
     
-# Old way
-class DrugBrowser(TemplateView):
-
-    template_name = 'drug_browser copy.html'
-
-    def get_context_data(self, **kwargs):
-
-        context = super().get_context_data(**kwargs)
-
-        browser_columns = ["drug_bankID",
-                            "drugtype",
-                            "name",
-                            "groups",
-                            "categories",
-                            "description",
-                            "aliases",
-                            "superclass",
-                            "classname",
-                            "subclass",
-                            "direct_parent",
-                            "indication",
-                            "pharmacodynamics",
-                            "moa",
-                            "absorption",
-                            "toxicity",
-                            "halflife",
-                            "distribution_volume",
-                            "protein_binding",
-                            "dosages",
-                            "properties",
-                            "atc_codes",
-                            "atc_code_detail",
-                            "chEMBL",
-                            "pubChemCompound",
-                            "pubChemSubstance"
-                           ]
-        table = pd.DataFrame(columns=browser_columns)
-        drug_rows = Drug.objects.all().values_list("drug_bankID",
-                                                    "drugtype",
-                                                    "name",
-                                                    "groups",
-                                                    "categories",
-                                                    "description",
-                                                    "aliases",
-                                                    "superclass",
-                                                    "classname",
-                                                    "subclass",
-                                                    "direct_parent",
-                                                    "indication",
-                                                    "pharmacodynamics",
-                                                    "moa",
-                                                    "absorption",
-                                                    "toxicity",
-                                                    "halflife",
-                                                    "distribution_volume",
-                                                    "protein_binding",
-                                                    "dosages",
-                                                    "properties",
-                                                    "atc_codes",
-                                                    "atc_code_detail",
-                                                    "chEMBL",
-                                                    "pubChemCompound",
-                                                    "pubChemSubstance")
-
-        # if drug_data[0][0] == 1:
-        #     drugtype = "Biotech"
-        # else:
-        #     drugtype = "Small molecule"
-      
-        for drug_data in drug_rows:
-            data_subset = {}
-            data_subset["drug_bankID"] = drug_data[0]
-            data_subset["drugtype"] = drug_data[1]
-            data_subset["name"] = drug_data[2]
-            data_subset["groups"] = drug_data[3]
-            data_subset["categories"] = drug_data[4]
-            data_subset["description"] = drug_data[5]
-            data_subset["aliases"] = drug_data[6]
-            data_subset["superclass"] = drug_data[7]
-            data_subset["classname"] = drug_data[8]
-            data_subset["subclass"] = drug_data[9]
-            data_subset["direct_parent"] = drug_data[10]
-            data_subset["indication"] = drug_data[11]
-            data_subset["pharmacodynamics"] = drug_data[12]
-            data_subset["moa"] = drug_data[13]
-            data_subset["absorption"] = drug_data[14]
-            data_subset["toxicity"] = drug_data[15]
-            data_subset["halflife"] = drug_data[16]
-            data_subset["distribution_volume"] = drug_data[17]
-            data_subset["protein_binding"] = drug_data[18]
-            data_subset["dosages"] = drug_data[19]
-            data_subset["properties"] = drug_data[20]
-            data_subset["atc_codes"] = drug_data[21]
-            data_subset["atc_code_detail"] = drug_data[22]
-            data_subset["chEMBL"] = drug_data[23]
-            data_subset["pubChemCompound"] = drug_data[24]
-            data_subset["pubChemSubstance"] = drug_data[25]
-
-            table = table.append(data_subset, ignore_index=True)
-            
-
-        table.fillna('', inplace=True)
-        # context = dict()
-        print(table.head(3))
-        length = len(table)
-        context['drugdata'] = table.to_numpy()
-        context['length'] = length
-
-        return context
 
 
+# This is a helper function that takes a request object and checks if it's an AJAX request. It does this by checking if the 'HTTP_X_REQUESTED_WITH' key in the request.META dictionary is set to 'XMLHttpRequest'. If it is, it returns True, otherwise it returns False.
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
@@ -298,29 +194,15 @@ def SelectionAutocomplete(request):
         type_of_selection = request.GET.get('type_of_selection')
         results = []
 
-        # find proteins
-        # if type_of_selection!='navbar':
-        #     ps = Protein.objects.filter(Q(name__icontains=q) | Q(entry_name__icontains=q),
-        #                                 species__in=(species_list),
-        #                                 source__in=(protein_source_list)).exclude(family__slug__startswith=exclusion_slug).exclude(sequence_type__slug='consensus')[:10]
-        # else:
-        #     print('checking that we are here')
-        #     redirect = '/drug/'
-        #     ps = Drug.objects.filter(Q(drug_bankID__icontains=q) | Q(name__icontains=q) | Q(aliases__icontains=q))
-        #     if len(ps) == 0:
-        #         redirect = '/gene/'
-        #         ps = Gene.objects.filter(Q(gene_id__icontains=q) | Q(genename__icontains=q))
-        # print("ps length ", ps.count())
-        # print("ps ---------------", ps)
 
         if type_of_selection!='navbar':
             ps = Protein.objects.filter(Q(name__icontains=q) | Q(entry_name__icontains=q),
                                         species__in=(species_list),
                                         source__in=(protein_source_list)).exclude(family__slug__startswith=exclusion_slug).exclude(sequence_type__slug='consensus')[:10]
         else:
-            print('checking that we are here')
+            print('Checking that we are here')
             redirect = '/drug/'
-            ps1 = Drug.objects.filter(Q(drug_bankID__icontains=q) | Q(name__icontains=q) | Q(aliases__icontains=q))
+            ps1 = Drug.objects.filter(Q(drug_bankID__icontains=q) | Q(name__name_detail__icontains=q) | Q(aliases__icontains=q))
             ps2 = Gene.objects.filter(Q(gene_id__icontains=q) | Q(genename__icontains=q))
             ps3 = Protein.objects.filter(Q(uniprot_ID__icontains=q) | Q(protein_name__icontains=q))
             if len(ps1) > 0:
@@ -332,7 +214,7 @@ def SelectionAutocomplete(request):
             if len(ps3) > 0:
                 redirect = "/protein/"
                 ps = ps3
-                
+        print("-----ps-------")        
         print("ps length ", ps.count())
         print("ps ---------------", ps)
 
@@ -341,7 +223,7 @@ def SelectionAutocomplete(request):
             for p in ps:
                 p_json = {}
                 p_json['id'] = p.drug_bankID
-                p_json['label'] = p.name
+                p_json['label'] = p.name.name_detail
                 p_json['type'] = 'drug'
                 p_json['redirect'] = redirect
                 p_json['category'] = 'Drugs'
@@ -379,125 +261,53 @@ def SelectionAutocomplete(request):
     return HttpResponse(data, mimetype)
 
 
-
-#@cache_page(60 * 60 * 24 * 7)
-def detail(request, slug):
-    # get protein
-    slug = slug.upper()
-
-    print("SLUGGGGGGGGGGGGG", slug)
-    print("SLUGGGGGGGGGGGGG", slug)
-    print("SLUGGGGGGGGGGGGG", slug)
-    print("SLUGGGGGGGGGGGGG", slug)
-    try:
-        if Drug.objects.filter(drug_bankID=slug).exists():
-            p = Drug.objects.get(drug_bankID=slug)
-            print("p --------- ",p)
-        
-    except:
-        context = {'drug_no_found': slug}
-        return render(request, 'drug_detail.html', context)
-
-    # context_list=[]
-    # for p in ps:
-
-    # get family list
-    id = p.drug_bankID
-    drugtype = "Biotech" if p.drugtype == 1 else "Small molecule"
-    name = p.name
-    groups = p.groups
-    categories = p.categories
-    description = p.description
-    aliases = p.aliases
-    kingdom = p.kingdom
-    superclass = p.superclass
-    classname = p.classname
-    subclass = p.subclass
-    direct_parent = p.direct_parent
-    indication = p.indication
-    pharmacodynamics = p.pharmacodynamics
-    moa = p.moa
-    absorption = p.absorption
-    toxicity = p.toxicity
-    halflife = p.halflife
-    distribution_volume = p.distribution_volume
-    protein_binding = p.protein_binding
-    dosages = p.dosages
-    properties = p.properties
-
-
-    context = {'drug_bankID': id, 'drugtype': drugtype, 'name': name, 'groups': groups, 'categories': categories,
-            'description': description, 'aliases': aliases, 'kingdom': kingdom, 'superclass': superclass, 'classname': classname,'subclass': subclass, 'direct_parent':direct_parent, 'indication':indication, 'pharmacodynamics':pharmacodynamics, 'moa':moa, 'absorption':absorption, 'toxicity':toxicity, 'halflife':halflife, 'distribution_volume':distribution_volume, 'protein_binding':protein_binding, 'dosages':dosages, 'properties':properties}
-
-        # context_list.append(dic)
-
-
-    return render(request, 'drug_detail.html', context)
-
-
 # Create your views here.
 class DrugStatistics(TemplateView):
 
-    template_name = 'drugstatistics copy.html'
-
+    template_name = 'drugstatistics.html'
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
-
-        browser_columns = ["gene_name",
-                           "interaction_type",
-                           "drugtype",
-                           "uniprot_ID",
-                           "geneID",
-                           "#variants"
-                           ]
-        table = pd.DataFrame(columns=browser_columns)
-
-        interaction_data = Interaction.objects.filter(drug_bankID='DB00002').values_list(
-            "uniprot_ID", "interaction_type")
-        drug_data = Drug.objects.filter(
-            drug_bankID='DB00002').values_list("drugtype", "name")
-        drug_data = Drug.objects.all().values_list("drugtype", "name")
-        drugname=drug_data[0][1]
-
-        if drug_data[0][0] == 1:
-            drugtype = "Biotech"
-        else:
-            drugtype = "Small molecule"
-      
-        for data in interaction_data:
-            data_subset = {}
-            data_subset["uniprot_ID"] = data[0]
-            data_subset["interaction_type"] = data[1].title()
-            data_subset["drugtype"] = drugtype
-
-            # Retrieve protein name
-            genename = Protein.objects.filter(
-                uniprot_ID=data[0]).values_list("genename")[0][0]
-            data_subset["gene_name"] = genename
-
-            # Retrieve gene ID
-            geneID = Protein.objects.filter(
-                uniprot_ID=data[0]).values_list("geneID")[0][0]
-            data_subset["geneID"] = geneID
-
-            # Retrieve number of variant
-            markers = VariantMarker.objects.filter(
-                geneID=geneID).values_list("markerID")
-            data_subset["#variants"]=len(markers)
-
-            table = table.append(data_subset, ignore_index=True)
-            
-
-        table.fillna('', inplace=True)
-        # context = dict()
-        print(table.head(3))
-        print("--------------------  drug_data[0][0]: ", drug_data[0][0])
-        length = len(table)
-        context['Array'] = table.to_numpy()
-        context['test'] = table.to_json(orient='records')
-        context['drugname'] = drugname
-        context['drugID'] = 'DB00002'
-        context['length'] = length
-
         return context
+    
+
+# Help from chatGPT.
+def drug_detail(request, drugbank_id):
+    # Retrieve the drug object
+    drug = get_object_or_404(Drug, drug_bankID=drugbank_id)
+
+    # a) Retrieve all the uniprot_ID of proteins that have interactions with the drug
+    interactions = Interaction.objects.filter(drug_bankID=drug)
+    protein_ids = [interaction.uniprot_ID.uniprot_ID for interaction in interactions]
+
+    # b) Count for each interaction_type
+    interaction_counts = interactions.values('interaction_type').annotate(count=Count('interaction_type'))
+
+    # c) Retrieve the names of all AtcChemicalSubstance that associate with the drugs
+    associations = DrugAtcAssociation.objects.filter(drug_id=drug)
+    chemical_substance_names = [association.atc_id.id + "-"+ association.atc_id.name for association in associations]
+
+    # d) For each AtcChemicalSubstance, retrieve their parents until the top one
+    atc_parents = []
+    for association in associations:
+        temp=[]
+        parent = association.atc_id.parent
+        temp.append(parent.id + "-" + parent.name)
+        while parent:
+            if not(isinstance(parent, AtcAnatomicalGroup)):
+                parent = parent.parent
+                temp.append(parent.id + "-" + parent.name)
+            else:
+                break
+        atc_parents.append(temp)
+
+    context = {
+        'drug': drug,
+        'protein_ids': protein_ids,
+        'interaction_counts': interaction_counts,
+        # 'associations': associations,
+        'chemical_substance_names': chemical_substance_names,
+        'atc_parents': atc_parents
+    }
+
+    print("-------------- context", context)
+    return render(request, '_drug_detail.html', context)

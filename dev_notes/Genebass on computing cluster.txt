@@ -1,0 +1,3 @@
+<div><h1>Genebass on computing cluster</h1></div>
+<div><br></div>
+<div>gsutil -m cp -r gs://ukbb-exome-public/500k/results/results.mt .</div>

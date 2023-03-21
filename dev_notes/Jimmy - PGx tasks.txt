@@ -1,0 +1,29 @@
+<div><h1>Jimmy - PGx tasks</h1></div>
+<div> +Convention — naming</div>
+<div>			— git contribution</div>
+<div>			—Code base</div>
+<div>			— Database on cluster</div>
+<div>			—??? Optimize db queries</div>
+<div>+Detail templates in a consistent manner</div>
+<ul>
+<li>1.Gene/Variant table heat map for each gene (similar to https://gpcrdb.org/protein/isoforms)</li>
+<li>2.2D/3D view of the part of the gene that are predicted red</li>
+<li>3.-Hiearchy of ATC codes —&gt need to be structured in the DB</li>
+</ul>
+<div>ref: https://gpcrdb.org/alignment/targetselection</div>
+<div><u>GPCRdb</u><u><br></u></div>
+<ul>
+<li><u>4.Summary statistics of a drug </u></li>
+</ul>
+<div>How many targets/ and their variants associated with this drug?</div>
+<div><br></div>
+<div>Start from interaction table —&gt search for drug bankID —&gt number of targets = how many records returns —&gt retrieve their genes —&gt retrieve their variants</div>
+<ul>
+<li><u>5.Phenotype and the association (P_value, STAK_O…)</u><br></li>
+</ul>
+<div><br></div>
+<div><br></div>
+<div>-</div>
+<div><br></div>
+<div><br></div>
+<div><br></div>

@@ -1,0 +1,99 @@
+<div><h1>Note để cài đặt và chạy thành công protwis</h1></div>
+<div><br></div>
+<div>Khi tạo môi trường</div>
+<div><br></div>
+<div>0/Bước 5, chỉnh .bash_profile thành</div>
+<div><br></div>
+<div>echo &quotThis is coming from .bash_profile&quot</div>
+<div>export JAVA_HOME=$(/usr/libexec/java_home)</div>
+<div><br></div>
+<div><br></div>
+<div>alias arm=&quotenv /usr/bin/arch -arm64 /bin/bash --login&quot</div>
+<div>alias intel=&quotenv /usr/bin/arch -x86_64 /bin/bash --login&quot </div>
+<div>init_conda() {</div>
+<div>   # &gt&gt&gt conda initialize &gt&gt&gt</div>
+<div>   conda_path_m1=&quot${HOME}/miniconda3&quot</div>
+<div>   __conda_setup=&quot$('${conda_path_m1}/bin/conda' 'shell.bash' 'hook' 2&gt /dev/null)&quot</div>
+<div>   if [ $? -eq 0 ]; then</div>
+<div>      eval &quot$__conda_setup&quot</div>
+<div>   else</div>
+<div>      if [ -f &quot${conda_path_m1}/etc/profile.d/conda.sh&quot ]; then</div>
+<div>          . &quot${conda_path_m1}/etc/profile.d/conda.sh&quot</div>
+<div>      else</div>
+<div>          export PATH=&quot${conda_path_m1}/bin:$PATH&quot</div>
+<div>      fi</div>
+<div>   fi</div>
+<div>   unset __conda_setup</div>
+<div># &lt&lt&lt conda initialize &lt&lt&lt</div>
+<div>}</div>
+<div><br></div>
+<div>init_conda_intel() {</div>
+<div>   # &gt&gt&gt conda initialize &gt&gt&gt</div>
+<div>   conda_path_intel=&quot${HOME}/mc3_intel&quot</div>
+<div>   __conda_setup=&quot$('${conda_path_intel}/bin/conda' 'shell.bash' 'hook' 2&gt /dev/null)&quot</div>
+<div>   if [ $? -eq 0 ]; then</div>
+<div>      eval &quot$__conda_setup&quot</div>
+<div>   else</div>
+<div>      if [ -f &quot${conda_path_intel}/etc/profile.d/conda.sh&quot ]; then</div>
+<div>          . &quot${conda_path_intel}/etc/profile.d/conda.sh&quot</div>
+<div>      else</div>
+<div>          export PATH=&quot${conda_path_intel}/bin:$PATH&quot</div>
+<div>      fi</div>
+<div>   fi</div>
+<div>   unset __conda_setup</div>
+<div>   # &lt&lt&lt conda initialize &lt&lt&lt</div>
+<div>}</div>
+<div><br></div>
+<div>eval &quot$(/opt/homebrew/bin/brew shellenv)&quot</div>
+<div>source $HOME/perl5/perlbrew/etc/bashrc</div>
+<div>export PERL5LIB=${PERL5LIB}:##PATH_TO##/bioperl-1.6.924</div>
+<div>export DYLD_LIBRARY_PATH=/usr/local/mysql-5.5.15-osx10.6-x86/lib/:$DYLD_LIBRARY_PATH</div>
+<div>export PSQL_PATH=/Applications/Postgres.app/Contents/Versions/14/bin</div>
+<div>export PATH=&quot$PATH:$PSQL_PATH&quot</div>
+<div><br></div>
+<div>0b/Bước này</div>
+<div>conda create -c rdkit -n gpcrdb rdkit</div>
+<div>Thì mình ko cài được mà cài luôn env có tên my-rdkit-env, có chưa library rdkit, và lấy luôn tên này thay vì gpcrdb  </div>
+<div><br></div>
+<div>1/Trong file requirements.txt, đổi</div>
+<ul class="Apple-dash-list">
+<li>freesasa==2.1.0 thành freesasa</li>
+<li>Giữ nguyên Django 2, không đổi thành 4</li>
+<li>psycopg2 thành psycopg2-binary</li>
+</ul>
+<div><br></div>
+<div>2/Có thể gom các bước liên quan đến docker trong 1 file docker compose vì file này dùng để build vài container một lúc</div>
+<div><br></div>
+<div>3/Thông tin log in vô database bằng Adminer (chú ý đổi IP theo từng máy):</div>
+<div><u>http://127.0.0.1:8888/?pgsql=10.179.65.108%3A5432&ampusername=protwis&ampdb=protwis&ampns=public</u><u><br></u></div>
+<div><u><br></u></div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div>Sau khi đã đến bước run server:</div>
+<div><br></div>
+<div>A/Sửa lỗi này</div>
+<div>-ugettext_lazy has been removed in Django 4. I am used <i>gettext_lazy</i> instead: from django.utils.translation import gettext_lazy as _</div>
+<div><br></div>
+<div><br></div>
+<div><br></div>
+<div>B/ Không hiểu sao khi chạy Django server thì bị báo lỗi này:</div>
+<div>SELECT usename FROM pg_user WHERE usename = 'protwis';</div>
+<div><br></div>
+<div>—&gt sửa DATABASES thành</div>
+<div><i># Database</i><br></div>
+<div>DATABASES = {</div>
+<div>    'default': {</div>
+<div>        'ENGINE': 'django.db.backends.postgresql_psycopg2',</div>
+<div>        'NAME': 'protwis',</div>
+<div>        'USER': 'protwis',</div>
+<div>        'PASSWORD': 'protwis',</div>
+<div>        'HOST': '10.179.109.126',</div>
+<div>        'PORT': '5432',</div>
+<div>    }</div>
+<div>}</div>
+<div><br></div>
+<div><br></div>
+<div>C/Lỗi ALLOWED_HOST —&gt đưa thêm địa chỉ vào ALLOWED_HOST</div>
+<div>ALLOWED_HOSTS = ['*', '0.0.0.0']</div>
+<div><br></div>

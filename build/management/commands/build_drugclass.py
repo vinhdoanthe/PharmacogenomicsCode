@@ -55,7 +55,7 @@ class Command(BaseCommand):
             filenames = [
                 fn
                 for fn in os.listdir(self.drugdata_data_dir)
-                if fn.endswith("encoded_drug_data.txt")
+                if fn.endswith("classname.csv")
             ]
             print(filenames)
         
@@ -64,9 +64,8 @@ class Command(BaseCommand):
             with open(filepath, "r") as f:
                 lines = f.readlines()
                 for line in lines:
-                    if line[0]=="3":
-                        values=line[:-1].split(":")
-                        drugclass = values[0].split("-")[1]
+                        values=line[:-1].split(";")
+                        drugclass = values[0]
                         class_detail = values[1]
 
 
@@ -75,6 +74,6 @@ class Command(BaseCommand):
                             class_detail=class_detail,
                             )
                         c.save()
-                        print("a record is saved")
+                        # print("a record is saved")
 
         self.logger.info("COMPLETED CREATING DRUGCLASS DATA")
