@@ -1,9 +1,0 @@
-<div><h1>Shuqing’s thesis</h1></div>
-<div><br></div>
-<div><b>Notes from Using deep mutational scanning to benchmark variant effect predictors and identify disease mutations</b></div>
-<div><b><br></b></div>
-<div>-Mục tiêu của VEP là để deal với new protein-coding variants</div>
-<div>-DMS = study variant <b>effects</b> (quantitative, independent, phenotypic) for single amino acid substitution</div>
-<div>-Dữ liệu từ DMS được dùng để benchmark với VEP (In addition to directly identifying damaging variants, another major benefit of DMS experiments is that they produce large variant effect data sets that can be used to benchmark and assess the performance of VEPs)</div>
-<div>-Combine DMS và VEPs để phân biệt pathogenic and benign missense variants.</div>
-<div><br></div>

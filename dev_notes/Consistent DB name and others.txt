@@ -1,5 +1,0 @@
-<div><h1>Consistent DB name and others</h1></div>
-<div><br></div>
-<div><br></div>
-<div>-Use hyphen for separate words in file name both in data processing and in the DB model definition</div>
-<div>-Cú pháp con lạc đà</div>

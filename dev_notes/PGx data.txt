@@ -1,9 +1,0 @@
-<div><h1>PGx data</h1></div>
-<div><br></div>
-<div><br></div>
-<div>-Sau khi tập hợp hết data, từ cluster:</div>
-<div>	+ Chạy lại script cho drug và các table khác</div>
-<div>	+Xem thử data vậy ổn chưa</div>
-<div>	+Vẫn là dùng 1 sample nhỏ cho dev nhưng tất cả data là available</div>
-<div><br></div>
-<div> </div>
