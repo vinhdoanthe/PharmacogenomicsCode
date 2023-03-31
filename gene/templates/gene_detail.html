@@ -256,7 +256,7 @@
     <p>
       Data showed in this table is collected from the
       <a href="https://www.ensembl.org" target="_blank">Ensembl</a> database and
-      <a href="https://gnomad.broadinstitute.org/" target="_blank">Gnomad</a>
+      <a href="https://app.genebass.org/" target="_blank">Genebass</a>
     </p>
   </div>
   <a id="dlink" style="display: none"></a>
@@ -425,17 +425,13 @@
     <br />
   </div>
 
-	<div id="variant_consquence_statistics">
-		<div>
-			<svg id="variant_statistics"></svg>
-		</div>
-	</div>  
+ 
 </div>
 {% endautoescape %} 
 {% endblock content%}
 
 {% block addon_js %}
-//addon_js from gene_browser.html
+<!--addon_js from gene_browser.html -->
 <script src="{% static 'home/js/datatables.min.js' %}"> </script>
 <script src="{% static 'home/js/bootstrap2-toggle.min.js' %}"></script>
 {% comment %} <script src="{% static 'home/js/jquery.dataTables.min.js' %}"> </script> {% endcomment %}

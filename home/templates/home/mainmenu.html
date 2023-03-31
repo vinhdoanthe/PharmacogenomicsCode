@@ -7,13 +7,18 @@
 <link href="{% static 'home/css/modal.css' %}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{% static 'home/css/jquery.powertip.css' %}" />
 <script src="{% static 'home/js/jquery-3.1.1.min.js' %}"></script>
-{% comment %}<script src="https://code.jquery.com/jquery-3.5.1.js"></script>{% endcomment %}
 <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 
-{% comment %} <script src="{% static 'home/js/citation_tool.js' %}"></script>
-<script src="{% static 'home/js/joinus_tool.js' %}"></script> {% endcomment %}
-{% comment %} <script>
+
+<!-- Hidden citation tool and join us tool 
+<script src="{% static 'home/js/citation_tool.js' %}"></script>
+<script src="{% static 'home/js/joinus_tool.js' %}"></script>
+-->
+
+<script>
   $(document).ready(function() {
+
+
     if (window.location.pathname != '/') {
       $('#ref_widget_div').css('display', 'block');
       check_for_video(window.location.href);
@@ -41,7 +46,7 @@
     }, 8000)
 
   });
-</script> {% endcomment %}
+</script>
 <style>
   #center_menu ul {
       padding: 0;
@@ -65,15 +70,15 @@
 <!-- Fixed navbar -->
 <nav class="navbar navbar-inverse navbar-static-top">
   <div class="container">
-    <div class="navbar-header">
+    {% comment %} <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <!-- <a class="navbar-brand" href="/" alt="{{ site_title }}"><img src="{% static logo_path %}" class="main-logo"></a> -->
-    </div>
+      <a class="navbar-brand" href="/" alt="{{ site_title }}"><img src="{% static 'home/logo/uni_cph.png' %}" class="main-logo"></a>
+    </div> {% endcomment %}
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-left">
         <!-- INFO -->
@@ -106,4 +111,4 @@
 </nav>
 
 <!-- Cite widget and modal -->
-{% comment %} {% include "home/cite_widget_and_modal.html" %} {% endcomment %}
+{% include "home/cite_widget_and_modal.html" %} 

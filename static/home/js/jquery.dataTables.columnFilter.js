@@ -437,6 +437,7 @@
             return sText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
         };
 
+        // Create a dropdown filter menu for a DataTables table. The dropdown menu allows the user to filter the table data by selecting a specific value from a list.
         function fnCreateDropdown(aData) {
             var index = i;
             var r = '<div class="dropdown select_filter form-control"><a class="dropdown-toggle" data-toggle="dropdown" href="#">' + label + '<b class="caret"></b></a><ul class="dropdown-menu" role="menu"><li data-value=""><a>Show All</a></li>', j, iLen = aData.length;
@@ -462,7 +463,7 @@
             var r = '', j, iLen = aData.length;
 
             //clean the string
-            var localLabel = label.replace('%', 'Perc').replace("&", "AND").replace("$", "DOL").replace("£", "STERL").replace("@", "AT").replace(/\s/g, "_");
+            var localLabel = label.replace('%', 'Perc').replace("&", "AND").replace("$", "DOL").replace("ï¿½", "STERL").replace("@", "AT").replace(/\s/g, "_");
             localLabel = localLabel.replace(/[^a-zA-Z 0-9]+/g, '');
             //clean the string
 

@@ -9,7 +9,7 @@ class AtcAnatomicalGroup(models.Model):
     class Meta():
         db_table = 'atc_anatomical_group'
     def __str__(self):
-        return self.id + "_" + self.name
+        return self.id # + "_" + self.name
 
 class AtcTherapeuticGroup(models.Model):
     id = models.CharField(max_length=3, primary_key=True)  
@@ -18,7 +18,7 @@ class AtcTherapeuticGroup(models.Model):
     class Meta():
         db_table = 'atc_therapeutic_group'
     def __str__(self):
-        return self.id + "_" + self.name
+        return self.id # + "_" + self.name
 
 class AtcPharmacologicalGroup(models.Model):
     id = models.CharField(max_length=4, primary_key=True)  
@@ -27,7 +27,7 @@ class AtcPharmacologicalGroup(models.Model):
     class Meta():
         db_table = 'atc_pharmacological_group'
     def __str__(self):
-        return self.id + "_" + self.name
+        return self.id # + "_" + self.name
 
 class AtcChemicalGroup(models.Model):
     id = models.CharField(max_length=5, primary_key=True)  
@@ -36,7 +36,7 @@ class AtcChemicalGroup(models.Model):
     class Meta():
         db_table = 'atc_chemical_group'
     def __str__(self):
-        return self.id + "_" + self.name
+        return self.id  # + "_" + self.name
         
 class AtcChemicalSubstance(models.Model):
     id = models.CharField(max_length=7, primary_key=True)  
@@ -45,7 +45,7 @@ class AtcChemicalSubstance(models.Model):
     class Meta():
         db_table = 'atc_chemical_substance'
     def __str__(self):
-        return self.id + "_" + self.name
+        return self.id # + "_" + self.name
 
 class DrugAtcAssociation(models.Model):
     association_id = models.AutoField(auto_created=True, primary_key=True)

@@ -46,60 +46,92 @@
   padding: 2px 0;
 }
 
+/* targets the nav element with the class of navbar */
 nav.navbar {
   background-color: #fff;
 }
 
+
+/* targets list items (li) that have the class of dropdown, but not the class of highlight_menu */
 nav.navbar li.dropdown:not(.highlight_menu) {
   background-position: 10px 12px;
 }
 
+/* targets list items (li) that have the class of dropdown and the class of highlight_menu */
 nav.navbar li.dropdown.highlight_menu {
   background-color: rgb(163, 20, 39);
   background-position: 10px 8px;
 }
 
+/* targets list items (li) that have the class of dropdown and the class of open */
 nav.navbar li.dropdown.open {
   background-color: rgb(163, 20, 39, 0.4);
 }
 
+/* targets links (a) that have the class of dropdown-toggle but not the class of select-link and are nested within a list item (li) that has the class of dropdown */
 nav.navbar li.dropdown a.dropdown-toggle:not(.select-link) {
   color: #777;
 }
 
+/* These selectors target links (a) that have the class of dropdown-toggle and are nested within a list item (li) that has the class of open and the class of dropdown. */
 nav.navbar li.dropdown.open a.dropdown-toggle,
 nav.navbar li.dropdown.open a.dropdown-toggle:hover,
 nav.navbar li.dropdown.open a.dropdown-toggle:focus {
   background-color: transparent;
 }
 
+/* targets links (a) that have the class of dropdown-toggle but not the class of select-link and are nested within a list item (li) that has the class of dropdown */
 nav.navbar li.dropdown a.dropdown-toggle:hover:not(.select-link) {
   color: #111;
 }
 
+/* targets links (a) that have the class of dropdown-toggle but not the class of select-link and are nested within a list item (li) that has the class of dropdown and the class of highlight_menu */
 nav.navbar li.dropdown.highlight_menu a.dropdown-toggle:not(.select-link) {
   color: #fff;
 }
 
+
+/* target links (a) that are nested within a list item (li) that has the class of open and is a direct child of a ul element with the class of navbar-nav. */
 nav.navbar .navbar-nav > .open > a,
 nav.navbar .navbar-inverse .navbar-nav > .open > a:focus,
 nav.navbar .navbar-inverse .navbar-nav > .open > a:hover {
   background-color: transparent;
 }
 
+/* chatGPT - adding this will make the dropdown list opens when the mouse hovers over */
+nav.navbar li.dropdown:hover > ul.dropdown-menu {
+  display: block;
+}
+
+
 li#gpcrdb_menu,
 li#gproteindb_menu,
 li#biasedsignalingatlas_menu,
 li#arrestindb_menu {
   background-repeat: no-repeat;
-  background-size: 30px;
+  background-size: 50px;
   padding-left: 30px;
+  margin-bottom: 8px;
+  /* display: inline-block; */
 }
 
 li#gpcrdb_menu,
 li#drugs_menu,
 li#constructs_menu {
   background-position: 10px 8px;
+}
+
+li#gpcrdb_menu .dropdown-toggle {
+  padding-left: 36px;
+}
+li#gproteindb_menu .dropdown-toggle {
+  padding-left: 30px;
+}
+li#biasedsignalingatlas_menu .dropdown-toggle {
+  padding-left: 33px;
+}
+li#arrestindb_menu .dropdown-toggle {
+  padding-left: 31px;
 }
 
 li#gpcrdb_menu {
@@ -114,7 +146,6 @@ li#gproteindb_menu {
 li#arrestindb_menu {
   background-position: 10px 8px;
   background-image: url("/static/home/logo/arrestin/main.jpeg");
-  background-size: 35px;
   padding-left: 35px;
 }
 

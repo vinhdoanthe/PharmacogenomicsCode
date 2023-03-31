@@ -65,7 +65,9 @@ $(function() {
       }).data("custom-catcomplete")._renderItem = function (ul, item) {
         return $("<li></li>")
         .data("item.autocomplete", item)
+        // .data( "ui-autocomplete-item", item )
         .append("<a>" + item.label + "</a>")
         .appendTo(ul);
     };
 });
+

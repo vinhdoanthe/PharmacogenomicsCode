@@ -15,6 +15,9 @@ from pathlib import Path
 # import marshmallow
 # import environ
 import os
+import dj_database_url
+
+
 
 # env = environ.Env()
 print("Printing from the settings.py")
@@ -67,7 +70,8 @@ INSTALLED_APPS = [
     "structure.apps.StructureConfig",
     "variant",
     "sitesearch",
-    "temp"
+    "temp",
+    "draft_drug",
 ]
 ...
 AUTH_USER_MODEL = "accounts.CustomUser"

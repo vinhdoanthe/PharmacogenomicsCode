@@ -27,6 +27,7 @@ urlpatterns = [
     path("", include("gene.urls")),
     path("", include("sitesearch.urls")),
     path("", include("temp.urls")),
+    path("", include("draft_drug.urls")),
     # path("", include("interaction.urls")),
     path("__debug__/", include(debug_toolbar.urls)),
     

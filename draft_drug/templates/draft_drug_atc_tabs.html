@@ -1,0 +1,306 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ site_title }}</title>
+
+    <!-- Bootstrap -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/bootstrap-submenu.min.css' %}" rel="stylesheet">
+    <!-- jQueryUI -->
+    <link rel="stylesheet" href="{% static 'home/css/jquery-ui.min.css' %}" type="text/css" media="all"/>
+    <link rel="stylesheet" href="{% static 'home/css/jquery-ui.theme.min.css' %}" type="text/css" media="all"/>
+
+    <!-- TreeView -->
+    <link href="{% static 'home/css/bootstrap-treeview.min.css' %}" rel="stylesheet">
+    <!-- Custom styles -->
+    <link href="{% static 'home/css/style.css' %}" rel="stylesheet">
+    <!-- flowplayer skin -->
+    <link href="{% static 'flowplayer/flowplayer.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home/css/jquery.dataTables.min.css' %}" type="text/css" />
+    <style media="screen">
+    </style>
+
+    <style>
+      #drug_general{
+        margin: 10px;
+      }
+
+      #drug_atc_expansion{
+        margin: 10px;
+      }
+      {/* Style for tabs  */}
+      #tabs {
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      
+      #tab-header {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      
+      #tab-header li {
+        float: left; 
+      }
+
+      #tab-header li.more a, #tab-header li.prev a {
+        display: block;
+        text-align: center;
+        width: 70px;
+        border: none;
+        background-color: transparent;
+        font-weight: bold;
+      }
+      
+      #tab-header li a {
+        display: block;
+        padding: 5px;
+        width: 180px;
+        background-color: #eee;
+        text-decoration: none;
+        color: #000;
+        border-top-right-radius: 12px;
+        border-top-left-radius: 3px;
+        border: 1px solid  #d6d6d6;
+        border-bottom: none;
+      }
+      
+      #tab-header li.active a {
+        // background-color: rgb(51, 122, 183);
+        background-color: #ccc;
+      }
+      
+      .tab-content {
+        display: none;
+        padding: 10px;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      #tab-header li.disable a{
+        pointer-events: none;
+        color: rgba(0, 0, 0, 0.3);
+      }
+    </style>
+</head>
+
+<body>
+  <h2>Drug Browser</h2>
+  <button onclick="tableToExcel()" type="button" class="btn btn-primary" style="margin-top:10px;margin-top:3px"> Export to Excel </button>
+
+  <div>
+    <div id="drug_general">
+      <h2>Drug name: {{drug_name}}</h2>
+      <p>Some brief description here</p>
+      <p>Drug indication and therapeutic uses here</p>
+      <p>Optimal: high-quality image of the drug and logo here</p>
+    </div>
+
+    <div id="drug_atc_expansion">
+      <h2>ATC code and expanded hierachy here (in draft_drug) </h2>
+      <div id="tabs">
+        <ul id="tab-header">
+          <li class="prev"><a href="#prev">&lt;&lt;</a></li>
+          {% for i in num_list %}
+            <li><a href="#tab-{{i}}">Tab {{i}}</a></li>
+          {% endfor %}
+          <li class="more"><a href="#more">&gt;&gt;</a></li>
+        </ul>
+        {% for i in num_list %}
+          <div id="tab-{{i}}" class="tab-content">
+            <h2>Tab {{i}}</h2>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+            <p>This is the content for Tab {{i}}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+{% comment %} <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> {% endcomment %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+{% comment %} <script src="{% static 'home/js/jquery-3.1.1.min.js' %}"></script> {% endcomment %}
+<script src="{% static 'home/js/jquery-ui.min.js' %}"></scrip>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap-submenu.js' %}"></script>
+<script src="{% static 'home/js/navbar-autocomplete.js' %}"></script>
+<script src="{% static 'home/js/svg-pan-zoom.min.js' %}"></script>
+<script src="{% static 'home/js/bootstrap-treeview.min.js' %}"></script>
+<script src="{% static 'home/js/papaparse.min.js' %}"></script>
+
+<!-- 3. flowplayer -->
+<script src="{% static 'flowplayer/flowplayer.min.js' %}"></script>
+<!-- the overlay plugin -->
+<script src="{% static 'flowplayer/flowplayer.overlay.min.js' %}"></script>
+<!-- the bootstrap vendor overlay wrapper -->
+<script src="{% static 'flowplayer/flowplayer.overlay.bootstrap.js' %}"></script>
+<!-- Comply with GDPR Minified Cookie Consent from https://github.com/osano/cookieconsent -->
+<script src="{% static 'home/js/gpcrdb.js' %}"></script>
+<script src="{% static 'home/js/cookieconsent.min.js' %}"></script>
+
+
+<script type="text/javascript" charset="utf-8">
+	var numTabs = {{ num_substance }};
+	{/* var numTabs = 13;  */}
+  var maxTabs = 3;
+  var lastVisibleIndex = 0; 
+  var firstVisibleIndex = 0; 
+
+  {/* Initial display */}
+  $('#tab-header li:nth-child(2)').addClass('active');
+  $('#tab-1').addClass('active');
+
+  if (numTabs > maxTabs) 
+  {
+    for (var i=0; i<=numTabs+2; i++)
+    {
+      var str = $('#tab-header li:eq(' + (i) + ') a').text();
+      if (str !== ">>" && str !== "<<" && str!=='') 
+      {
+        const num = parseInt(str.match(/\d+/)[0], 10);
+        if (num>maxTabs){
+          $('#tab-header li:eq(' + (i) + ')').hide();
+        }
+      }
+    }
+    firstVisibleIndex = 1; //zero-based index, the prev tab is the first one at index=0
+    lastVisibleIndex = maxTabs; //zero-based index
+    $('#tab-header li.prev').addClass("disable");
+    $('#tab-header li.more').show();
+  }
+  else
+  {
+    $('#tab-header li.prev').hide();
+    $('#tab-header li.more').hide();
+  }
+
+  {/* if content tab is clicked */}
+  $('#tab-header li a').on('click', function (e) 
+  {
+    e.preventDefault();
+    $('#tab-header li').removeClass('active');
+    $(this).parent().addClass('active');
+    
+    $('.tab-content').removeClass('active');
+    $($(this).attr('href')).addClass('active');
+  });
+
+  {/* if a moreTab is click */}
+  $('#tab-header li.more a').on('click', function (e) 
+  {
+    e.preventDefault();
+    $('#tab-header li.more').removeClass('active');
+    for (var i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
+      $('#tab-header li:eq(' + (i) + ')').hide();
+    }
+    $('#tab-header li.prev').removeClass("disable");
+    $('#tab-header li.prev').show();
+    $('#tab-header li:eq(' + (lastVisibleIndex+1) + ')').addClass('active');
+    $('#tab-'+(lastVisibleIndex+1)).addClass('active');
+
+    if ((numTabs - (lastVisibleIndex)) < maxTabs)
+    {
+      console.log($('#tab-header li'));
+      $('#tab-header li:gt(' + (lastVisibleIndex) + ')').show();
+      $('#tab-header li.more').addClass('disable');
+      firstVisibleIndex = lastVisibleIndex+1;
+      lastVisibleIndex = numTabs;
+    }
+    else
+    {
+      console.log($('#tab-header li'));
+      for (var i = lastVisibleIndex+1; i <= lastVisibleIndex+maxTabs; i++) {
+        $('#tab-header li:nth-child(' + (i+1) + ')').show();
+      }
+      // $('#tab-header li.more').show();
+      lastVisibleIndex = lastVisibleIndex + maxTabs;
+      firstVisibleIndex = lastVisibleIndex - maxTabs+1;
+    }
+  });
+    
+    {/* if a preTab is click */}
+  $('#tab-header li.prev a').on('click', function (e) 
+    {
+      // alert("a prev tab is clicked");
+      e.preventDefault();
+      $('#tab-header li.prev').removeClass('active');
+      $('#tab-header li.more').removeClass('disable');
+      for (var i = lastVisibleIndex; i >= firstVisibleIndex; i--) {
+        $('#tab-header li:nth-child(' + (i+1) + ')').hide();
+      }
+      $('#tab-header li:eq(' + (firstVisibleIndex-maxTabs) + ')').addClass('active');
+      $('#tab-'+(firstVisibleIndex-maxTabs)).addClass('active');
+      if (firstVisibleIndex-maxTabs==1)
+      {
+        $('#tab-header li:lt(' + (firstVisibleIndex) + ')').show();
+        $('#tab-header li.prev').addClass('disable');
+        $('#tab-header li.more').show();
+        firstVisibleIndex = 1;
+        lastVisibleIndex = firstVisibleIndex + maxTabs -1;
+        console.log("firstVisibleIndex updated = ", firstVisibleIndex);
+        console.log("lastVisibleIndex updated = ", lastVisibleIndex);
+      }
+      else
+      {
+        $('#tab-header li.prev').show();
+        for (var i = firstVisibleIndex-1; i >= firstVisibleIndex-maxTabs; i--) {
+          $('#tab-header li:nth-child(' + (i+1) + ')').show();
+        }
+        $('#tab-header li.more').show();
+        lastVisibleIndex = firstVisibleIndex - 1;
+        firstVisibleIndex = firstVisibleIndex - maxTabs;
+        console.log("firstVisibleIndex updated = ", firstVisibleIndex);
+        console.log("lastVisibleIndex updated = ", lastVisibleIndex);
+      }
+    });
+    
+</script>
+</body>
+</html>

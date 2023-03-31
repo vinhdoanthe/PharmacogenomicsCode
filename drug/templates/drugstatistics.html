@@ -202,7 +202,7 @@ var tooltip = d3.select("body")
     var width = parseInt(d3.select("#targetdistribution").style("width"));
   }
 </script>
-  updateTypes('approved')
+  updateTypes('approved');
   function updateTypes(request) {
 
     var series = {{drugtypes_approved|safe}}
@@ -220,7 +220,7 @@ var tooltip = d3.select("body")
       text = "Agents targeting not established targets"
       series = {{drugtypes_not_estab|safe}}
     }
-    updatermoas(series,text)
+    updatermoas(series,text);
   }
 
   function updatermoas(series,text) {
