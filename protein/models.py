@@ -13,6 +13,12 @@ class Protein(models.Model):
     def __str__(self):
         return "Protein with UniProt ID: " + self.uniprot_ID + " and genename: " + self.genename
     
+class Structure(models.Model):
+    uniprot_ID = models.ForeignKey(Protein, on_delete=models.CASCADE)
+    primary_struc = models.TextField()
+    tertiary_struc = models.TextField()
+
+    
 
 class Species(models.Model):
     latin_name = models.CharField(max_length=100, unique=True)

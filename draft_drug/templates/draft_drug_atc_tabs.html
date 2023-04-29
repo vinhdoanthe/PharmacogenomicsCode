@@ -89,6 +89,72 @@
         pointer-events: none;
         color: rgba(0, 0, 0, 0.3);
       }
+
+      #atc_hierachy_l1{
+        background: #c1d3fe;
+        border: 1px solid #abc4ff;
+        width: 697px;
+        height: 327px;
+        margin-top: 14px;
+
+      }
+
+      #atc_hierachy_l2{
+        background: #ccdbfd;
+        border-top: 1px solid #abc4ff;
+        border-left: 1px solid #abc4ff;
+        width:617px;
+        height: 260px;
+      }
+
+      #atc_hierachy_l3{
+        background: #d7e3fc;
+        border-top: 1px solid #abc4ff;
+        border-left: 1px solid #abc4ff;
+        width: 526px;
+        height: 199px;
+      }
+
+      #atc_hierachy_l4{
+        background: #e2eafc;
+        border-top: 1px solid #abc4ff;
+        border-left: 1px solid #abc4ff;
+        width: 447px;
+        height: 137px;
+      }
+
+      #atc_hierachy_l5{
+        background: #edf2fb;
+        border-top: 1px solid #abc4ff;
+        border-left: 1px solid #abc4ff;
+        width: 352px;
+        height: 67px;
+      }
+
+      .outer {
+        position: relative;
+      }
+
+      .inner {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+
+      .atc_hierachy p {
+        margin: 20px;
+      }
+
+      {% comment %} #atc_hierachy_l1 > p {
+        padding-top: 20px;
+      } {% endcomment %}
+
+      .atc_hierachy p a{
+        color: #2e6da4;
+        text-decoration: none;
+      }
+
+
     </style>
 </head>
 
@@ -109,56 +175,35 @@
       <div id="tabs">
         <ul id="tab-header">
           <li class="prev"><a href="#prev">&lt;&lt;</a></li>
-          {% for i in num_list %}
-            <li><a href="#tab-{{i}}">Tab {{i}}</a></li>
+          {% for code in atc_code %}
+              <li><a href="#tab-{{forloop.counter}}">{{code.0}}</a></li>
           {% endfor %}
           <li class="more"><a href="#more">&gt;&gt;</a></li>
         </ul>
-        {% for i in num_list %}
-          <div id="tab-{{i}}" class="tab-content">
-            <h2>Tab {{i}}</h2>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
-            <p>This is the content for Tab {{i}}</p>
+        {% for level in allLevels %}
+          <div id="tab-{{forloop.counter}}" class="tab-content">
+            {% comment %} {% for key, value in level.items %}
+              <p>{{ key }}: {{ value }}</p>
+            {% endfor %} {% endcomment %}
+            <div id="atc_hierachy_l1" class="outer atc_hierachy">
+              <p><a href="#">{{level.atc_anatomical_group}}</a></p>
+              <div id="atc_hierachy_l2" class="inner atc_hierachy">
+                <p><a href="#">{{level.atc_therapeutic_group}}</a></p>
+                <div id="atc_hierachy_l3" class="inner atc_hierachy">
+                  <p><a href="#">{{level.atc_pharmacological_group}}</a></p>
+                  <div id="atc_hierachy_l4" class="inner atc_hierachy">
+                    <p><a href="#">{{level.atc_chemical_group}}</a></p>
+                    <div id="atc_hierachy_l5" class="inner atc_hierachy">
+                      <p><a href="#">{{level.atc_chemical_substance}}</a></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         {% endfor %}
+        
+
       </div>
     </div>
   </div>
@@ -189,7 +234,7 @@
 <script type="text/javascript" charset="utf-8">
 	var numTabs = {{ num_substance }};
 	{/* var numTabs = 13;  */}
-  var maxTabs = 3;
+  var maxTabs = 5;
   var lastVisibleIndex = 0; 
   var firstVisibleIndex = 0; 
 

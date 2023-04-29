@@ -19,10 +19,10 @@
   $(document).ready(function() {
 
 
-    if (window.location.pathname != '/') {
-      $('#ref_widget_div').css('display', 'block');
-      check_for_video(window.location.href);
-    }
+    // if (window.location.pathname != '/') {
+    //   $('#ref_widget_div').css('display', 'block');
+    //   check_for_video(window.location.href);
+    // }
     $('#cite').click(function() {
       citation_tool(window.location.href);
     })
@@ -36,14 +36,14 @@
       document.getElementById(anchor_id).scrollIntoView(true);
       $('#page_select_button').html($(this).text());
     })
-    $('#ref_widget_openclose').click(function() {
-      toggle_widget();
-    })
-    setTimeout(function() {
-      if ($('#widget_chevron').hasClass("glyphicon glyphicon-chevron-left")) {
-        toggle_widget();
-      }
-    }, 8000)
+    // $('#ref_widget_openclose').click(function() {
+    //   toggle_widget();
+    // })
+    // setTimeout(function() {
+    //   if ($('#widget_chevron').hasClass("glyphicon glyphicon-chevron-left")) {
+    //     toggle_widget();
+    //   }
+    // }, 8000)
 
   });
 </script>
@@ -94,7 +94,7 @@
         {% include "home/variant.html" %}
 
         <!-- Cite and join us -->
-        {% include "home/cite_and_join_us.html" %}
+        {% comment %} {% include "home/cite_and_join_us.html" %} {% endcomment %}
       </ul>
       <form class="navbar-form navbar-right" role="search">
         <div class="input-group">
@@ -111,4 +111,4 @@
 </nav>
 
 <!-- Cite widget and modal -->
-{% include "home/cite_widget_and_modal.html" %} 
+{% comment %} {% include "home/cite_widget_and_modal.html" %} {% endcomment %}

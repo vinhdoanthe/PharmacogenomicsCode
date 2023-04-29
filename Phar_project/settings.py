@@ -15,7 +15,7 @@ from pathlib import Path
 # import marshmallow
 # import environ
 import os
-import dj_database_url
+# import dj_database_url
 
 
 
@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "debug_toolbar",
+    # "debug_toolbar",
     # Local
     "accounts.apps.AccountsConfig",
     "protein.apps.ProteinConfig",
@@ -77,7 +77,7 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = "accounts.CustomUser"
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -105,7 +105,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "Phar_project.wsgi.application"
+# WSGI_APPLICATION = "Phar_project.wsgi.application"
 
 
 # Database

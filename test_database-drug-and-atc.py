@@ -18,6 +18,7 @@ print("Drug: ", drug)
 # Get the related ATC code of the drug
 atc_code = DrugAtcAssociation.objects.filter(drug_id=drug).values_list('atc_id_id')
 
+
 print("atc_code = ", atc_code, " length = ", len(atc_code))
 
 # # Retrieve the related ATC codes in 5 levels

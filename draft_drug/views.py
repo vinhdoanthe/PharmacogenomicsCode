@@ -41,30 +41,31 @@ def drug_atc_expansion(request): #put a parameter drug_name here
 
     # Retrieve the drug object based on the name
     drug = Drug.objects.get(name=drug_name)
-    print("Drug: ", drug)
+    # print("Drug: ", drug)
 
     # Get the related ATC code of the drug
     atc_code = DrugAtcAssociation.objects.filter(drug_id=drug).values_list('atc_id_id')
     context["atc_code"] = atc_code
-    # context["num_substance"] = len(atc_code)
-    context["num_substance"] = 14
-    # num_list = [num + 1 for num in range(len(atc_code))]
-    num_list = [num + 1 for num in range(14)]
+    context["num_substance"] = len(atc_code)
+    num_list = [num + 1 for num in range(len(atc_code))]
     context ['num_list'] = num_list
 
+    allLevels = []
 
-    # # Retrieve the related ATC codes in 5 levels
-    # atc_chemical_substance = AtcChemicalSubstance.objects.get(id=atc_code.id[:7])
-    # atc_chemical_group = AtcChemicalGroup.objects.get(id=atc_code.id[:5])
-    # atc_pharmacological_group = AtcPharmacologicalGroup.objects.get(id=atc_code.id[:4])
-    # atc_therapeutic_group = AtcTherapeuticGroup.objects.get(id=atc_code.id[:3])
-    # atc_anatomical_group = AtcAnatomicalGroup.objects.get(id=atc_code.id[:1])
+    for i, code in enumerate(atc_code):
+        print(i, code[0]) 
 
-    # print("atc_chemical_substance = ", atc_chemical_substance)
-    # print("atc_chemical_group = ", atc_chemical_group)
-    # print("atc_pharmacological_group = ", atc_pharmacological_group)
-    # print("atc_therapeutic_group = ", atc_therapeutic_group)
-    # print("atc_anatomical_group = ", atc_anatomical_group)
+        # # Retrieve the related ATC codes in 5 levels
+        atc_chemical_substance = AtcChemicalSubstance.objects.filter(id=code[0]).values_list('name', flat=True)[0]
+        atc_chemical_group = AtcChemicalGroup.objects.filter(id=code[0][:5]).values_list('name', flat=True)[0]
+        atc_pharmacological_group = AtcPharmacologicalGroup.objects.filter(id=code[0][:4]).values_list('name', flat=True)[0]
+        atc_therapeutic_group = AtcTherapeuticGroup.objects.filter(id=code[0][:3]).values_list('name', flat=True)[0]
+        atc_anatomical_group = AtcAnatomicalGroup.objects.filter(id=code[0][:1]).values_list('name', flat=True)[0]
+        
+        allLevels.append({"atc_chemical_substance":code[0]+": "+atc_chemical_substance, "atc_chemical_group":code[0][:5]+": "+atc_chemical_group, "atc_pharmacological_group":code[0][:4]+": "+atc_pharmacological_group, "atc_therapeutic_group":code[0][:3]+": "+atc_therapeutic_group, "atc_anatomical_group":code[0][:1]+": "+atc_anatomical_group})
+    
+    context["allLevels"] = allLevels
+
 
 
     # # Retrieve the drugs that belong to each ATC code level
@@ -84,7 +85,7 @@ def drug_atc_expansion(request): #put a parameter drug_name here
     # print(f"Drugs in ATC Therapeutic Group: {atc_therapeutic_group_drugs}")
     # print(f"ATC Anatomical Group: {atc_anatomical_group}")
     # print(f"Drugs in ATC Anatomical Group: {atc_anatomical_group_drugs}")
-    print("atc_code: ", atc_code)
-    print("context ", context)
+    # print("atc_code: ", atc_code)
+    # print("context ", context)
 
     return render(request, 'draft_drug_atc_tabs.html', context)
