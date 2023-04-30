@@ -85,5 +85,15 @@ target/
 __pycache__/
 local_settings.py
 
+# Environment varialbes
 .env
+
+# Database files
 db.sqlite3
+docker/pgdata
+
+# Sample data folder
+data/
+
+# Virtualenv folder
+venv
