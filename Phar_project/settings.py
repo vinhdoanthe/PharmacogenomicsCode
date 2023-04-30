@@ -104,7 +104,7 @@ DATABASES = {
         "NAME": config("DATABASE_NAME", default="ljw303", cast=str),
         "USER": config("DATABASE_USERNAME", default="ljw303", cast=str),
         "PASSWORD": config("DATABASE_PASSWORD", default="", cast=str),
-        "HOST": config("DATBASE_HOST", default="localhost", cast=str),
+        "HOST": config("DATABASE_HOST", default="localhost", cast=str),
         "PORT": config("DATABASE_PORT", default=5432, cast=int)
     }
 }
