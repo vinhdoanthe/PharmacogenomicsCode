@@ -97,3 +97,6 @@ data/
 
 # Virtualenv folder
 venv
+
+# Pycharm files
+.idea/
