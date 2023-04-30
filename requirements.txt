@@ -19,3 +19,4 @@ py3Dmol==2.0.1.post1
 XlsxWriter==3.1.0
 xlrd==2.0.1
 python-decouple==3.8
+gunicorn==20.1.0
