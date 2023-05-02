@@ -30,7 +30,4 @@ urlpatterns = [
     path("", include("draft_drug.urls")),
     # path("", include("interaction.urls")),
     # path("__debug__/", include(debug_toolbar.urls)),
-    
-
-
 ]
