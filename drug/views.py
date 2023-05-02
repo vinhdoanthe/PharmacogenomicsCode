@@ -274,7 +274,7 @@ def SelectionAutocomplete(request):
             for p in ps:
                 p_json = {}
                 p_json['id'] = p.drug_bankID
-                p_json['label'] = p.name.name_detail
+                p_json['label'] = p.name
                 p_json['type'] = 'drug'
                 p_json['redirect'] = redirect
                 p_json['category'] = 'Drugs'
@@ -299,10 +299,6 @@ def SelectionAutocomplete(request):
                         p_json['label'] = p.protein_name
                         p_json['redirect'] = redirect
                         results.append(p_json)
-
-
-
-
         data = json.dumps(results)
     else:
         data = 'fail'
@@ -361,4 +357,5 @@ def drug_detail(request, drugbank_id):
     }
 
     print("-------------- context", context)
-    return render(request, '_drug_detail.html', context)
+    # return render(request, '_drug_detail.html', context)
+    return render(request, 'drug_atc_tabs.html', context)

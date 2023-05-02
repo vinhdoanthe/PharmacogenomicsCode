@@ -57,8 +57,6 @@ INSTALLED_APPS = [
     "structure.apps.StructureConfig",
     "variant",
     "sitesearch",
-    "temp",
-    "draft_drug",
 ]
 
 AUTH_USER_MODEL = "accounts.CustomUser"

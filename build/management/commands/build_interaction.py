@@ -29,7 +29,8 @@ class Command(BaseCommand):
 
     # source file directory
     interactiondata_data_dir = os.sep.join(
-        [settings.DATA_DIR, "interaction_data"])
+        [str(settings.DATA_DIR), "interaction_data"])
+    # interactiondata_data_dir = settings.DATA_DIR / "interaction_data"
 
     print("checkpoint1")
 
