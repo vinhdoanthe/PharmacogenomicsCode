@@ -114,7 +114,7 @@ class Command(BaseCommand):
                     )
                     continue
 
-                print("checkpoint 2.1 - start to fetch data to interaction table")
+                # print("checkpoint 2.1 - start to fetch data to interaction table")
                 interaction, created = Interaction.objects.get_or_create(
                     drug_bankID=d,
                     uniprot_ID=p,

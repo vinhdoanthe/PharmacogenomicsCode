@@ -94,7 +94,7 @@ class Command(BaseCommand):
                     )
                     continue
 
-                print("checkpoint 2.1 - start to fetch data to genebass variant table")
+                # print("checkpoint 2.1 - start to fetch data to genebass variant table")
                 marker, created = Variant.objects.get_or_create(
                     Gene_ID=g,
                     VariantMarker=markerID,

@@ -150,9 +150,9 @@ class Command(BaseCommand):
                     )
                     continue
 
-                print(
-                    "checkpoint 2.1 - start to fetch data to genebass variant table")
-                print("type of vm : ", type(vm))
+                # print(
+                #     "checkpoint 2.1 - start to fetch data to genebass variant table")
+                # print("type of vm : ", type(vm))
                 vep, created = VepVariant.objects.get_or_create(
                     Variant_marker = vm,
                     Transcript_ID = Transcript_ID,

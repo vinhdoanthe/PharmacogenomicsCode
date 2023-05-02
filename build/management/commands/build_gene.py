@@ -77,6 +77,8 @@ class Command(BaseCommand):
             data = pd.read_csv(filepath, low_memory=False,
                                encoding="ISO-8859-1", sep=";")
             data.dropna(subset=["GeneID"], inplace=True)
+            
+            # print("checkpoint 2.1 - start to fetch data to Gene table")
 
             for index, row in enumerate(data.iterrows()):
 
@@ -84,7 +86,6 @@ class Command(BaseCommand):
                 genename = data[index: index + 1]["Gene name"].values[0]
                 
 
-                print("checkpoint 2.1 - start to fetch data to Gene table")
                 gene, created = Gene.objects.get_or_create(
                     gene_id=gene_id,
                     genename=genename,
