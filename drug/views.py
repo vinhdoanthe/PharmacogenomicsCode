@@ -31,7 +31,8 @@ from django.views.decorators.cache import cache_page
 # Create your views here.
 from django.http import JsonResponse
 from .models import Drug, DrugAtcAssociation
-def drug_atc_expansion(request): #put a parameter drug_name here
+
+def drug_atc_detail(request, search_term):
 
     context={}
 
@@ -318,7 +319,7 @@ class DrugStatistics(TemplateView):
 
 
 # Help from chatGPT.
-def drug_detail(request, drugbank_id):
+def drug_interaction_detail(request, drugbank_id):
     # Retrieve the drug object
     drug = get_object_or_404(Drug, drug_bankID=drugbank_id)
 
