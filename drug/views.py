@@ -75,7 +75,7 @@ def drug_atc_expansion(request): #put a parameter drug_name here
 
         # Append the information to the list
         atcCodeInAllLevels.append({"atc_chemical_substance":code[0]+": "+atc_chemical_substance.replace('"',''), "atc_chemical_group":code[0][:5]+": "+atc_chemical_group.replace('"',''), "atc_pharmacological_group":code[0][:4]+": "+atc_pharmacological_group.replace('"',''), "atc_therapeutic_group":code[0][:3]+": "+atc_therapeutic_group.replace('"',''), "atc_anatomical_group":code[0][:1]+": "+atc_anatomical_group.replace('"',''), "atc_chemical_group_drugs":atc_chemical_group_drugs, "atc_pharmacological_group_drugs":atc_pharmacological_group_drugs, "atc_therapeutic_group_drugs":atc_therapeutic_group_drugs, "atc_anatomical_group_drugs":atc_anatomical_group_drugs})
-    
+
     # Convert the list to a JSON string
     json_data = json.dumps(atcCodeInAllLevels)
     print("json_data: ", json_data)
@@ -124,7 +124,7 @@ def search_drugs(request):
     return render(request, 'drug_search_results.html', context)
 
 
-    
+
 @cache_page(60 * 60 * 24 * 28)
 def drugbrowser(request):
     # Get drugdata from here somehow
@@ -181,7 +181,7 @@ def drugbrowser(request):
                 classname = drug.classname.class_detail
             else:
                 classname = None
-            
+
             #retrieve subclass
             drug = Drug.objects.select_related('subclass').filter(drug_bankID=drug_bankID).first()
             if drug:
@@ -219,19 +219,19 @@ def drugbrowser(request):
 
             pubChemSubstance = drug.pubChemSubstance
 
-            jsondata = {'drug_bankID':drug_bankID, 'drugtype':drugtype, 'drugname': drugname, 'groups':groups, 
-                        'categories':categories, 'description':description, 'aliases':aliases, 'superclass':superclass, 
-                        'classname':classname, 'subclass':subclass, 'direct_parent':direct_parent, 'indication':indication, 
-                        'pharmacodynamics':pharmacodynamics, 'moa':moa, 'absorption':absorption, 'toxicity':toxicity, 
-                        'halflife':halflife, 'distribution_volume':distribution_volume, 'protein_binding':protein_binding, 'dosages':dosages, 
-                        'properties':properties, 'chEMBL':chEMBL, 
+            jsondata = {'drug_bankID':drug_bankID, 'drugtype':drugtype, 'drugname': drugname, 'groups':groups,
+                        'categories':categories, 'description':description, 'aliases':aliases, 'superclass':superclass,
+                        'classname':classname, 'subclass':subclass, 'direct_parent':direct_parent, 'indication':indication,
+                        'pharmacodynamics':pharmacodynamics, 'moa':moa, 'absorption':absorption, 'toxicity':toxicity,
+                        'halflife':halflife, 'distribution_volume':distribution_volume, 'protein_binding':protein_binding, 'dosages':dosages,
+                        'properties':properties, 'chEMBL':chEMBL,
                         'pubChemCompound':pubChemCompound, 'pubChemSubstance':pubChemSubstance}
             context.append(jsondata)
 
         cache.set(name_of_cache, context, 60*60*24*28)
 
     return render(request, 'drug_browser copy.html', {'drugdata': context})
-    
+
 
 
 # This is a helper function that takes a request object and checks if it's an AJAX request. It does this by checking if the 'HTTP_X_REQUESTED_WITH' key in the request.META dictionary is set to 'XMLHttpRequest'. If it is, it returns True, otherwise it returns False.
@@ -253,6 +253,7 @@ def SelectionAutocomplete(request):
                                         species__in=(species_list),
                                         source__in=(protein_source_list)).exclude(family__slug__startswith=exclusion_slug).exclude(sequence_type__slug='consensus')[:10]
         else:
+            ps = []
             print('Checking that we are here')
             redirect = '/drug/'
             ps1 = Drug.objects.filter(Q(drug_bankID__icontains=q) | Q(name__icontains=q) | Q(aliases__icontains=q))
@@ -267,11 +268,8 @@ def SelectionAutocomplete(request):
             if len(ps3) > 0:
                 redirect = "/protein/"
                 ps = ps3
-        print("-----ps-------")        
-        print("ps length ", ps.count())
-        print("ps ---------------", ps)
 
-        
+
         if redirect == '/drug/':
             for p in ps:
                 p_json = {}
@@ -317,7 +315,7 @@ class DrugStatistics(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-    
+
 
 # Help from chatGPT.
 def drug_detail(request, drugbank_id):

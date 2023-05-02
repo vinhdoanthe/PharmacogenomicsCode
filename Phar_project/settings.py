@@ -11,33 +11,19 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-# from django-environ import Env
-# import marshmallow
-# import environ
 import os
-# import dj_database_url
 
-
-
-# env = environ.Env()
-print("Printing from the settings.py")
-# from environs import Env
-# env = Env()
-
-# env.read_env()
-
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR /'Data'
-print("BASE_DIR : ", BASE_DIR)
+DATA_DIR = os.path.join(BASE_DIR, 'data')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-hv1(e0r@v4n4m6gqdz%dn(60o=dsy8&@0_lbs8p-v3u^bs4)xl"
-# SECRET_KEY = env("DJANGO_SECRET_KEY")
+SECRET_KEY = config("SECRET_KEY", default="django-insecure-hv1(e0r@v4n4m6gqdz%dn(60o=dsy8&@0_lbs8p-v3u^bs4)xl", cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -56,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.postgres",
     # "debug_toolbar",
     # Local
     "accounts.apps.AccountsConfig",
@@ -71,7 +58,7 @@ INSTALLED_APPS = [
     "variant",
     "sitesearch",
 ]
-...
+
 AUTH_USER_MODEL = "accounts.CustomUser"
 
 MIDDLEWARE = [
@@ -109,23 +96,14 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# django_project/settings.py
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ljw303",
-        # "NAME": "gpcrdb", --> just for testing
-        "USER": "ljw303",
-        # "PASSWORD": "postgres",
-        # "HOST": "db",  # comment this out if run in venv
-        "PORT": 5432,
+        "NAME": config("DATABASE_NAME", default="ljw303", cast=str),
+        "USER": config("DATABASE_USERNAME", default="ljw303", cast=str),
+        "PASSWORD": config("DATABASE_PASSWORD", default="", cast=str),
+        "HOST": config("DATABASE_HOST", default="localhost", cast=str),
+        "PORT": config("DATABASE_PORT", default=5432, cast=int)
     }
 }
 
@@ -163,12 +141,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = "static/"
-# STATIC_URL = "/static/"
-# STATIC_ROOT = "static/"
-# STATICFILES_DIRS = (os.sep.join([BASE_DIR, "static"]),)
+STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATICFILES_DIRS = (
-    BASE_DIR / 'static',)
+    os.path.join(BASE_DIR, "static"),
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
