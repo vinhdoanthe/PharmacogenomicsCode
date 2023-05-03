@@ -31,7 +31,9 @@ from django.views.decorators.cache import cache_page
 # Create your views here.
 from django.http import JsonResponse
 from .models import Drug, DrugAtcAssociation
-def drug_atc_expansion(request): #put a parameter drug_name here
+
+# Then in this view function, we add drugbank_id as a parameter
+def drug_atc_expansion(request): #put a parameter drugbank_id here
 
     context={}
 
@@ -39,6 +41,8 @@ def drug_atc_expansion(request): #put a parameter drug_name here
     drug_name = "Insulin human"
 
     # Retrieve the drug object based on the name
+    # And change the code getting drug to bellow
+    # drug = get_object_or_404(Drug, drug_bankID=drugbank_id)
     drug = Drug.objects.get(name=drug_name)
     # print("Drug: ", drug)
 

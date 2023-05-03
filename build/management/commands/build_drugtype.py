@@ -52,7 +52,7 @@ class Command(BaseCommand):
     def create_drugtype_data(self, filenames=False):
         self.logger.info("CREATING DRUGTYPEDATA")
 
-        print("checkpoint start to fetch data to Drugtype table")
+        # print("checkpoint start to fetch data to Drugtype table")
         type, created = DrugType.objects.get_or_create(
             drugtype=0,
             type_detail="Biotech",

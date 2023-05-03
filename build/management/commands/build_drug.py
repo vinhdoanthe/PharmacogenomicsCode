@@ -90,6 +90,8 @@ class Command(BaseCommand):
             data = pd.read_csv(filepath, low_memory=False,
                                encoding="ISO-8859-1", sep=";")
 
+            # print("checkpoint 2.1 - start to fetch data to Drug table")
+
             for index, row in enumerate(data.iterrows()):
 
                 drug_bankID = data[index: index + 1]["drugbank_id"].values[0]
@@ -234,7 +236,6 @@ class Command(BaseCommand):
                         )
                     continue
 
-                print("checkpoint 2.1 - start to fetch data to Drug table")
                 drug, created = Drug.objects.get_or_create(
                     drug_bankID=drug_bankID,
                     drugtype=drugtype,
