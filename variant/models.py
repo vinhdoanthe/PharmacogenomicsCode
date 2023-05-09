@@ -1,11 +1,13 @@
 from django.db import models
+
+
 # Create your models here.
 
 class Variant(models.Model):
-    VariantMarker= models.CharField(primary_key=True, max_length=255)
+    VariantMarker = models.CharField(primary_key=True, max_length=255)
     Gene_ID = models.ForeignKey(
-            "gene.gene", on_delete=models.CASCADE, default="None"
-        )
+        "gene.gene", on_delete=models.CASCADE, default="None"
+    )
 
 
 class VariantPhenocode(models.Model):
@@ -15,15 +17,15 @@ class VariantPhenocode(models.Model):
     description_more = models.TextField(null=True)
 
     def __str__(self):
-        return "Phenocode: " + self.phenocode + "\n --- Description: "+self.description
-    
+        return "Phenocode: " + self.phenocode + "\n --- Description: " + self.description
+
 
 class VepVariant(models.Model):
     vep_id = models.AutoField(auto_created=True, primary_key=True)
     Variant_marker = models.ForeignKey(
         "variant.variant", on_delete=models.CASCADE
     )
-    
+
     Transcript_ID = models.CharField(max_length=255)
     Consequence = models.CharField(max_length=255)
     cDNA_position = models.CharField(max_length=255)
@@ -74,7 +76,6 @@ class VepVariant(models.Model):
     PhastCons30way_mammalian_rankscore = models.FloatField()
     PhyloP30way_mammalian_rankscore = models.FloatField()
     LINSIGHT_rankscore = models.FloatField()
-    
 
 
 class GenebassVariant(models.Model):
@@ -83,7 +84,7 @@ class GenebassVariant(models.Model):
         "variant.variant", on_delete=models.CASCADE
     )
     phenocode = models.ForeignKey(
-            "variant.variantphenocode", on_delete=models.CASCADE, default="None")
+        "variant.variantphenocode", on_delete=models.CASCADE, default="None")
     n_cases = models.FloatField()
     n_controls = models.FloatField()
     n_cases_defined = models.FloatField()
