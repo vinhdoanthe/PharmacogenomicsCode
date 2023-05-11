@@ -30,7 +30,7 @@ from django.views.generic import ListView
 
 class GeneDetailBrowser(TemplateView):
 
-    #@cache_page(60 * 60 * 24 * 7)
+    # @cache_page(60 * 60 * 24 * 7)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
@@ -43,57 +43,58 @@ class GeneDetailBrowser(TemplateView):
         slug = kwargs.get('slug')
 
         if slug is not None:
-            browser_columns = ["Variant_marker",  # MarkerID
-                            "Transcript_ID",
-                                "Consequence",
-                                "cDNA_position",
-                                "CDS_position",
-                                "Protein_position",
-                                "Amino_acids",
-                                "Codons",
-                                "Impact",
-                                "Strand",
-                                "BayesDel_addAF_rankscore",
-                                "BayesDel_noAF_rankscore",
-                                "CADD_raw_rankscore",
-                                "ClinPred_rankscore",
-                                "DANN_rankscore",
-                                "DEOGEN2_rankscore",
-                                "Eigen_PC_raw_coding_rankscore",
-                                "Eigen_raw_coding_rankscore",
-                                "FATHMM_converted_rankscore",
-                                "GERP_RS_rankscore",
-                                "GM12878_fitCons_rankscore",
-                                "GenoCanyon_rankscore",
-                                "H1_hESC_fitCons_rankscore",
-                                "HUVEC_fitCons_rankscore",
-                                "LIST_S2_rankscore",
-                                "LRT_converted_rankscore",
-                                "M_CAP_rankscore",
-                                "MPC_rankscore",
-                                "MVP_rankscore",
-                                "MetaLR_rankscore",
-                                "MetaRNN_rankscore",
-                                "MetaSVM_rankscore",
-                                "MutPred_rankscore",
-                                "MutationAssessor_rankscore",
-                                "MutationTaster_converted_rankscore",
-                                "PROVEAN_converted_rankscore",
-                                "Polyphen2_HDIV_rankscore",
-                                "Polyphen2_HVAR_rankscore",
-                                "PrimateAI_rankscore",
-                                "REVEL_rankscore",
-                                "SIFT4G_converted_rankscore",
-                                "SIFT_converted_rankscore",
-                                "SiPhy_29way_logOdds_rankscore",
-                                "VEST4_rankscore",
-                                "bStatistic_converted_rankscore",
-                                "Fathmm_MKL_coding_rankscore",
-                                "Fathmm_XF_coding_rankscore",
-                                "Integrated_fitCons_rankscore",
-                                "PhastCons30way_mammalian_rankscore",
-                                "PhyloP30way_mammalian_rankscore",
-                            ]
+            browser_columns = [
+                "Variant_marker",  # MarkerID
+                "Transcript_ID",
+                "Consequence",
+                "cDNA_position",
+                "CDS_position",
+                "Protein_position",
+                "Amino_acids",
+                "Codons",
+                "Impact",
+                "Strand",
+                "BayesDel_addAF_rankscore",
+                "BayesDel_noAF_rankscore",
+                "CADD_raw_rankscore",
+                "ClinPred_rankscore",
+                "DANN_rankscore",
+                "DEOGEN2_rankscore",
+                "Eigen_PC_raw_coding_rankscore",
+                "Eigen_raw_coding_rankscore",
+                "FATHMM_converted_rankscore",
+                "GERP_RS_rankscore",
+                "GM12878_fitCons_rankscore",
+                "GenoCanyon_rankscore",
+                "H1_hESC_fitCons_rankscore",
+                "HUVEC_fitCons_rankscore",
+                "LIST_S2_rankscore",
+                "LRT_converted_rankscore",
+                "M_CAP_rankscore",
+                "MPC_rankscore",
+                "MVP_rankscore",
+                "MetaLR_rankscore",
+                "MetaRNN_rankscore",
+                "MetaSVM_rankscore",
+                "MutPred_rankscore",
+                "MutationAssessor_rankscore",
+                "MutationTaster_converted_rankscore",
+                "PROVEAN_converted_rankscore",
+                "Polyphen2_HDIV_rankscore",
+                "Polyphen2_HVAR_rankscore",
+                "PrimateAI_rankscore",
+                "REVEL_rankscore",
+                "SIFT4G_converted_rankscore",
+                "SIFT_converted_rankscore",
+                "SiPhy_29way_logOdds_rankscore",
+                "VEST4_rankscore",
+                "bStatistic_converted_rankscore",
+                "Fathmm_MKL_coding_rankscore",
+                "Fathmm_XF_coding_rankscore",
+                "Integrated_fitCons_rankscore",
+                "PhastCons30way_mammalian_rankscore",
+                "PhyloP30way_mammalian_rankscore",
+            ]
 
             table = pd.DataFrame(columns=browser_columns)
 
@@ -101,11 +102,15 @@ class GeneDetailBrowser(TemplateView):
             if slug.startswith("ENSG"):
                 marker_ID_data = Variant.objects.filter(Gene_ID=slug).values_list(
                 "VariantMarker")
+                # import pdb
+                # pdb.set_trace()
             else:
                 geneid = Gene.objects.filter(genename=slug).values_list("gene_id")[0][0]
                 marker_ID_data = Variant.objects.filter(Gene_ID=geneid).values_list(
                 "VariantMarker")
 
+
+            # Below code should be rewritten to avoid N+1 queries
             for marker in marker_ID_data:
                 # Retrieve all VEP scores for each variant marker
                 vep_scores = VepVariant.objects.filter(
@@ -226,19 +231,15 @@ class GeneDetailBrowser(TemplateView):
                 for value in values:
                     consequence_dict[name_dic.get(value)] = consequence_dict.get(value, 0)+1
 
-            # context = dict()
-            print(table.head(5))
-            print("*************** consequence_dict: ", consequence_dict)
+            context = dict()
+
             context['array'] = table.to_numpy()
             context['length'] = length
             for key in consequence_dict.keys():
                 context[key] = consequence_dict.get(key)
-            # print("************ Type of array ", type(context['array']))
-            # print("************ Elements of array ", context['array'][:5])
-            
-            # context["qs"] = Editors.objects.all()
+
             context["consequence_dict"] = consequence_dict
-        
+
         return context
         
     

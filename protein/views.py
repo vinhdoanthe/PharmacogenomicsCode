@@ -80,10 +80,6 @@ def detail(request, slug):
     # get protein
     slug = slug.upper()
 
-    print("SLUGGGGGGGGGGGGG", slug)
-    print("SLUGGGGGGGGGGGGG", slug)
-    print("SLUGGGGGGGGGGGGG", slug)
-    print("SLUGGGGGGGGGGGGG", slug)
     try:
         if Protein.objects.filter(uniprot_ID=slug).exists():
             p = Protein.objects.get(uniprot_ID=slug)
