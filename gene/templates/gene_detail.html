@@ -18,11 +18,17 @@
 	} {% endcomment %}
 
 	table.dataTable thead th,
+
+    {#This fix issue https://trello.com/c/9kMXVaOY/26-l%E1%BB%97i-khi-variant-qu%C3%A1-d%C3%A0i-d%C3%A0i-h%C6%A1n-%C4%91%E1%BB%99-r%E1%BB%99ng-c%E1%BB%99t-v%C3%AD-d%E1%BB%A5-http-1270018000-gene-ensg00000005381#}
 	table.dataTable tbody td {
 		max-width: 115px;
 		word-break: break-all;
-		{% comment %} overflow: hidden; {% endcomment %}
-		{% comment %} text-overflow: ellipsis; {% endcomment %}
+        overflow-wrap: break-word;
+		overflow: hidden;
+		text-overflow: ellipsis;
+        {#word-break: break-word;#}
+        {#white-space: pre-wrap;#}
+        {#-moz-white-space: pre-wrap;#}
 		white-space: nowrap;
 	}
 
@@ -300,6 +306,8 @@
 
         <tr class="table-filter-dropdown">
           <!-- Position block -->
+
+					<!-- This should be rewrote using templatetag -->
           <th  style="text-align: left; width:150px">Variant</th>
           <th  style="text-align: left">Transcript</th>
           <th  style="text-align: left">cDNA_</br>position</th>
@@ -366,6 +374,7 @@
         {% comment %} {% for value in array|slice:":12" %} {% endcomment %}
         {% for value in array %}
         <tr>
+					<!-- This should be rewrote using templatetag -->
           <td style="text-align: left">{{value.0}}</td>
 					<td style="text-align: left">{{value.1}}</td>
 					<td style="text-align: left">{{value.3}}</td>
@@ -377,6 +386,7 @@
 					<td style="text-align: left">{{value.2}}</td>
 					<td style="text-align: left">{{value.8}}</td>
 					
+					<!-- This should be rewrote using templatetag -->
 					<td style="text-align:center" class="{% if value.10 < 0.25 %}color1{% elif value.10 < 0.5 %}color2{% elif value.10 < 0.75 %}color3{% elif value.10 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.10|floatformat:2 }} </td>
 					<td style="text-align:center" class="{% if value.11 < 0.25 %}color1{% elif value.11 < 0.5 %}color2{% elif value.11 < 0.75 %}color3{% elif value.11 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.11|floatformat:2 }} </td>
 					<td style="text-align:center" class="{% if value.12 < 0.25 %}color1{% elif value.12 < 0.5 %}color2{% elif value.12 < 0.75 %}color3{% elif value.12 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.12|floatformat:2 }} </td>
@@ -465,6 +475,16 @@
 			],
 		})
 		
+		<!-- Below shows the way to access the data in the table -->
+        oTable1.on( 'draw.dt', function () {
+            let data = oTable1.rows({search: 'applied'});
+				    console.log( 'The table has '+data.count()+' records' );
+						debugger;
+						// get data of an individual row
+						// data.row(1).data()
+//						console.log(data[0])
+        } );
+
 		let column_filters = [];
 
 		// Variant

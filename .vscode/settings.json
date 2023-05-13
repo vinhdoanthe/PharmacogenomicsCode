@@ -1,5 +1,0 @@
-{
-  "isort.interpreter": [
-    "venv/bin/python"
-  ]
-}

@@ -81,9 +81,7 @@ target/
 
 ### Django ###
 *.log
-*.pot
 *.pyc
-__pycache__/
 local_settings.py
 
 # Environment varialbes
@@ -98,6 +96,10 @@ data/
 
 # Virtualenv folder
 venv
+.venv
 
 # Pycharm files
 .idea/
+
+# VS Code files
+.vscode/

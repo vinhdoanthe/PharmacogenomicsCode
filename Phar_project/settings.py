@@ -28,10 +28,9 @@ SECRET_KEY = config("SECRET_KEY", default="django-insecure-hv1(e0r@v4n4m6gqdz%dn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost", cast=str).split(",")
 
 DOCUMENTATION_URL = 'https://docs.gpcrdb.org/'
-
 
 # Application definition
 
@@ -43,27 +42,19 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
-    "debug_toolbar",
-    # Local
-    "accounts.apps.AccountsConfig",
     "protein.apps.ProteinConfig",
     "gene.apps.GeneConfig",
     "drug.apps.DrugConfig",
     "interaction.apps.InteractionConfig",
-    # "variant.apps.VariantConfig",
     "build.apps.BuildConfig",
     "home.apps.HomeConfig",
     "common.apps.CommonConfig",
-    "structure.apps.StructureConfig",
     "variant",
     "sitesearch",
     "polls"
 ]
 
-AUTH_USER_MODEL = "accounts.CustomUser"
-
 MIDDLEWARE = [
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -90,9 +81,6 @@ TEMPLATES = [
         },
     },
 ]
-
-# WSGI_APPLICATION = "Phar_project.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -155,6 +143,6 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-ALLOWED_HOSTS = ['*', '0.0.0.0']
-
 INTERNAL_IPS = ["127.0.0.1",]
+
+VEP_VARIANT_ITEMS_PER_IMPORT = config("VEP_VARIANT_ITEMS_PER_IMPORT", default=10000, cast=int)

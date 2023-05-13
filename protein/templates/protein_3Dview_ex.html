@@ -19,17 +19,47 @@
       let element = $('#protein-viewer');
       let config = { backgroundColor: 'orange' };
       let viewer = $3Dmol.createViewer( element, config );
+      {#debugger#}
 
       //First example - viewing one structure after downloading
-         {% comment %} $3Dmol.download("pdb:4wwy",viewer,{},function(){
-          var atoms = viewer.selectedAtoms({chain:'A'});
-          for(var i = 0, n = atoms.length; i < n; i++) {
-             atoms[i].b = 0.9;
-          }
-          viewer.setStyle({cartoon:{colorscheme:{prop:'b',gradient: 'roygb',min:0,max:30}}});
-          viewer.render();
-        });  {% endcomment %}
+         $3Dmol.download("pdb:4wwy",viewer,{},function(){
+             {#debugger#}
 
+             // Get the 100th atom in the structure
+                {#let atom = viewer.getModel().selectedAtoms({index: 100})[0];#}
+
+
+                {#viewer.setStyle({index: 100},{'cartoon':{color:'red'}});#}
+             // this set style for atom from ... to ...
+
+              viewer.setStyle({resi:["10-20","40-50"]},{cartoon:{color:"purple",thickness:1.0}});
+
+              viewer.setStyle({resi:["100-200","400-500"]},{cartoon:{color:"red",thickness:1.0}});
+
+             // Then you can set style for this atom
+                {#atom.style = {sphere: {color: 'red', radius: 1.0}};#}
+      //    var atoms = viewer.selectedAtoms({chain:'A'});
+        //  for(var i = 0, n = atoms.length; i < n; i++) {
+         //    atoms[i].b = 0.9;
+          //}
+          {#viewer.setStyle({cartoon:{colorscheme:{prop:'b',gradient: 'roygb',min:0,max:30}}});#}
+          viewer.render();
+        });
+
+
+    {#  viewer.setBackgroundColor(0xffffffff);#}
+    {#$3Dmol.download('pdb:5IRE',viewer,{doAssembly: false},function(m) {#}
+    {#    viewer.setStyle({index: 100},{'cartoon':{color:'red'}});#}
+    {#m.setStyle({chain:'A'},{'cartoon':{color:'spectrum'}});#}
+    {#m.setStyle({chain:'C'},{'cartoon':{style:'trace',color:'blue'}});#}
+    {#m.setStyle({chain:'E'},{'cartoon':{tubes:true,arrows:true,color:'green',opacity:0.75}});#}
+    {#m.setStyle({chain:'B'},{'cartoon':{color:'red',opacity:0.5}});#}
+    {#m.setStyle({chain:'D'},{'cartoon':{style:'trace',color:'grey',opacity:0.75}});#}
+    {#m.setStyle({chain:'F'},{'cartoon':{arrows:true,color:'white'}});#}
+    {#// viewer.addStyle({chain:'B'},{line:{}});#}
+    {#viewer.zoomTo();#}
+    {#viewer.render();#}
+    {#});#}
         //Second example - set color by function
         {% comment %} $3Dmol.download("pdb:4UAA",viewer,{},function(){
           viewer.setBackgroundColor(0xffffffff);
