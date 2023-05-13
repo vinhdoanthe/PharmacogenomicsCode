@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "common.apps.CommonConfig",
     "variant",
     "sitesearch",
-    "polls"
+    # "polls"
 ]
 
 MIDDLEWARE = [
