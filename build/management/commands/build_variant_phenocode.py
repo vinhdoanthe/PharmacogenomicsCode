@@ -88,8 +88,8 @@ class Command(BaseCommand):
                 pheno_sex = data[index: index +
                                         1]["pheno_sex"].values[0]
 
-                print(
-                    "checkpoint 2.1 - start to fetch data to genebass variant table")
+                # print(
+                #     "checkpoint 2.1 - start to fetch data to genebass variant table")
 
                 ph, created = VariantPhenocode.objects.get_or_create(
                     phenocode=phenocode,

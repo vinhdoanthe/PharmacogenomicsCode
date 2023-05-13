@@ -94,7 +94,7 @@ class Command(BaseCommand):
                 #     )
                 #     continue
 
-                print("checkpoint 2.1 - start to fetch data to Protein table")
+                # print("checkpoint 2.1 - start to fetch data to Protein table")
                 protein, created = Protein.objects.get_or_create(
                     uniprot_ID=uniprot_ID,
                     genename=genename,

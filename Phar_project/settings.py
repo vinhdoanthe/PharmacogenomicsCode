@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
-    # "debug_toolbar",
+    "debug_toolbar",
     # Local
     "accounts.apps.AccountsConfig",
     "protein.apps.ProteinConfig",
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "structure.apps.StructureConfig",
     "variant",
     "sitesearch",
+    "polls"
 ]
 
 AUTH_USER_MODEL = "accounts.CustomUser"

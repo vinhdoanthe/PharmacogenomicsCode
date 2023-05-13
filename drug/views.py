@@ -32,7 +32,8 @@ from django.views.decorators.cache import cache_page
 from django.http import JsonResponse
 from .models import Drug, DrugAtcAssociation
 
-def drug_atc_detail(request, search_term):
+# Then in this view function, we add drugbank_id as a parameter
+def drug_atc_expansion(request, drugbank_id): #put a parameter drugbank_id here
 
     context={}
 
@@ -40,7 +41,9 @@ def drug_atc_detail(request, search_term):
     drug_name = "Insulin human"
 
     # Retrieve the drug object based on the name
-    drug = Drug.objects.get(name=drug_name)
+    # And change the code getting drug to bellow
+    # drug = get_object_or_404(Drug, drug_bankID=drugbank_id)
+    drug = Drug.objects.get(drug_bankID=drugbank_id)
     # print("Drug: ", drug)
 
     # Get the related ATC code of the drug
