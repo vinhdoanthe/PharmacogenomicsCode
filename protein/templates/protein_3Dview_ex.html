@@ -68,7 +68,7 @@
           };
           viewer.setStyle( {}, { cartoon: {colorfunc: colorAsSnake }});
           viewer.render();
-        }); {% endcomment %}
+        });  {% endcomment %}
 
         //3rd example - set coordinates
         {% comment %} let m = viewer.addModel()  //create an empty model
@@ -78,7 +78,7 @@
          viewer.animate({loop: "forward",reps: 1});
          viewer.zoomTo();
          viewer.zoom(0.5);
-         viewer.render(); {% endcomment %}
+         viewer.render();  {% endcomment %}
 
          //4th example - viewer.setStyle
          {% comment %} $3Dmol.download("pdb:4UB9",viewer,{},function(){

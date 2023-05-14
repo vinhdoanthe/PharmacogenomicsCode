@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
-
     "protein.apps.ProteinConfig",
     "gene.apps.GeneConfig",
     "drug.apps.DrugConfig",
@@ -52,6 +51,7 @@ INSTALLED_APPS = [
     "common.apps.CommonConfig",
     "variant",
     "sitesearch",
+    # "polls"
 ]
 
 MIDDLEWARE = [

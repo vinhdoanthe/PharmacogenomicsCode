@@ -33,7 +33,7 @@ from django.http import JsonResponse
 from .models import Drug, DrugAtcAssociation
 
 # Then in this view function, we add drugbank_id as a parameter
-def drug_atc_expansion(request): #put a parameter drugbank_id here
+def drug_atc_expansion(request, drugbank_id): #put a parameter drugbank_id here
 
     context={}
 
@@ -43,7 +43,7 @@ def drug_atc_expansion(request): #put a parameter drugbank_id here
     # Retrieve the drug object based on the name
     # And change the code getting drug to bellow
     # drug = get_object_or_404(Drug, drug_bankID=drugbank_id)
-    drug = Drug.objects.get(name=drug_name)
+    drug = Drug.objects.get(drug_bankID=drugbank_id)
     # print("Drug: ", drug)
 
     # Get the related ATC code of the drug
@@ -322,7 +322,7 @@ class DrugStatistics(TemplateView):
 
 
 # Help from chatGPT.
-def drug_detail(request, drugbank_id):
+def drug_interaction_detail(request, drugbank_id):
     # Retrieve the drug object
     drug = get_object_or_404(Drug, drug_bankID=drugbank_id)
 
