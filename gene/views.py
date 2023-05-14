@@ -1,6 +1,7 @@
 import hashlib
 import itertools
 import json
+import random
 import re
 import time
 import pandas as pd
@@ -20,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.cache import cache
 
 
-from variant.models import Variant, VepVariant
+from variant.models import Variant, VepVariant, GenebassVariant, VariantPhenocode
 from gene.models import Gene
 
 from django.views.generic import ListView
@@ -242,4 +243,54 @@ class GeneDetailBrowser(TemplateView):
 
         return context
         
-    
+
+class GenbassVariantListView(TemplateView):
+    template_name = "genebass/variant_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        genbass_variants_list = GenebassVariant.objects.filter(  # Filter to get all genebass variants for a gene
+            markerID__in=Variant.objects.filter(  # Filter to get all variants for a gene
+                Gene_ID=Gene.objects.get(gene_id=self.kwargs['pk'])  # Gen Gene by gene_id
+            ).values_list('VariantMarker', flat=True)
+        )
+
+        # Test sample data
+        context['variant_list'] = self.__generate_sample_data()
+        # context['variant_list'] = genbass_variants_list
+        # print(f"count genbass_variants_list {context['variant_list'].count()}")
+        return context
+
+    def __generate_sample_data(self):
+        """Generate sample data for testing purposes
+        """
+        num_of_genebass_variant = 1000
+
+        list_of_genebass_variants = []
+        marker = Variant.objects.all().last()
+        phenocode = VariantPhenocode.objects.all().last()
+        for i in range(num_of_genebass_variant):
+            list_of_genebass_variants.append(
+                {
+                    'markerID': marker.VariantMarker,
+                    'n_cases': random.randint(0, 100),
+                    'n_controls': random.randint(0, 100),
+                    'description': phenocode.description,
+                    'phenocode': phenocode.phenocode,
+                    'n_cases_defined': random.randint(0, 100),
+                    'n_cases_both_sexes': random.randint(0, 100),
+                    'n_cases_females': random.randint(0, 100),
+                    'n_cases_males': random.randint(0, 100),
+                    'category': random.choice(['A', 'B', 'C', 'D']),
+                    'AC': random.randint(0, 100),
+                    'AF': random.randint(0, 100),
+                    'BETA': random.randint(0, 100),
+                    'SE': random.randint(0, 100),
+                    'AF_Cases': random.randint(0, 100),
+                    'AF_Controls': random.randint(0, 100),
+                    'Pvalue': random.randint(0, 100),
+                }
+            )
+
+        return list_of_genebass_variants

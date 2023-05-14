@@ -80,6 +80,7 @@ class Command(BaseCommand):
 
             print("filename ", filename, " is processing ")
             for index, row in enumerate(data.iterrows()):
+                print(f"index {index} is processing")
                 markerID = data[index: index + 1]["markerID"].values[0]
                 
                 n_cases = data[index: index + 1]["n_cases"].values[0]
@@ -100,22 +101,10 @@ class Command(BaseCommand):
                 BETA = data[index: index + 1]["BETA"].values[0]
                 SE = data[index: index + 1]["SE"].values[0]
 
-                AF_Cases = data[index: index + 1]["AF_Cases"].values[0]
-                AF_Controls = data[index: index + 1]["AF_Controls"].values[0]
+                # breakpoint()
+                AF_Cases = data[index: index + 1]["AF.Cases"].values[0]
+                AF_Controls = data[index: index + 1]["AF.Controls"].values[0]
                 Pvalue = data[index: index + 1]["Pvalue"].values[0]
-                
-
-                # fetch variant marker
-                # try:
-                #     print(filename, " , markerID = " , markerID)
-                #     v = Variant.objects.get(VariantMarker=markerID)
-                # except Variant.DoesNotExist:
-
-                #     self.logger.error(
-                #         "Variant not found for entry with VariantMarker ID {markerID}".format(
-                #         )
-                #     )
-                #     continue
 
                 try:
                     print(filename, " , markerID = " , markerID)
@@ -127,7 +116,6 @@ class Command(BaseCommand):
                         )
                     )
                     continue
-
 
                 # fetch variant phenocode
                 try:
@@ -163,6 +151,6 @@ class Command(BaseCommand):
                     Pvalue=Pvalue,
                 )
                 gb_variant.save()
-                # print(filename, " a record is saved")
+                print(filename, " a record is saved")
 
         self.logger.info("COMPLETED CREATING GENEBASS VARIANT DATA")

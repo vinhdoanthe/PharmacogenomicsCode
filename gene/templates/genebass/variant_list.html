@@ -1,0 +1,66 @@
+{% extends "home/base.html" %}
+
+{% load static %}
+{% load i18n %}
+{% load render_genebass_variant_row %}
+
+{% csrf_token %}
+
+{% block addon_css %}
+    <link rel="stylesheet" href="{% static 'home/css/jquery.dataTables.min.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'home/css/bootstrap2-toggle.min.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'home/css/yadcf_bootstrap_version.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'home/css/select2.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'home/css/modal.css' %}" type="text/css"/>
+
+    <!--This is for the filter, min max, pagination styling -->
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.css"/>
+    <link rel="stylesheet" href="{% static 'home/css/construct_browser.css' %}" type="text/css"/>
+
+{% endblock addon_css %}
+
+{% block content %}
+    {% autoescape off %}
+
+        <div style="padding-top: 0px; font-size: 14px; white-space: nowrap; overflow-y:hidden; width: 100%">
+            <br/>
+
+            <div>
+                <h2>{% trans 'Genebass variants list' %}</h2>
+
+                <div id="structures_scrollable_table">
+                    <table class="display compact text-nowrap" id="structures_scrollable"
+                           style="width: 100%; margin-top: 10px; font-size: 12px;">
+                        <thead id="headers">
+                        <tr class="table-filter-dropdown">
+                            {% include "genebass/header_row.html" %}
+                        </tr>
+                        </thead>
+                        <tbody id='structures_scrollable_body'>
+                        {% for genebass_variant in variant_list %}
+                            {% render_genebass_variant_row genebass_variant %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <br/>
+                </div>
+            </div>
+
+            {% include "genebass/helper_buttons.html" %}
+        </div>
+    {% endautoescape %}
+{% endblock content %}
+
+{% block addon_js %}
+    <!--addon_js from gene_browser.html -->
+    <script src="{% static 'home/js/datatables.min.js' %}"></script>
+    <script src="{% static 'home/js/bootstrap2-toggle.min.js' %}"></script>
+    <script src="{% static 'home/js/jquery.dataTables.yadcf.js' %}"></script>
+    <script src="{% static 'home/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'home/js/select2.js' %}"></script>
+    <script src="{% static 'home/js/grayscale.js' %}"></script>
+    <script src="{% static 'home/js/gpcrdb.js' %}"></script>
+    <script src="{% static 'home/js/signprot-multitabtable.js' %}"></script>
+    {% include "genebass/yadcf_filter.html" %}
+{% endblock addon_js %}

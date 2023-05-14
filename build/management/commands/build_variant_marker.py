@@ -78,25 +78,37 @@ class Command(BaseCommand):
 
             print("data length = ", len(data))
             print("data column = ", data.columns)
+
+            # count_items = data.count()
+            # # Create 10000 items at a time
+            # for i in range(0, len(data), 10000):
+            #     print("checkpoint 2.1 - start to fetch data to variant table")
+            #     Variant.objects.bulk_create([
+            #         Variant(
+            #             Gene_ID_id=data["GeneID"][i],
+            #             VariantMarker=data["VariantMarker"][i],
+            #         )
+            #         for i in range(i, i + 10000)
+            #     ])
+
             for index, row in enumerate(data.iterrows()):
                 geneID = data[index: index + 1]["GeneID"].values[0]
                 markerID = data[index: index + 1]["VariantMarker"].values[0]
-               
 
                 # fetch gene
-                try:
-                    g = Gene.objects.get(gene_id=geneID)
-                except Gene.DoesNotExist:
-
-                    self.logger.error(
-                        "Gene not found for entry with gene ID {}".format(
-                            geneID)
-                    )
-                    continue
+                # try:
+                #     g = Gene.objects.get(gene_id=geneID)
+                # except Gene.DoesNotExist:
+                #
+                #     self.logger.error(
+                #         "Gene not found for entry with gene ID {}".format(
+                #             geneID)
+                #     )
+                #     continue
 
                 # print("checkpoint 2.1 - start to fetch data to genebass variant table")
                 marker, created = Variant.objects.get_or_create(
-                    Gene_ID=g,
+                    Gene_ID_id=geneID,
                     VariantMarker=markerID,
                 )
                 marker.save()
