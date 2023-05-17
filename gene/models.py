@@ -8,5 +8,5 @@ class Gene(models.Model):
     genename = models.CharField(max_length=50)  # string values
       # true or false that can ebe encoded
 
-    def __str__(self):
-        return "GeneID: "+self.gene_id + ", gene name: "+self.genename
+    # def __str__(self):
+    #     return "GeneID: "+self.gene_id + ", gene name: "+self.genename

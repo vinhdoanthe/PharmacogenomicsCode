@@ -250,11 +250,20 @@ class GenbassVariantListView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        # print("\n------------- self.kwargs['pk'] : ", self.kwargs['pk'])
+        # Gene_ID=Gene.objects.get(gene_id=self.kwargs['pk'])
+        # print("Gene_ID : ", Gene_ID, " type : ", type(Gene_ID))
+        # variants = Variant.objects.filter(Gene_ID=Gene_ID)
+        # print(" number of variants : ", variants.count())
+        # genbass_variants_list = GenebassVariant.objects.filter(markerID__in = variants)
+        # print(" number of genbass_variants : ", genbass_variants_list.count())
+
         genbass_variants_list = GenebassVariant.objects.filter(  # Filter to get all genebass variants for a gene
             markerID__in=Variant.objects.filter(  # Filter to get all variants for a gene
                 Gene_ID=Gene.objects.get(gene_id=self.kwargs['pk'])  # Gen Gene by gene_id
             ).values_list('VariantMarker', flat=True)
         )
+        # print("genbass_variants_list : ", genbass_variants_list)
 
         # Test sample data
         context['variant_list'] = self.__generate_sample_data()
