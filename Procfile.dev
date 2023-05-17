@@ -1,2 +1,2 @@
-postgresql: docker-compose -f docker/docker-compose-db.yml up
-app: venv/bin/python manage.py runserver 0.0.0.0:8080
+app: venv/bin/python manage.py runserver
+livereload: venv/bin/python manage.py livereload

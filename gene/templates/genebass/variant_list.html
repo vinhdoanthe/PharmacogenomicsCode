@@ -1,4 +1,4 @@
-{% extends "home/base.html" %}
+{% extends "layouts/with_leftbar/base.html" %}
 
 {% load static %}
 {% load i18n %}
@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="{% static 'home/css/yadcf_bootstrap_version.css' %}" type="text/css"/>
     <link rel="stylesheet" href="{% static 'home/css/select2.css' %}" type="text/css"/>
     <link rel="stylesheet" href="{% static 'home/css/modal.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.1.2/css/searchPanes.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.6.2/css/select.dataTables.min.css" type="text/css" />
 
     <!--This is for the filter, min max, pagination styling -->
     <link rel="stylesheet" type="text/css"
@@ -23,12 +25,20 @@
 {% block content %}
     {% autoescape off %}
 
-        <div style="padding-top: 0px; font-size: 14px; white-space: nowrap; overflow-y:hidden; width: 100%">
-            <br/>
 
-            <div>
-                <h2>{% trans 'Genebass variants list' %}</h2>
+        <!-- Filter area -->
+        <div class="row col-md-3" style="margin-right: auto">
+            <h4>Filter area</h4>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis tincidunt sollicitudin,
+            </p>
+        <div id="table-searchPane"></div>
+        </div>
 
+        <!-- Table area -->
+        <div class="row col-md-9">
+            <h4>Table area</h4>
+            <div class="row">
                 <div id="structures_scrollable_table">
                     <table class="display compact text-nowrap" id="structures_scrollable"
                            style="width: 100%; margin-top: 10px; font-size: 12px;">
@@ -48,6 +58,7 @@
             </div>
 
             {% include "genebass/helper_buttons.html" %}
+
         </div>
     {% endautoescape %}
 {% endblock content %}
@@ -62,5 +73,10 @@
     <script src="{% static 'home/js/grayscale.js' %}"></script>
     <script src="{% static 'home/js/gpcrdb.js' %}"></script>
     <script src="{% static 'home/js/signprot-multitabtable.js' %}"></script>
+
+    <script src="https://cdn.datatables.net/searchpanes/2.1.2/js/dataTables.searchPanes.min.js"></script>
+    <script src="https://cdn.datatables.net/searchpanes/2.1.2/js/searchPanes.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+
     {% include "genebass/yadcf_filter.html" %}
 {% endblock addon_js %}
