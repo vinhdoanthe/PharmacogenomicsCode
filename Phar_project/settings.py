@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     "common.apps.CommonConfig",
     "variant",
     "sitesearch",
-    # "polls"
 ]
 
 MIDDLEWARE = [
@@ -63,6 +62,14 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    INSTALLED_APPS += [
+        "livereload",
+    ]
+    MIDDLEWARE += [
+        'livereload.middleware.LiveReloadScript',
+    ]
 
 ROOT_URLCONF = "Phar_project.urls"
 

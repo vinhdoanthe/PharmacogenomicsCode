@@ -139,17 +139,17 @@ class Command(BaseCommand):
             LINSIGHT_rankscore = data[index: index + 1]["LINSIGHT_rankscore"].values[0]
 
             # This could be done better
-            # try:
-            #     vm = Variant.objects.get(
-            #         VariantMarker=Variant_marker)
-            # except Variant.DoesNotExist:
-            #     continue
+            try:
+                vm = Variant.objects.get(
+                    VariantMarker=Variant_marker)
+            except Variant.DoesNotExist:
+                continue
 
             # variant_id = variant_ids[Variant_marker]
 
             objects.append(
                 VepVariant(
-                    Variant_marker_id=Variant_marker,
+                    Variant_marker_id=vm.VariantMarker,
                     Transcript_ID=Transcript_ID,
                     Consequence=Consequence,
                     cDNA_position=cDNA_position,

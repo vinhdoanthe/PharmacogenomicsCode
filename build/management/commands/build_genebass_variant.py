@@ -2,9 +2,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-
 from variant.models import GenebassVariant, Variant, VariantPhenocode
-
 
 from optparse import make_option
 import logging
@@ -82,19 +80,20 @@ class Command(BaseCommand):
             for index, row in enumerate(data.iterrows()):
                 print(f"index {index} is processing")
                 markerID = data[index: index + 1]["markerID"].values[0]
-                
+                if markerID.startswith("chr1:"):
+                    markerID = data[index: index + 1]["markerID"].values[0][5:]
                 n_cases = data[index: index + 1]["n_cases"].values[0]
                 n_controls = data[index: index + 1]["n_controls"].values[0]
                 phenocode = data[index: index + 1]["phenocode"].values[0]
-                
+
                 n_cases_defined = data[index: index +
-                                       1]["n_cases_defined"].values[0]
+                                              1]["n_cases_defined"].values[0]
                 n_cases_both_sexes = data[index: index +
-                                          1]["n_cases_both_sexes"].values[0]
+                                                 1]["n_cases_both_sexes"].values[0]
                 n_cases_females = data[index: index +
-                                       1]["n_cases_females"].values[0]
+                                              1]["n_cases_females"].values[0]
                 n_cases_males = data[index: index +
-                                     1]["n_cases_males"].values[0]
+                                            1]["n_cases_males"].values[0]
                 category = data[index: index + 1]["category"].values[0]
                 AC = data[index: index + 1]["AC"].values[0]
                 AF = data[index: index + 1]["AF"].values[0]
@@ -107,30 +106,29 @@ class Command(BaseCommand):
                 Pvalue = data[index: index + 1]["Pvalue"].values[0]
 
                 try:
-                    print(filename, " , markerID = " , markerID)
+                    print(filename, " , markerID = ", markerID)
                     v = Variant.objects.get(VariantMarker=markerID)
                 except Exception as e:
-                    self.logger.error(
-                        "Error retrieving variant for entry with VariantMarker ID {markerID}: {error}".format(
-                            markerID=markerID, error=str(e)
-                        )
-                    )
+                    # self.logger.error(
+                    #     "Error retrieving variant for entry with VariantMarker ID {markerID}: {error}".format(
+                    #         markerID=markerID, error=str(e)
+                    #     )
+                    # )
                     continue
 
                 # fetch variant phenocode
                 try:
-                    print(filename, ", phenocode = " , phenocode)
+                    print(filename, ", phenocode = ", phenocode)
                     p = VariantPhenocode.objects.get(phenocode=phenocode.title())
                 except VariantPhenocode.DoesNotExist:
 
-                    self.logger.error(
-                        "VariantPhenocode not found for entry with phenocode {phenocode}".format(
-                        )
-                    )
+                    # self.logger.error(
+                    #     "VariantPhenocode not found for entry with phenocode {}".format(
+                    #         phenocode
+                    #     )
+                    # )
                     continue
-                # print("we are here too")
 
-                # print("checkpoint 2.1 - start to fetch data to genebass variant table")
                 gb_variant, created = GenebassVariant.objects.get_or_create(
                     markerID=v,
                     n_cases=n_cases,
