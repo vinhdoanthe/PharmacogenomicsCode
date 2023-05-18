@@ -8,11 +8,12 @@
 * Virtualenv
 * PostgreSQL 12++
 ### Installation
+**Note**: This tutorial is tested on Macbook M1 with MacOS Ventura 13.3.1. It should work on Ubuntu or other Linux distributions.
 * Clone this repository
 * Go to project folder
 * Create virtual environment with command `python -m venv venv`
 * Activate virtual environment with command `source venv/bin/activate`
-* Install libraries with command `pip install -r requirements.txt`
+* Install libraries with command `python -m pip install -r requirements.txt`
 * Create `.env` file in project folder with content from `.env.example` file: `cp .env.example .env`. Then update values in `.env` file
 * Run command `python manage.py migrate` to create database
 * Run command `python manage.py runserver` to start server
