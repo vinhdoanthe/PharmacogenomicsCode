@@ -1,533 +1,501 @@
-{% extends "home/base.html" %} 
-{% load static %} 
-{% csrf_token %} 
+{% extends "home/base.html" %}
+{% load static %}
+{% load gene_detail %}
+{% csrf_token %}
 {% block addon_css %}
-<link rel="stylesheet" href="{% static 'home/css/jquery.dataTables.min.css' %}" type="text/css" />
-<link rel="stylesheet" href="{% static 'home/css/bootstrap2-toggle.min.css' %}" type="text/css" />
-<link rel="stylesheet" href="{% static 'home/css/yadcf_bootstrap_version.css' %}" type="text/css" />
-<link rel="stylesheet" href="{% static 'home/css/select2.css' %}" type="text/css" />
-<link rel="stylesheet" href="{% static 'home/css/modal.css' %}" type="text/css" />
-<!--This is for the filter, min max, pagination styling -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.css" />
-<link rel="stylesheet" href="{% static 'home/css/construct_browser.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'home/css/jquery.dataTables.min.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'home/css/bootstrap2-toggle.min.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'home/css/yadcf_bootstrap_version.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'home/css/select2.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'home/css/modal.css' %}" type="text/css"/>
+    <!--This is for the filter, min max, pagination styling -->
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.css"/>
+    <link rel="stylesheet" href="{% static 'home/css/construct_browser.css' %}" type="text/css"/>
 
-<style>
+    <style>
 
-  {% comment %} .dataTables_scrollHeadInner {
-		margin-top: 20px;
-	} {% endcomment %}
+        {% comment %} .dataTables_scrollHeadInner {
+              margin-top: 20px;
+          } {% endcomment %}
 
-	table.dataTable thead th,
+        table.dataTable thead th,
+        {#This fix issue https://trello.com/c/9kMXVaOY/26-l%E1%BB%97i-khi-variant-qu%C3%A1-d%C3%A0i-d%C3%A0i-h%C6%A1n-%C4%91%E1%BB%99-r%E1%BB%99ng-c%E1%BB%99t-v%C3%AD-d%E1%BB%A5-http-1270018000-gene-ensg00000005381#} table.dataTable tbody td {
+            max-width: 115px;
+            word-break: break-all;
+            overflow-wrap: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        {#word-break: break-word;#}{#white-space: pre-wrap;#}{#-moz-white-space: pre-wrap;#} white-space: nowrap;
+        }
 
-    {#This fix issue https://trello.com/c/9kMXVaOY/26-l%E1%BB%97i-khi-variant-qu%C3%A1-d%C3%A0i-d%C3%A0i-h%C6%A1n-%C4%91%E1%BB%99-r%E1%BB%99ng-c%E1%BB%99t-v%C3%AD-d%E1%BB%A5-http-1270018000-gene-ensg00000005381#}
-	table.dataTable tbody td {
-		max-width: 115px;
-		word-break: break-all;
-        overflow-wrap: break-word;
-		overflow: hidden;
-		text-overflow: ellipsis;
-        {#word-break: break-word;#}
-        {#white-space: pre-wrap;#}
-        {#-moz-white-space: pre-wrap;#}
-		white-space: nowrap;
-	}
+        table.dataTable thead .sorting {
+            background-position: right;
+        }
 
-	table.dataTable thead .sorting {
-		background-position: right;
-	}
+        .select2-container select2-container-multi {
+            width: 75%;
+        }
 
-	.select2-container select2-container-multi {
-		width: 75%;
-	}
+        .select2-container-multi .select2-choices .select2-search-field input {
+            max-width: 50px;
+        }
 
-	.select2-container-multi .select2-choices .select2-search-field input {
-		max-width: 50px;
-	}
+        .yadcf-filter-wrapper {
+            position: center;
+            display: flex;
+            white-space: nowrap;
+            margin-top: 7px;
+            width: 50% !important;
+        }
 
-	.yadcf-filter-wrapper {
-		position: center;
-		display: flex;
-		white-space: nowrap;
-		margin-top: 7px;
-		width: 50% !important;
-	}
+        .yadcf-filter-wrapper-inner {
+            white-space: normal;
+        }
 
-	.yadcf-filter-wrapper-inner {
-		white-space: normal;
-	}
+        .select2-results {
+            background-color: white;
+            border: gray;
+            width: 150px !important;
+        }
 
-	.select2-results {
-		background-color: white;
-		border: gray;
-		width: 150px !important;
-	}
+        .yadcf-filter-range {
+            grid-auto-columns: auto;
+            max-width: 50px !important;
+            font-family: sans-serif;
+            font-size: 80%;
+            font-weight: bold;
+            margin: auto;
+            margin-top: 10%;
+            min-width: 40px;
+        }
 
-	.yadcf-filter-range {
-		grid-auto-columns: auto;
-		max-width: 50px !important;
-		font-family: sans-serif;
-		font-size: 80%;
-		font-weight: bold;
-		margin: auto;
-		margin-top: 10%;
-		min-width: 40px;
-	}
+        table.dataTable.compact tbody th {
+            padding: 5px 10px 5px 0px !important;
+            /* width: 0px; */
+        }
 
-	table.dataTable.compact tbody th
-	{
-		padding: 5px 10px 5px 0px !important;
-		/* width: 0px; */
-	}
+        table.dataTable.compact thead th,
+        table.dataTable.compact thead td {
+            padding: 5px 10px 5px 0px;
+            /* width: 0px; */
+        }
 
-	table.dataTable.compact thead th,
-	table.dataTable.compact thead td {
-		padding: 5px 10px 5px 0px;
-		/* width: 0px; */
-	}
+        table.dataTable.compact thead tr.over_header th {
+            border-bottom: 1px solid #ccc;
+        }
 
-	table.dataTable.compact thead tr.over_header th {
-		border-bottom: 1px solid #ccc;
-	}
+        table.dataTable.compact thead th.leftborder {
+            border-left: 1px solid;
+        }
 
-	table.dataTable.compact thead th.leftborder {
-		border-left: 1px solid;
-	}
+        table.dataTable.compact thead th.rightborder {
+            border-right: 1px solid;
+        }
 
-	table.dataTable.compact thead th.rightborder {
-		border-right: 1px solid;
-	}
+        #structures_scrollable tr td {
+            margin: 10px 0 0 0;
+        }
 
-	#structures_scrollable tr td {
-		margin: 10px 0 0 0;
-	}
-
-	.yadcf-filter-range {
-		grid-auto-columns: auto;
-		max-width: 60px !important;
-		font-family: sans-serif;
-		font-size: 80%;
-		font-weight: bold;
-		margin: auto;
-		margin-top: 10%;
-		min-width: 50px;
-	}
+        .yadcf-filter-range {
+            grid-auto-columns: auto;
+            max-width: 60px !important;
+            font-family: sans-serif;
+            font-size: 80%;
+            font-weight: bold;
+            margin: auto;
+            margin-top: 10%;
+            min-width: 50px;
+        }
 
 
-	#overlay {
-		top: 0px;
-		position: absolute;
-		background: #f8f8f8;
-		/*border: 1px solid #333;*/
-		-webkit-box-shadow: 5px 0 2px -2px #888;
-		box-shadow: 5px 0 2px -2px #888;
-	}
+        #overlay {
+            top: 0px;
+            position: absolute;
+            background: #f8f8f8;
+            /*border: 1px solid #333;*/
+            -webkit-box-shadow: 5px 0 2px -2px #888;
+            box-shadow: 5px 0 2px -2px #888;
+        }
 
-	.container {
-		width: 90%;
-		/* display:flex;
-            flex-direction: column; */
-	}
+        .container {
+            width: 90%;
+            /* display:flex;
+                flex-direction: column; */
+        }
 
-	.wrapper {
-		overflow-x: scroll;
-		overflow-y: hidden;
-	}
+        .wrapper {
+            overflow-x: scroll;
+            overflow-y: hidden;
+        }
 
-	#overlay tbody tr {
-		background-color: #f8f8f8;
-	}
+        #overlay tbody tr {
+            background-color: #f8f8f8;
+        }
 
-	{% comment %} #count_row th {
-		font-size: 11px;
-		text-align: center;
-	} {% endcomment %}
+        {% comment %} #count_row th {
+            font-size: 11px;
+            text-align: center;
+        } {% endcomment %}
 
-	.border-left {
-		padding-left: 3px;
-	}
+        .border-left {
+            padding-left: 3px;
+        }
 
-	.name {
-		width: 100px;
-		text-overflow: ellipsis;
-		cursor: pointer;
-		word-break: break-all;
-		overflow: hidden;
-		white-space: nowrap;
-	}
+        .name {
+            width: 100px;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            word-break: break-all;
+            overflow: hidden;
+            white-space: nowrap;
+        }
 
-	.name:hover {
-		overflow: visible;
-		white-space: normal;
+        .name:hover {
+            overflow: visible;
+            white-space: normal;
 
-	}
+        }
 
-	.toolbar_data_css {
-		width: 250px;
-		margin-right: auto;
-		margin-left: 0px;
-		/* border: 1px solid; */
-		font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
-		font-weight: normal;
-		font-size: 120%;
-		line-height: 1.625;
-	}
+        .toolbar_data_css {
+            width: 250px;
+            margin-right: auto;
+            margin-left: 0px;
+            /* border: 1px solid; */
+            font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
+            font-weight: normal;
+            font-size: 120%;
+            line-height: 1.625;
+        }
 
-	.toolbar_data_css.td {
-		height: 15px;
-		max-width: 150px;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-	}
-  
-  #variant_consquence_statistics{
-    margin-top: 10px;
-    display: flex;
-    {% comment %} background-color: lavender; {% endcomment %}
-    justify-content: space-between;
-    border: 1px solid grey;
-		flex-direction: column;
-  }
+        .toolbar_data_css.td {
+            height: 15px;
+            max-width: 150px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
 
-  #variant_consquence_statistics_in_words{
-    margin-top: 50px;
-    margin-left: 10px;
-  }
+        #variant_consquence_statistics {
+            margin-top: 10px;
+            display: flex;
+        {% comment %} background-color: lavender; {% endcomment %} justify-content: space-between;
+            border: 1px solid grey;
+            flex-direction: column;
+        }
 
-  #structures_scrollable_table{
-		margin-top: 20px;
-    max-width: 100%;
-		
-  }
-	#structures_scrollable_table tr td.color5{
-		margin-right:10px;
-	}
-	
-		table {
-			border-spacing: 10px;
-		}
+        #variant_consquence_statistics_in_words {
+            margin-top: 50px;
+            margin-left: 10px;
+        }
 
-	td.color1 {
-		background-color: #ffee32; //green
-		text-align: center;
-		border-radius: 15px;
-		{% comment %} margin-left: 5px;
-		margin-right: 5px; {% endcomment %}
-	}
-	
-	td.color2 {
-		background-color: #fbc501; //light yellow
-		text-align: center;
-		border-radius: 15px;
-		margin-left: 5px;
-		margin-right: 5px;
-	}
+        #structures_scrollable_table {
+            margin-top: 20px;
+            max-width: 100%;
 
-	td.color3 {
-		background-color: #a47e1b; //light orange
-		text-align: center;
-		border-radius: 15px;
-		{% comment %} margin-left: 5px;
-		margin-right: 5px; {% endcomment %}
-	}
-	
-	td.color4 {
-		background-color: #df6c02; //orange
-		text-align: center;
-		border-radius: 15px;
-		{% comment %} margin-left: 5px;
-		margin-right: 5px; {% endcomment %}
-	}
+        }
 
-	td.color5 {
-		background-color: #77bfa3; //grey
-		text-align: center;
-		border-radius: 15px;
-		{% comment %} margin-left: 5px;
-		margin-right: 5px; {% endcomment %}
-	}
+        #structures_scrollable_table tr td.color5 {
+            margin-right: 10px;
+        }
+
+        table {
+            border-spacing: 10px;
+        }
+
+        td.color-value {
+            border-radius: 15px;
+        }
+
+    </style>
+{% endblock addon_css %}
 
 
-</style>
-{% endblock addon_css %} 
+{% block content %}
+    {% autoescape off %}
+
+        <div style="padding-top: 0px; font-size: 14px; white-space: nowrap; overflow-y:hidden; width: 100%">
+            <br/>
+
+            {% include '_buttons.html' %}
+
+            <div id="structures_scrollable_table">
+                <table class="display compact text-nowrap" id="structures_scrollable"
+                       style="width: 100%; margin-top: 10px; font-size: 12px;">
+                    <thead id="headers">
+                    <tr class="header-spans">
+                        <th style="text-align:left" colspan="8">Position</th>
+                        <th style="border-left: 1px solid black; text-align:left" colspan="2" style="">Impact</th>
+                        <th style="border-left: 1px solid black; text-align:left" colspan="40"> Predicted effect
+                            scores
+                        </th>
+                    </tr>
+
+                    <tr class="table-filter-dropdown">
+                        <!-- Position block -->
+
+                        <!-- This should be rewrote using templatetag -->
+                        <th style="text-align: left; width:150px">Variant</th>
+                        <th style="text-align: left">Transcript</th>
+                        <th style="text-align: left">cDNA_</br>position</th>
+                        <th style="text-align: left">CDS_</br>position</th>
+                        <th style="text-align: left">Protein_</br>position</th>
+                        <th style="text-align: left">Amino_</br>acids</th>
+                        <th style="text-align: left">Codons</th>
+                        <th style="text-align: left">Strand</th>
+                        <!-- Impact block -->
+                        <th style="text-align: left">Conse_</br>quence</th>
+                        <th style="text-align: left">Impact</th>
+                        <!-- Score block -->
+                        <th style="text-align: left">BayesDel_</br>addAF</th>
+                        <th style="text-align: left">BayesDel_</br>noAF</th>
+                        <th style="text-align: left">CADD_</br>raw</th>
+                        <th style="text-align: left">ClinPred</th>
+                        <th style="text-align: left">DANN</th>
+
+                        <th style="text-align: left">DEOGEN2</th>
+                        <th style="text-align: left">Eigen_PC_</br>raw_coding</th>
+                        <th style="text-align: left">Eigen_raw_</br>coding</th>
+                        <th style="text-align: left">FATHMM_</br>converted</th>
+                        <th style="text-align: left">GERP_RS</th>
+
+                        <th style="text-align: left">GM12878_</br>fitCons</th>
+                        <th style="text-align: left">Geno</br>Canyon</th>
+                        <th style="text-align: left">H1_hESC_</br>fitCons</th>
+                        <th style="text-align: left">HUVEC_</br>fitCons</th>
+                        <th style="text-align: left">LIST_S2</th>
+
+                        <th style="text-align: left">LRT_</br>converted</th>
+                        <th style="text-align: left">M_CAP</th>
+                        <th style="text-align: left">MPC</th>
+                        <th style="text-align: left">MVP</th>
+                        <th style="text-align: left">MetaLR</th>
+
+                        <th style="text-align: left">MetaRNN</th>
+                        <th style="text-align: left">MetaSVM</th>
+                        <th style="text-align: left">MutPred</th>
+                        <th style="text-align: left">Mutation</br>Assessor</th>
+                        <th style="text-align: left">Mutation</br>Taster_</br>converted</th>
+
+                        <th style="text-align: left">PROVEAN_</br>converted</th>
+                        <th style="text-align: left">Polyphen2_</br>HDIV</th>
+                        <th style="text-align: left">Polyphen2_</br>HVAR</th>
+                        <th style="text-align: left">PrimateAI</th>
+                        <th style="text-align: left">REVEL</th>
+
+                        <th style="text-align: left">SIFT4G_</br>converted</th>
+                        <th style="text-align: left">SIFT_</br>converted</th>
+                        <th style="text-align: left">SiPhy_</br>29way_</br>logOdds</th>
+                        <th style="text-align: left">VEST4</th>
+                        <th style="text-align: left">bStatistic</br>converted</th>
+
+                        <th style="text-align: left">Fathmm_</br>MKL_coding</th>
+                        <th style="text-align: left">Fathmm_XF</br>_coding</th>
+                        <th style="text-align: left">Integrated_</br>fitCons</th>
+                        <th style="text-align: left">PhastCons</br>30way_</br>mammalian</th>
+                        <th style="text-align: left">Phylo_</br>P30way_</br>mammalian</th>
+                    </tr>
+
+                    </thead>
+                    <tbody id='structures_scrollable_body'>
+                    {% comment %} {% for value in array|slice:":12" %} {% endcomment %}
+                    {% for value in array %}
+                        <tr>
+                            <!-- This should be rewrote using templatetag -->
+                            <td style="text-align: left">{{ value.0 }}</td>
+                            <td style="text-align: left">{{ value.1 }}</td>
+                            <td style="text-align: left">{{ value.3 }}</td>
+                            <td style="text-align: left">{{ value.4 }}</td>
+                            <td style="text-align: left">{{ value.5 }}</td>
+                            <td style="text-align: left">{{ value.6 }}</td>
+                            <td style="text-align: left">{{ value.7 }}</td>
+                            <td style="text-align: left">{{ value.9 }}</td>
+                            <td style="text-align: left">{{ value.2 }}</td>
+                            <td style="text-align: left">{{ value.8 }}</td>
+
+                            <!-- This should be rewrote using templatetag -->
+
+                        {% render_variant_value value.10 %}
+                        {% render_variant_value value.11 %}
+
+{#                        Chị Dương viết tiếp phần này nhé#}
+                            <td style="text-align:center"
+                                class="{% if value.12 < 0.25 %}color1{% elif value.12 < 0.5 %}color2{% elif value.12 < 0.75 %}color3{% elif value.12 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.12|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.13 < 0.25 %}color1{% elif value.13 < 0.5 %}color2{% elif value.13 < 0.75 %}color3{% elif value.13 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.13|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.14 < 0.25 %}color1{% elif value.14 < 0.5 %}color2{% elif value.14 < 0.75 %}color3{% elif value.14 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.14|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.15 < 0.25 %}color1{% elif value.15 < 0.5 %}color2{% elif value.15 < 0.75 %}color3{% elif value.15 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.15|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.16 < 0.25 %}color1{% elif value.16 < 0.5 %}color2{% elif value.16 < 0.75 %}color3{% elif value.16 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.16|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.17 < 0.25 %}color1{% elif value.17 < 0.5 %}color2{% elif value.17 < 0.75 %}color3{% elif value.17 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.17|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.18 < 0.25 %}color1{% elif value.18 < 0.5 %}color2{% elif value.18 < 0.75 %}color3{% elif value.18 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.18|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.19 < 0.25 %}color1{% elif value.19 < 0.5 %}color2{% elif value.19 < 0.75 %}color3{% elif value.19 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.19|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.20 < 0.25 %}color1{% elif value.20 < 0.5 %}color2{% elif value.20 < 0.75 %}color3{% elif value.20 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.20|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.21 < 0.25 %}color1{% elif value.21 < 0.5 %}color2{% elif value.21 < 0.75 %}color3{% elif value.21 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.21|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.22 < 0.25 %}color1{% elif value.22 < 0.5 %}color2{% elif value.22 < 0.75 %}color3{% elif value.22 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.22|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.23 < 0.25 %}color1{% elif value.23 < 0.5 %}color2{% elif value.23 < 0.75 %}color3{% elif value.23 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.23|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.24 < 0.25 %}color1{% elif value.24 < 0.5 %}color2{% elif value.24 < 0.75 %}color3{% elif value.24 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.24|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.25 < 0.25 %}color1{% elif value.25 < 0.5 %}color2{% elif value.25 < 0.75 %}color3{% elif value.25 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.25|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.26 < 0.25 %}color1{% elif value.26 < 0.5 %}color2{% elif value.26 < 0.75 %}color3{% elif value.26 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.26|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.27 < 0.25 %}color1{% elif value.27 < 0.5 %}color2{% elif value.27 < 0.75 %}color3{% elif value.27 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.27|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.28 < 0.25 %}color1{% elif value.28 < 0.5 %}color2{% elif value.28 < 0.75 %}color3{% elif value.28 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.28|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.29 < 0.25 %}color1{% elif value.29 < 0.5 %}color2{% elif value.29 < 0.75 %}color3{% elif value.29 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.29|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.30 < 0.25 %}color1{% elif value.30 < 0.5 %}color2{% elif value.30 < 0.75 %}color3{% elif value.30 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.30|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.31 < 0.25 %}color1{% elif value.31 < 0.5 %}color2{% elif value.31 < 0.75 %}color3{% elif value.31 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.31|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.32 < 0.25 %}color1{% elif value.32 < 0.5 %}color2{% elif value.32 < 0.75 %}color3{% elif value.32 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.32|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.33 < 0.25 %}color1{% elif value.33 < 0.5 %}color2{% elif value.33 < 0.75 %}color3{% elif value.33 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.33|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.34 < 0.25 %}color1{% elif value.34 < 0.5 %}color2{% elif value.34 < 0.75 %}color3{% elif value.34 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.34|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.35 < 0.25 %}color1{% elif value.35 < 0.5 %}color2{% elif value.35 < 0.75 %}color3{% elif value.35 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.35|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.36 < 0.25 %}color1{% elif value.36 < 0.5 %}color2{% elif value.36 < 0.75 %}color3{% elif value.36 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.36|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.37 < 0.25 %}color1{% elif value.37 < 0.5 %}color2{% elif value.37 < 0.75 %}color3{% elif value.37 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.37|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.38 < 0.25 %}color1{% elif value.38 < 0.5 %}color2{% elif value.38 < 0.75 %}color3{% elif value.38 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.38|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.39 < 0.25 %}color1{% elif value.39 < 0.5 %}color2{% elif value.39 < 0.75 %}color3{% elif value.39 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.39|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.40 < 0.25 %}color1{% elif value.40 < 0.5 %}color2{% elif value.40 < 0.75 %}color3{% elif value.40 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.40|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.41 < 0.25 %}color1{% elif value.41 < 0.5 %}color2{% elif value.41 < 0.75 %}color3{% elif value.41 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.41|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.42 < 0.25 %}color1{% elif value.42 < 0.5 %}color2{% elif value.42 < 0.75 %}color3{% elif value.42 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.42|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.43 < 0.25 %}color1{% elif value.43 < 0.5 %}color2{% elif value.43 < 0.75 %}color3{% elif value.43 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.43|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.44 < 0.25 %}color1{% elif value.44 < 0.5 %}color2{% elif value.44 < 0.75 %}color3{% elif value.44 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.44|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.45 < 0.25 %}color1{% elif value.45 < 0.5 %}color2{% elif value.45 < 0.75 %}color3{% elif value.45 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.45|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.46 < 0.25 %}color1{% elif value.46 < 0.5 %}color2{% elif value.46 < 0.75 %}color3{% elif value.46 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.46|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.47 < 0.25 %}color1{% elif value.47 < 0.5 %}color2{% elif value.47 < 0.75 %}color3{% elif value.47 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.47|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.48 < 0.25 %}color1{% elif value.48 < 0.5 %}color2{% elif value.48 < 0.75 %}color3{% elif value.48 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.48|floatformat:2 }} </td>
+                            <td style="text-align:center"
+                                class="{% if value.49 < 0.25 %}color1{% elif value.49 < 0.5 %}color2{% elif value.49 < 0.75 %}color3{% elif value.49 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.49|floatformat:2 }} </td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <br/>
+            </div>
 
 
-{% block content %} 
-{% autoescape off %}
-
-<div style="padding-top: 0px; font-size: 14px; white-space: nowrap; overflow-y:hidden; width: 100%">
-  <br />
-
-  <div style="font-size: 12px">
-    <p>
-      Data showed in this table is collected from the
-      <a href="https://www.ensembl.org" target="_blank">Ensembl</a> database and
-      <a href="https://app.genebass.org/" target="_blank">Genebass</a>
-    </p>
-  </div>
-  <a id="dlink" style="display: none"></a>
-  <div id="excel_table" style2="display:none;"></div>
-
-  <button
-    onclick="tableToExcel('structures_scrollable', 'Families data', 'EndogenousData.xls')"
-    type="button"
-    class="btn btn-primary"
-    style="margin-top: 10px; margin-top: 3px"
-  >
-    Export to Excel
-  </button>
-
-  <button
-    id="reset"
-    type="button"
-    class="btn btn-primary"
-    style="margin-top: 10px; margin-top: 3px"
-  >
-    Reset filters
-  </button>
-
-  <button
-    id="statistics"
-    type="button"
-    class="btn btn-primary"
-    style="margin-top: 10px; margin-top: 3px"
-  >
-    Show statistics
-  </button>
-
-  <div id="structures_scrollable_table">
-    <table class="display compact text-nowrap" id="structures_scrollable" style="width: 100%; margin-top: 10px; font-size: 12px;">
-      <thead id="headers">
-        <tr class="header-spans">
-          <th style="text-align:left" colspan="8">Position</th>
-          <th style="border-left: 1px solid black; text-align:left" colspan="2" style="">Impact</th>
-          <th style="border-left: 1px solid black; text-align:left" colspan="40"> Predicted effect scores</th>
-        </tr>
-
-        <tr class="table-filter-dropdown">
-          <!-- Position block -->
-
-					<!-- This should be rewrote using templatetag -->
-          <th  style="text-align: left; width:150px">Variant</th>
-          <th  style="text-align: left">Transcript</th>
-          <th  style="text-align: left">cDNA_</br>position</th>
-          <th  style="text-align: left">CDS_</br>position</th>
-          <th  style="text-align: left">Protein_</br>position</th>
-          <th  style="text-align: left">Amino_</br>acids</th>
-          <th  style="text-align: left">Codons</th>
-          <th  style="text-align: left">Strand</th>
-          <!-- Impact block -->
-          <th  style="text-align: left">Conse_</br>quence</th>
-          <th  style="text-align: left">Impact</th>
-          <!-- Score block -->
-          <th  style="text-align: left">BayesDel_</br>addAF</th>
-					<th  style="text-align: left">BayesDel_</br>noAF</th>
-					<th  style="text-align: left">CADD_</br>raw</th>
-					<th  style="text-align: left">ClinPred</th>
-					<th  style="text-align: left">DANN</th>
-
-					<th  style="text-align: left">DEOGEN2</th>
-					<th  style="text-align: left">Eigen_PC_</br>raw_coding</th>
-					<th  style="text-align: left">Eigen_raw_</br>coding</th>
-					<th  style="text-align: left">FATHMM_</br>converted</th>
-					<th  style="text-align: left">GERP_RS</th>
-
-					<th  style="text-align: left">GM12878_</br>fitCons</th>
-					<th  style="text-align: left">Geno</br>Canyon</th>
-					<th  style="text-align: left">H1_hESC_</br>fitCons</th>
-					<th  style="text-align: left">HUVEC_</br>fitCons</th>
-					<th  style="text-align: left">LIST_S2</th>
-
-					<th  style="text-align: left">LRT_</br>converted</th>
-					<th  style="text-align: left">M_CAP</th>
-					<th  style="text-align: left">MPC</th>
-					<th  style="text-align: left">MVP</th>
-					<th  style="text-align: left">MetaLR</th>
-
-					<th  style="text-align: left">MetaRNN</th>
-					<th  style="text-align: left">MetaSVM</th>
-					<th  style="text-align: left">MutPred</th>
-					<th  style="text-align: left">Mutation</br>Assessor</th>
-					<th  style="text-align: left">Mutation</br>Taster_</br>converted</th>
-
-					<th  style="text-align: left">PROVEAN_</br>converted</th>
-					<th  style="text-align: left">Polyphen2_</br>HDIV</th>
-					<th  style="text-align: left">Polyphen2_</br>HVAR</th>
-					<th  style="text-align: left">PrimateAI</th>
-					<th  style="text-align: left">REVEL</th>
-
-					<th  style="text-align: left">SIFT4G_</br>converted</th>
-					<th  style="text-align: left">SIFT_</br>converted</th>
-					<th  style="text-align: left">SiPhy_</br>29way_</br>logOdds</th>
-					<th  style="text-align: left">VEST4</th>
-					<th  style="text-align: left">bStatistic</br>converted</th>
-
-					<th  style="text-align: left">Fathmm_</br>MKL_coding</th>
-					<th  style="text-align: left">Fathmm_XF</br>_coding</th>
-					<th  style="text-align: left">Integrated_</br>fitCons</th>
-					<th  style="text-align: left">PhastCons</br>30way_</br>mammalian</th>
-					<th  style="text-align: left">Phylo_</br>P30way_</br>mammalian</th>
-        </tr>
-
-      </thead>
-      <tbody id='structures_scrollable_body'>
-        {% comment %} {% for value in array|slice:":12" %} {% endcomment %}
-        {% for value in array %}
-        <tr>
-					<!-- This should be rewrote using templatetag -->
-          <td style="text-align: left">{{value.0}}</td>
-					<td style="text-align: left">{{value.1}}</td>
-					<td style="text-align: left">{{value.3}}</td>
-					<td style="text-align: left">{{value.4}}</td>
-					<td style="text-align: left">{{value.5}}</td>
-					<td style="text-align: left">{{value.6}}</td>
-					<td style="text-align: left">{{value.7}}</td>
-					<td style="text-align: left">{{value.9}}</td>
-					<td style="text-align: left">{{value.2}}</td>
-					<td style="text-align: left">{{value.8}}</td>
-					
-					<!-- This should be rewrote using templatetag -->
-					<td style="text-align:center" class="{% if value.10 < 0.25 %}color1{% elif value.10 < 0.5 %}color2{% elif value.10 < 0.75 %}color3{% elif value.10 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.10|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.11 < 0.25 %}color1{% elif value.11 < 0.5 %}color2{% elif value.11 < 0.75 %}color3{% elif value.11 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.11|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.12 < 0.25 %}color1{% elif value.12 < 0.5 %}color2{% elif value.12 < 0.75 %}color3{% elif value.12 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.12|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.13 < 0.25 %}color1{% elif value.13 < 0.5 %}color2{% elif value.13 < 0.75 %}color3{% elif value.13 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.13|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.14 < 0.25 %}color1{% elif value.14 < 0.5 %}color2{% elif value.14 < 0.75 %}color3{% elif value.14 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.14|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.15 < 0.25 %}color1{% elif value.15 < 0.5 %}color2{% elif value.15 < 0.75 %}color3{% elif value.15 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.15|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.16 < 0.25 %}color1{% elif value.16 < 0.5 %}color2{% elif value.16 < 0.75 %}color3{% elif value.16 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.16|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.17 < 0.25 %}color1{% elif value.17 < 0.5 %}color2{% elif value.17 < 0.75 %}color3{% elif value.17 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.17|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.18 < 0.25 %}color1{% elif value.18 < 0.5 %}color2{% elif value.18 < 0.75 %}color3{% elif value.18 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.18|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.19 < 0.25 %}color1{% elif value.19 < 0.5 %}color2{% elif value.19 < 0.75 %}color3{% elif value.19 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.19|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.20 < 0.25 %}color1{% elif value.20 < 0.5 %}color2{% elif value.20 < 0.75 %}color3{% elif value.20 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.20|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.21 < 0.25 %}color1{% elif value.21 < 0.5 %}color2{% elif value.21 < 0.75 %}color3{% elif value.21 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.21|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.22 < 0.25 %}color1{% elif value.22 < 0.5 %}color2{% elif value.22 < 0.75 %}color3{% elif value.22 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.22|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.23 < 0.25 %}color1{% elif value.23 < 0.5 %}color2{% elif value.23 < 0.75 %}color3{% elif value.23 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.23|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.24 < 0.25 %}color1{% elif value.24 < 0.5 %}color2{% elif value.24 < 0.75 %}color3{% elif value.24 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.24|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.25 < 0.25 %}color1{% elif value.25 < 0.5 %}color2{% elif value.25 < 0.75 %}color3{% elif value.25 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.25|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.26 < 0.25 %}color1{% elif value.26 < 0.5 %}color2{% elif value.26 < 0.75 %}color3{% elif value.26 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.26|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.27 < 0.25 %}color1{% elif value.27 < 0.5 %}color2{% elif value.27 < 0.75 %}color3{% elif value.27 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.27|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.28 < 0.25 %}color1{% elif value.28 < 0.5 %}color2{% elif value.28 < 0.75 %}color3{% elif value.28 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.28|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.29 < 0.25 %}color1{% elif value.29 < 0.5 %}color2{% elif value.29 < 0.75 %}color3{% elif value.29 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.29|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.30 < 0.25 %}color1{% elif value.30 < 0.5 %}color2{% elif value.30 < 0.75 %}color3{% elif value.30 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.30|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.31 < 0.25 %}color1{% elif value.31 < 0.5 %}color2{% elif value.31 < 0.75 %}color3{% elif value.31 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.31|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.32 < 0.25 %}color1{% elif value.32 < 0.5 %}color2{% elif value.32 < 0.75 %}color3{% elif value.32 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.32|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.33 < 0.25 %}color1{% elif value.33 < 0.5 %}color2{% elif value.33 < 0.75 %}color3{% elif value.33 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.33|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.34 < 0.25 %}color1{% elif value.34 < 0.5 %}color2{% elif value.34 < 0.75 %}color3{% elif value.34 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.34|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.35 < 0.25 %}color1{% elif value.35 < 0.5 %}color2{% elif value.35 < 0.75 %}color3{% elif value.35 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.35|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.36 < 0.25 %}color1{% elif value.36 < 0.5 %}color2{% elif value.36 < 0.75 %}color3{% elif value.36 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.36|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.37 < 0.25 %}color1{% elif value.37 < 0.5 %}color2{% elif value.37 < 0.75 %}color3{% elif value.37 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.37|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.38 < 0.25 %}color1{% elif value.38 < 0.5 %}color2{% elif value.38 < 0.75 %}color3{% elif value.38 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.38|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.39 < 0.25 %}color1{% elif value.39 < 0.5 %}color2{% elif value.39 < 0.75 %}color3{% elif value.39 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.39|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.40 < 0.25 %}color1{% elif value.40 < 0.5 %}color2{% elif value.40 < 0.75 %}color3{% elif value.40 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.40|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.41 < 0.25 %}color1{% elif value.41 < 0.5 %}color2{% elif value.41 < 0.75 %}color3{% elif value.41 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.41|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.42 < 0.25 %}color1{% elif value.42 < 0.5 %}color2{% elif value.42 < 0.75 %}color3{% elif value.42 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.42|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.43 < 0.25 %}color1{% elif value.43 < 0.5 %}color2{% elif value.43 < 0.75 %}color3{% elif value.43 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.43|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.44 < 0.25 %}color1{% elif value.44 < 0.5 %}color2{% elif value.44 < 0.75 %}color3{% elif value.44 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.44|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.45 < 0.25 %}color1{% elif value.45 < 0.5 %}color2{% elif value.45 < 0.75 %}color3{% elif value.45 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.45|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.46 < 0.25 %}color1{% elif value.46 < 0.5 %}color2{% elif value.46 < 0.75 %}color3{% elif value.46 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.46|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.47 < 0.25 %}color1{% elif value.47 < 0.5 %}color2{% elif value.47 < 0.75 %}color3{% elif value.47 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.47|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.48 < 0.25 %}color1{% elif value.48 < 0.5 %}color2{% elif value.48 < 0.75 %}color3{% elif value.48 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.48|floatformat:2 }} </td>
-					<td style="text-align:center" class="{% if value.49 < 0.25 %}color1{% elif value.49 < 0.5 %}color2{% elif value.49 < 0.75 %}color3{% elif value.49 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.49|floatformat:2 }} </td>
-				
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <br />
-  </div>
-
- 
-</div>
-{% endautoescape %} 
-{% endblock content%}
+        </div>
+    {% endautoescape %}
+{% endblock content %}
 
 {% block addon_js %}
-<!--addon_js from gene_browser.html -->
-<script src="{% static 'home/js/datatables.min.js' %}"> </script>
-<script src="{% static 'home/js/bootstrap2-toggle.min.js' %}"></script>
-{% comment %} <script src="{% static 'home/js/jquery.dataTables.min.js' %}"> </script> {% endcomment %}
-<script src="{% static 'home/js/jquery.dataTables.yadcf.js' %}"> </script>
-<script src="{% static 'home/js/dataTables.buttons.min.js' %}"> </script>
-<script src="{% static 'home/js/select2.js' %}"> </script>
-<script src="{% static 'home/js/grayscale.js' %}"></script>
-<script src="{% static 'home/js/gpcrdb.js' %}"></script>
-<script src="{% static 'home/js/signprot-multitabtable.js' %}"></script>
-<script>
-  
-	$(document).ready(function() {
-		
-		$("#structures_scrollable").show();
-		oTable1 = $("#structures_scrollable").DataTable({
-			deferRender: true,
-			scrollY: true,
-			scrollX: true,
-			scrollCollapse: true,
-			scroller: true,
-			paging: true,
-			bSortCellsTop: false, //prevent sort arrows going on bottom row
-			aaSorting: [],
-			autoWidth: true,
-			bInfo: true,
-			//order: [[7, "asc"]],
-			pagingType: 'full_numbers',
-			lengthMenu: [
-					[10, 25, 50, 100, 200, -1],
-					[10, 25, 50, 100, 200, 'All'],
-			],
-		})
-		
-		<!-- Below shows the way to access the data in the table -->
-        oTable1.on( 'draw.dt', function () {
-            let data = oTable1.rows({search: 'applied'});
-				    console.log( 'The table has '+data.count()+' records' );
-						debugger;
-						// get data of an individual row
-						data.row(1).data()
-						console.log("First data row: " ,data.row(1).data())
-        } );
+    <!--addon_js from gene_browser.html -->
+    <script src="{% static 'home/js/datatables.min.js' %}"></script>
+    <script src="{% static 'home/js/bootstrap2-toggle.min.js' %}"></script>
+    {% comment %} <script src="{% static 'home/js/jquery.dataTables.min.js' %}"> </script> {% endcomment %}
+    <script src="{% static 'home/js/jquery.dataTables.yadcf.js' %}"></script>
+    <script src="{% static 'home/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'home/js/select2.js' %}"></script>
+    <script src="{% static 'home/js/grayscale.js' %}"></script>
+    <script src="{% static 'home/js/gpcrdb.js' %}"></script>
+    <script src="{% static 'home/js/signprot-multitabtable.js' %}"></script>
+    <script>
 
-		let column_filters = [];
+        $(document).ready(function () {
 
-		// Variant
-		column_filters = column_filters.concat(createYADCFfilters(0, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+            $("#structures_scrollable").show();
+            oTable1 = $("#structures_scrollable").DataTable({
+                deferRender: true,
+                scrollY: true,
+                scrollX: true,
+                scrollCollapse: true,
+                scroller: true,
+                paging: true,
+                bSortCellsTop: false, //prevent sort arrows going on bottom row
+                aaSorting: [],
+                autoWidth: true,
+                bInfo: true,
+                //order: [[7, "asc"]],
+                pagingType: 'full_numbers',
+                lengthMenu: [
+                    [10, 25, 50, 100, 200, -1],
+                    [10, 25, 50, 100, 200, 'All'],
+                ],
+            })
 
-		// Transcript
-		column_filters = column_filters.concat(createYADCFfilters(1, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+            <!-- Below shows the way to access the data in the table -->
+            oTable1.on('draw.dt', function () {
+                {#let data = oTable1.rows({search: 'applied'});#}
+                {#console.log('The table has ' + data.count() + ' records');#}
+                {#debugger;#}
+                // get data of an individual row
+                // data.row(1).data()
+//						console.log(data[0])
+            });
 
-		// cDNA_position
-		column_filters = column_filters.concat(createYADCFfilters(2, 1, "multi_select", "select2", 'Select', false, null, null, "80px"));
+            let column_filters = [];
 
-		// CDS_position
-		column_filters = column_filters.concat(createYADCFfilters(3, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+            // Variant
+            column_filters = column_filters.concat(createYADCFfilters(0, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
 
-		// Protein_position
-		column_filters = column_filters.concat(createYADCFfilters(4, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+            // Transcript
+            column_filters = column_filters.concat(createYADCFfilters(1, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
 
-		// Amino_acids
-		column_filters = column_filters.concat(createYADCFfilters(5, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+            // cDNA_position
+            column_filters = column_filters.concat(createYADCFfilters(2, 1, "multi_select", "select2", 'Select', false, null, null, "80px"));
 
-		// Codons
-		column_filters = column_filters.concat(createYADCFfilters(6, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+            // CDS_position
+            column_filters = column_filters.concat(createYADCFfilters(3, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
 
-		// Consequence
-		column_filters = column_filters.concat(createYADCFfilters(8, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+            // Protein_position
+            column_filters = column_filters.concat(createYADCFfilters(4, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
 
-		// Impact 
-		column_filters = column_filters.concat(createYADCFfilters(9, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
+            // Amino_acids
+            column_filters = column_filters.concat(createYADCFfilters(5, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
 
-		// BayesDel_addAF_rankscore 
-		column_filters = column_filters.concat(createYADCFfilters(10, 40, "range_number", null, ["Min", "Max"], false, null, null, "40px"))
+            // Codons
+            column_filters = column_filters.concat(createYADCFfilters(6, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
 
-		yadcf.init(oTable1.draw(), column_filters, {
-			cumulative_filtering: false
-		});
+            // Consequence
+            column_filters = column_filters.concat(createYADCFfilters(8, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
 
-		//yadcf.exFilterColumn(oTable1, [[8, ["mis"]]], true);
+            // Impact
+            column_filters = column_filters.concat(createYADCFfilters(9, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
 
-		gray_scale_table($("#structures_scrollable"));
-		console.log("We are here");
-		$("#reset").click(function() {
-			yadcf.exResetAllFilters(oTable1);
-		});
-		});
-</script>
-{% endblock addon_js %}  
+            // BayesDel_addAF_rankscore
+            column_filters = column_filters.concat(createYADCFfilters(10, 40, "range_number", null, ["Min", "Max"], false, null, null, "40px"))
+
+            yadcf.init(oTable1.draw(), column_filters, {
+                cumulative_filtering: false
+            });
+
+            //yadcf.exFilterColumn(oTable1, [[8, ["mis"]]], true);
+
+            gray_scale_table($("#structures_scrollable"));
+            console.log("We are here");
+            $("#reset").click(function () {
+                yadcf.exResetAllFilters(oTable1);
+            });
+        });
+    </script>
+{% endblock addon_js %}
