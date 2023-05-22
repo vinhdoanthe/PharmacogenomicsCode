@@ -319,8 +319,7 @@
                         {% render_variant_value value.11 %}
 
 {#                        Chị Dương viết tiếp phần này nhé#}
-                            <td style="text-align:center"
-                                class="{% if value.12 < 0.25 %}color1{% elif value.12 < 0.5 %}color2{% elif value.12 < 0.75 %}color3{% elif value.12 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.12|floatformat:2 }} </td>
+                        {% render_variant_value value.12 %}
                             <td style="text-align:center"
                                 class="{% if value.13 < 0.25 %}color1{% elif value.13 < 0.5 %}color2{% elif value.13 < 0.75 %}color3{% elif value.13 <= 1 %}color4{% else %}color5{% endif %}"> {{ value.13|floatformat:2 }} </td>
                             <td style="text-align:center"

@@ -20,11 +20,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django.core.cache import cache
 
-
 from variant.models import Variant, VepVariant, GenebassVariant, VariantPhenocode
 from gene.models import Gene
 
 from django.views.generic import ListView
+
 
 # Create your views here.
 
@@ -38,7 +38,7 @@ class GeneDetailBrowser(TemplateView):
     def get(self, request, slug=None):
         # Your view code here
         return render(request, 'gene_detail.html', self.get_context_data(slug=slug))
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         slug = kwargs.get('slug')
@@ -102,69 +102,68 @@ class GeneDetailBrowser(TemplateView):
             # Retrieve all variant markers from a gene
             if slug.startswith("ENSG"):
                 marker_ID_data = Variant.objects.filter(Gene_ID=slug).values_list(
-                "VariantMarker")
+                    "VariantMarker")
                 # import pdb
                 # pdb.set_trace()
             else:
                 geneid = Gene.objects.filter(genename=slug).values_list("gene_id")[0][0]
                 marker_ID_data = Variant.objects.filter(Gene_ID=geneid).values_list(
-                "VariantMarker")
-
+                    "VariantMarker")
 
             # Below code should be rewritten to avoid N+1 queries
             for marker in marker_ID_data:
                 # Retrieve all VEP scores for each variant marker
                 vep_scores = VepVariant.objects.filter(
                     Variant_marker=marker).values_list(
-                                                    "Transcript_ID",
-                                                    "Consequence",
-                                                    "cDNA_position",
-                                                    "CDS_position",
-                                                    "Protein_position",
-                                                    "Amino_acids",
-                                                    "Codons",
-                                                    "Impact",
-                                                    "Strand",
-                                                    "BayesDel_addAF_rankscore",
-                                                    "BayesDel_noAF_rankscore",
-                                                    "CADD_raw_rankscore",
-                                                    "ClinPred_rankscore",
-                                                    "DANN_rankscore",
-                                                    "DEOGEN2_rankscore",
-                                                    "Eigen_PC_raw_coding_rankscore",
-                                                    "Eigen_raw_coding_rankscore",
-                                                    "FATHMM_converted_rankscore",
-                                                    "GERP_RS_rankscore",
-                                                    "GM12878_fitCons_rankscore",
-                                                    "GenoCanyon_rankscore",
-                                                    "H1_hESC_fitCons_rankscore",
-                                                    "HUVEC_fitCons_rankscore",
-                                                    "LIST_S2_rankscore",
-                                                    "LRT_converted_rankscore",
-                                                    "M_CAP_rankscore",
-                                                    "MPC_rankscore",
-                                                    "MVP_rankscore",
-                                                    "MetaLR_rankscore",
-                                                    "MetaRNN_rankscore",
-                                                    "MetaSVM_rankscore",
-                                                    "MutPred_rankscore",
-                                                    "MutationAssessor_rankscore",
-                                                    "MutationTaster_converted_rankscore",
-                                                    "PROVEAN_converted_rankscore",
-                                                    "Polyphen2_HDIV_rankscore",
-                                                    "Polyphen2_HVAR_rankscore",
-                                                    "PrimateAI_rankscore",
-                                                    "REVEL_rankscore",
-                                                    "SIFT4G_converted_rankscore",
-                                                    "SIFT_converted_rankscore",
-                                                    "SiPhy_29way_logOdds_rankscore",
-                                                    "VEST4_rankscore",
-                                                    "bStatistic_converted_rankscore",
-                                                    "Fathmm_MKL_coding_rankscore",
-                                                    "Fathmm_XF_coding_rankscore",
-                                                    "Integrated_fitCons_rankscore",
-                                                    "PhastCons30way_mammalian_rankscore",
-                                                    "PhyloP30way_mammalian_rankscore")
+                    "Transcript_ID",
+                    "Consequence",
+                    "cDNA_position",
+                    "CDS_position",
+                    "Protein_position",
+                    "Amino_acids",
+                    "Codons",
+                    "Impact",
+                    "Strand",
+                    "BayesDel_addAF_rankscore",
+                    "BayesDel_noAF_rankscore",
+                    "CADD_raw_rankscore",
+                    "ClinPred_rankscore",
+                    "DANN_rankscore",
+                    "DEOGEN2_rankscore",
+                    "Eigen_PC_raw_coding_rankscore",
+                    "Eigen_raw_coding_rankscore",
+                    "FATHMM_converted_rankscore",
+                    "GERP_RS_rankscore",
+                    "GM12878_fitCons_rankscore",
+                    "GenoCanyon_rankscore",
+                    "H1_hESC_fitCons_rankscore",
+                    "HUVEC_fitCons_rankscore",
+                    "LIST_S2_rankscore",
+                    "LRT_converted_rankscore",
+                    "M_CAP_rankscore",
+                    "MPC_rankscore",
+                    "MVP_rankscore",
+                    "MetaLR_rankscore",
+                    "MetaRNN_rankscore",
+                    "MetaSVM_rankscore",
+                    "MutPred_rankscore",
+                    "MutationAssessor_rankscore",
+                    "MutationTaster_converted_rankscore",
+                    "PROVEAN_converted_rankscore",
+                    "Polyphen2_HDIV_rankscore",
+                    "Polyphen2_HVAR_rankscore",
+                    "PrimateAI_rankscore",
+                    "REVEL_rankscore",
+                    "SIFT4G_converted_rankscore",
+                    "SIFT_converted_rankscore",
+                    "SiPhy_29way_logOdds_rankscore",
+                    "VEST4_rankscore",
+                    "bStatistic_converted_rankscore",
+                    "Fathmm_MKL_coding_rankscore",
+                    "Fathmm_XF_coding_rankscore",
+                    "Integrated_fitCons_rankscore",
+                    "PhastCons30way_mammalian_rankscore",
+                    "PhyloP30way_mammalian_rankscore")
                 for vep_score in vep_scores:
                     data_subset = {}
 
@@ -224,13 +223,19 @@ class GeneDetailBrowser(TemplateView):
 
             table.fillna('', inplace=True)
             length = len(table)
-            
+
             consequence_dict = {}
-            name_dic = {'NMD': 'NMD_transcript', 'cse': 'coding_sequence', 'fsh': 'frameshift', 'itc': 'incomplete_terminal_codon', 'ide': 'inframe_deletion', 'iis': 'inframe_insertion', 'mis': 'missense', 'pal': 'protein_altering', 'sac': 'splice_acceptor', 'sdo': 'splice_donor', 'sd5': 'splice_donor_5th_base', 'sdr': 'splice_donor_region', 'spt': 'splice_polypyrimidine_tract', 'sre': 'splice_region', '_sl': 'start_lost', '_sr': 'start_retained', 'sga': 'stop_gained', 'sl_': 'stop_lost', 'sr_': 'stop_retained', 'syn': 'synonymous'}
+            name_dic = {'NMD': 'NMD_transcript', 'cse': 'coding_sequence', 'fsh': 'frameshift',
+                        'itc': 'incomplete_terminal_codon', 'ide': 'inframe_deletion', 'iis': 'inframe_insertion',
+                        'mis': 'missense', 'pal': 'protein_altering', 'sac': 'splice_acceptor', 'sdo': 'splice_donor',
+                        'sd5': 'splice_donor_5th_base', 'sdr': 'splice_donor_region',
+                        'spt': 'splice_polypyrimidine_tract', 'sre': 'splice_region', '_sl': 'start_lost',
+                        '_sr': 'start_retained', 'sga': 'stop_gained', 'sl_': 'stop_lost', 'sr_': 'stop_retained',
+                        'syn': 'synonymous'}
             for i in range(length):
                 values = table["Consequence"][i].split(",")
                 for value in values:
-                    consequence_dict[name_dic.get(value)] = consequence_dict.get(value, 0)+1
+                    consequence_dict[name_dic.get(value)] = consequence_dict.get(value, 0) + 1
 
             context = dict()
 
@@ -242,64 +247,91 @@ class GeneDetailBrowser(TemplateView):
             context["consequence_dict"] = consequence_dict
 
         return context
-        
 
-class GenbassVariantListView(TemplateView):
+
+class genebassVariantListView(TemplateView):
     template_name = "genebass/variant_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # print("\n------------- self.kwargs['pk'] : ", self.kwargs['pk'])
-        # Gene_ID=Gene.objects.get(gene_id=self.kwargs['pk'])
-        # print("Gene_ID : ", Gene_ID, " type : ", type(Gene_ID))
-        # variants = Variant.objects.filter(Gene_ID=Gene_ID)
-        # print(" number of variants : ", variants.count())
-        # genbass_variants_list = GenebassVariant.objects.filter(markerID__in = variants)
-        # print(" number of genbass_variants : ", genbass_variants_list.count())
-
-        genbass_variants_list = GenebassVariant.objects.filter(  # Filter to get all genebass variants for a gene
+        genebass_variants_list = GenebassVariant.objects.filter(  # Filter to get all genebass variants for a gene
             markerID__in=Variant.objects.filter(  # Filter to get all variants for a gene
-                Gene_ID=Gene.objects.get(gene_id=self.kwargs['pk'])  # Gen Gene by gene_id
+                Gene_ID=self.kwargs['pk']  # Gen Gene by gene_id
             ).values_list('VariantMarker', flat=True)
+        ).values(
+            'markerID__VariantMarker',
+            'n_cases',
+            'n_controls',
+            'phenocode__description',
+            'phenocode',
+            'n_cases_defined',
+            'n_cases_both_sexes',
+            'n_cases_females',
+            'n_cases_males',
+            'category',
+            'AC',
+            'AF',
+            'BETA',
+            'SE',
+            'AF_Cases',
+            'AF_Controls',
+            'Pvalue',
         )
-        # print("genbass_variants_list : ", genbass_variants_list)
 
-        # Test sample data
-        context['variant_list'] = self.__generate_sample_data()
-        # context['variant_list'] = genbass_variants_list
-        # print(f"count genbass_variants_list {context['variant_list'].count()}")
+        print(f"genebass_variants_list count: {genebass_variants_list.count()}")
+
+        genebass_variants_list = genebass_variants_list[:5000]
+
+        phenotypes = GenebassVariant.objects.filter(  # Filter to get all genebass variants for a gene
+            markerID__in=Variant.objects.filter(  # Filter to get all variants for a gene
+                Gene_ID=self.kwargs['pk']  # Gen Gene by gene_id
+            ).values_list('VariantMarker', flat=True)
+        ).values_list('phenocode', flat=True).distinct()
+
+        # đổi lại câu query để lấy categories
+        categories = GenebassVariant.objects.filter(  # Filter to get all genebass variants for a gene
+            markerID__in=Variant.objects.filter(  # Filter to get all variants for a gene
+                Gene_ID=self.kwargs['pk']  # Gen Gene by gene_id
+            ).values_list('VariantMarker', flat=True)
+        ).values_list('category', flat=True).distinct()
+
+        context['gene'] = Gene.objects.get(pk=self.kwargs['pk'])
+        context['variant_list'] = genebass_variants_list
+        context['phenotypes'] = phenotypes
+        context['categories'] = categories
+
         return context
 
-    def __generate_sample_data(self):
-        """Generate sample data for testing purposes
-        """
-        num_of_genebass_variant = 1000
-
-        list_of_genebass_variants = []
-        marker = Variant.objects.all().last()
-        phenocode = VariantPhenocode.objects.all().last()
-        for i in range(num_of_genebass_variant):
-            list_of_genebass_variants.append(
-                {
-                    'markerID': marker.VariantMarker,
-                    'n_cases': random.randint(0, 100),
-                    'n_controls': random.randint(0, 100),
-                    'description': phenocode.description,
-                    'phenocode': phenocode.phenocode,
-                    'n_cases_defined': random.randint(0, 100),
-                    'n_cases_both_sexes': random.randint(0, 100),
-                    'n_cases_females': random.randint(0, 100),
-                    'n_cases_males': random.randint(0, 100),
-                    'category': random.choice(['A', 'B', 'C', 'D']),
-                    'AC': random.randint(0, 100),
-                    'AF': random.randint(0, 100),
-                    'BETA': random.randint(0, 100),
-                    'SE': random.randint(0, 100),
-                    'AF_Cases': random.randint(0, 100),
-                    'AF_Controls': random.randint(0, 100),
-                    'Pvalue': random.randint(0, 100),
-                }
-            )
-
-        return list_of_genebass_variants
+    # def __generate_sample_data(self):
+    #     """Generate sample data for testing purposes
+    #     """
+    #     num_of_genebass_variant = 1000
+    #
+    #     list_of_genebass_variants = []
+    #     marker = Variant.objects.all().last()
+    #     phenocode = VariantPhenocode.objects.all().last()
+    #     for i in range(num_of_genebass_variant):
+    #         list_of_genebass_variants.append(
+    #             {
+    #                 'markerID': marker.VariantMarker,
+    #                 'n_cases': random.randint(0, 100),
+    #                 'n_controls': random.randint(0, 100),
+    #                 'description': phenocode.description,
+    #                 'phenocode': phenocode.phenocode,
+    #                 'n_cases_defined': random.randint(0, 100),
+    #                 'n_cases_both_sexes': random.randint(0, 100),
+    #                 'n_cases_females': random.randint(0, 100),
+    #                 'n_cases_males': random.randint(0, 100),
+    #                 'category': random.choice(['A', 'B', 'C', 'D']),
+    #                 'AC': random.randint(0, 100),
+    #                 'AF': random.randint(0, 100),
+    #                 'BETA': random.randint(0, 100),
+    #                 'SE': random.randint(0, 100),
+    #                 'AF_Cases': random.randint(0, 100),
+    #                 'AF_Controls': random.randint(0, 100),
+    #                 'Pvalue': random.randint(0, 100),
+    #             }
+    #         )
+    #
+    #     return list_of_genebass_variants

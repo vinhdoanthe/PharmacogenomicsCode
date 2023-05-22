@@ -92,6 +92,7 @@ class GenebassVariant(models.Model):
     n_cases_females = models.FloatField()
     n_cases_males = models.FloatField()
 
+    # category = phenocode.description
     category = models.CharField(max_length=10)  # encoded as categorical data
     AC = models.FloatField()
     AF = models.FloatField()
