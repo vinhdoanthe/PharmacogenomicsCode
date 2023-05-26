@@ -48,3 +48,4 @@ def render_variant_value(value):
         'color': color,
         'value': value,
     }
+

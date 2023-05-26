@@ -101,8 +101,8 @@ class Command(BaseCommand):
                 SE = data[index: index + 1]["SE"].values[0]
 
                 # breakpoint()
-                AF_Cases = data[index: index + 1]["AF.Cases"].values[0]
-                AF_Controls = data[index: index + 1]["AF.Controls"].values[0]
+                AF_Cases = data[index: index + 1]["AF_Cases"].values[0]
+                AF_Controls = data[index: index + 1]["AF_Controls"].values[0]
                 Pvalue = data[index: index + 1]["Pvalue"].values[0]
 
                 try:

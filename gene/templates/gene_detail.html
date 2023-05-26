@@ -1,4 +1,4 @@
-{% extends "home/base.html" %}
+{% extends "layouts/with_leftbar/base.html" %}
 {% load static %}
 {% load gene_detail %}
 {% csrf_token %}
@@ -13,449 +13,189 @@
           href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.css"/>
     <link rel="stylesheet" href="{% static 'home/css/construct_browser.css' %}" type="text/css"/>
 
-    <style>
-
-        {% comment %} .dataTables_scrollHeadInner {
-              margin-top: 20px;
-          } {% endcomment %}
-
-        table.dataTable thead th,
-        {#This fix issue https://trello.com/c/9kMXVaOY/26-l%E1%BB%97i-khi-variant-qu%C3%A1-d%C3%A0i-d%C3%A0i-h%C6%A1n-%C4%91%E1%BB%99-r%E1%BB%99ng-c%E1%BB%99t-v%C3%AD-d%E1%BB%A5-http-1270018000-gene-ensg00000005381#} table.dataTable tbody td {
-            max-width: 115px;
-            word-break: break-all;
-            overflow-wrap: break-word;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        {#word-break: break-word;#}{#white-space: pre-wrap;#}{#-moz-white-space: pre-wrap;#} white-space: nowrap;
-        }
-
-        table.dataTable thead .sorting {
-            background-position: right;
-        }
-
-        .select2-container select2-container-multi {
-            width: 75%;
-        }
-
-        .select2-container-multi .select2-choices .select2-search-field input {
-            max-width: 50px;
-        }
-
-        .yadcf-filter-wrapper {
-            position: center;
-            display: flex;
-            white-space: nowrap;
-            margin-top: 7px;
-            width: 50% !important;
-        }
-
-        .yadcf-filter-wrapper-inner {
-            white-space: normal;
-        }
-
-        .select2-results {
-            background-color: white;
-            border: gray;
-            width: 150px !important;
-        }
-
-        .yadcf-filter-range {
-            grid-auto-columns: auto;
-            max-width: 50px !important;
-            font-family: sans-serif;
-            font-size: 80%;
-            font-weight: bold;
-            margin: auto;
-            margin-top: 10%;
-            min-width: 40px;
-        }
-
-        table.dataTable.compact tbody th {
-            padding: 5px 10px 5px 0px !important;
-            /* width: 0px; */
-        }
-
-        table.dataTable.compact thead th,
-        table.dataTable.compact thead td {
-            padding: 5px 10px 5px 0px;
-            /* width: 0px; */
-        }
-
-        table.dataTable.compact thead tr.over_header th {
-            border-bottom: 1px solid #ccc;
-        }
-
-        table.dataTable.compact thead th.leftborder {
-            border-left: 1px solid;
-        }
-
-        table.dataTable.compact thead th.rightborder {
-            border-right: 1px solid;
-        }
-
-        #structures_scrollable tr td {
-            margin: 10px 0 0 0;
-        }
-
-        .yadcf-filter-range {
-            grid-auto-columns: auto;
-            max-width: 60px !important;
-            font-family: sans-serif;
-            font-size: 80%;
-            font-weight: bold;
-            margin: auto;
-            margin-top: 10%;
-            min-width: 50px;
-        }
-
-
-        #overlay {
-            top: 0px;
-            position: absolute;
-            background: #f8f8f8;
-            /*border: 1px solid #333;*/
-            -webkit-box-shadow: 5px 0 2px -2px #888;
-            box-shadow: 5px 0 2px -2px #888;
-        }
-
-        .container {
-            width: 90%;
-            /* display:flex;
-                flex-direction: column; */
-        }
-
-        .wrapper {
-            overflow-x: scroll;
-            overflow-y: hidden;
-        }
-
-        #overlay tbody tr {
-            background-color: #f8f8f8;
-        }
-
-        {% comment %} #count_row th {
-            font-size: 11px;
-            text-align: center;
-        } {% endcomment %}
-
-        .border-left {
-            padding-left: 3px;
-        }
-
-        .name {
-            width: 100px;
-            text-overflow: ellipsis;
-            cursor: pointer;
-            word-break: break-all;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .name:hover {
-            overflow: visible;
-            white-space: normal;
-
-        }
-
-        .toolbar_data_css {
-            width: 250px;
-            margin-right: auto;
-            margin-left: 0px;
-            /* border: 1px solid; */
-            font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
-            font-weight: normal;
-            font-size: 120%;
-            line-height: 1.625;
-        }
-
-        .toolbar_data_css.td {
-            height: 15px;
-            max-width: 150px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
-        #variant_consquence_statistics {
-            margin-top: 10px;
-            display: flex;
-        {% comment %} background-color: lavender; {% endcomment %} justify-content: space-between;
-            border: 1px solid grey;
-            flex-direction: column;
-        }
-
-        #variant_consquence_statistics_in_words {
-            margin-top: 50px;
-            margin-left: 10px;
-        }
-
-        #structures_scrollable_table {
-            margin-top: 20px;
-            max-width: 100%;
-
-        }
-
-        #structures_scrollable_table tr td.color5 {
-            margin-right: 10px;
-        }
-
-        table {
-            border-spacing: 10px;
-        }
-
-        td.color-value {
-            border-radius: 15px;
-        }
-
-    </style>
+    <link rel="stylesheet" href="{% static 'gene/css/gene-detail.css' %}" type="text/css"/>
 {% endblock addon_css %}
 
 
 {% block content %}
     {% autoescape off %}
-
-        <div style="padding-top: 0px; font-size: 14px; white-space: nowrap; overflow-y:hidden; width: 100%">
-            <br/>
-
-            {% include '_buttons.html' %}
-
-            <div id="structures_scrollable_table">
-                <table class="display compact text-nowrap" id="structures_scrollable"
-                       style="width: 100%; margin-top: 10px; font-size: 12px;">
-                    <thead id="headers">
-                    <tr class="header-spans">
-                        <th style="text-align:left" colspan="8">Position</th>
-                        <th style="border-left: 1px solid black; text-align:left" colspan="2" style="">Impact</th>
-                        <th style="border-left: 1px solid black; text-align:left" colspan="40"> Predicted effect
-                            scores
-                        </th>
-                    </tr>
-
-                    <tr class="table-filter-dropdown">
-                        <!-- Position block -->
-
-                        <!-- This should be rewrote using templatetag -->
-                        <th style="text-align: left; width:150px">Variant</th>
-                        <th style="text-align: left">Transcript</th>
-                        <th style="text-align: left">cDNA_</br>position</th>
-                        <th style="text-align: left">CDS_</br>position</th>
-                        <th style="text-align: left">Protein_</br>position</th>
-                        <th style="text-align: left">Amino_</br>acids</th>
-                        <th style="text-align: left">Codons</th>
-                        <th style="text-align: left">Strand</th>
-                        <!-- Impact block -->
-                        <th style="text-align: left">Conse_</br>quence</th>
-                        <th style="text-align: left">Impact</th>
-                        <!-- Score block -->
-                        <th style="text-align: left">BayesDel_</br>addAF</th>
-                        <th style="text-align: left">BayesDel_</br>noAF</th>
-                        <th style="text-align: left">CADD_</br>raw</th>
-                        <th style="text-align: left">ClinPred</th>
-                        <th style="text-align: left">DANN</th>
-
-                        <th style="text-align: left">DEOGEN2</th>
-                        <th style="text-align: left">Eigen_PC_</br>raw_coding</th>
-                        <th style="text-align: left">Eigen_raw_</br>coding</th>
-                        <th style="text-align: left">FATHMM_</br>converted</th>
-                        <th style="text-align: left">GERP_RS</th>
-
-                        <th style="text-align: left">GM12878_</br>fitCons</th>
-                        <th style="text-align: left">Geno</br>Canyon</th>
-                        <th style="text-align: left">H1_hESC_</br>fitCons</th>
-                        <th style="text-align: left">HUVEC_</br>fitCons</th>
-                        <th style="text-align: left">LIST_S2</th>
-
-                        <th style="text-align: left">LRT_</br>converted</th>
-                        <th style="text-align: left">M_CAP</th>
-                        <th style="text-align: left">MPC</th>
-                        <th style="text-align: left">MVP</th>
-                        <th style="text-align: left">MetaLR</th>
-
-                        <th style="text-align: left">MetaRNN</th>
-                        <th style="text-align: left">MetaSVM</th>
-                        <th style="text-align: left">MutPred</th>
-                        <th style="text-align: left">Mutation</br>Assessor</th>
-                        <th style="text-align: left">Mutation</br>Taster_</br>converted</th>
-
-                        <th style="text-align: left">PROVEAN_</br>converted</th>
-                        <th style="text-align: left">Polyphen2_</br>HDIV</th>
-                        <th style="text-align: left">Polyphen2_</br>HVAR</th>
-                        <th style="text-align: left">PrimateAI</th>
-                        <th style="text-align: left">REVEL</th>
-
-                        <th style="text-align: left">SIFT4G_</br>converted</th>
-                        <th style="text-align: left">SIFT_</br>converted</th>
-                        <th style="text-align: left">SiPhy_</br>29way_</br>logOdds</th>
-                        <th style="text-align: left">VEST4</th>
-                        <th style="text-align: left">bStatistic</br>converted</th>
-
-                        <th style="text-align: left">Fathmm_</br>MKL_coding</th>
-                        <th style="text-align: left">Fathmm_XF</br>_coding</th>
-                        <th style="text-align: left">Integrated_</br>fitCons</th>
-                        <th style="text-align: left">PhastCons</br>30way_</br>mammalian</th>
-                        <th style="text-align: left">Phylo_</br>P30way_</br>mammalian</th>
-                    </tr>
-
-                    </thead>
-                    <tbody id='structures_scrollable_body'>
-                    {% comment %} {% for value in array|slice:":12" %} {% endcomment %}
-                    {% for value in array %}
-                        <tr>
-                            <!-- This should be rewrote using templatetag -->
-                            <td style="text-align: left">{{ value.0 }}</td>
-                            <td style="text-align: left">{{ value.1 }}</td>
-                            <td style="text-align: left">{{ value.3 }}</td>
-                            <td style="text-align: left">{{ value.4 }}</td>
-                            <td style="text-align: left">{{ value.5 }}</td>
-                            <td style="text-align: left">{{ value.6 }}</td>
-                            <td style="text-align: left">{{ value.7 }}</td>
-                            <td style="text-align: left">{{ value.9 }}</td>
-                            <td style="text-align: left">{{ name_dic.value.2 }}</td>
-                            <td style="text-align: left">{{ name_dic.value.8 }}</td>
-
-                            <!-- This should be rewrote using templatetag -->
-
-                        {% render_variant_value value.10 %}
-                        {% render_variant_value value.11 %}
-                        {% render_variant_value value.12 %}
-                        {% render_variant_value value.13 %}
-                        {% render_variant_value value.14 %}
-                        {% render_variant_value value.15 %}
-                        {% render_variant_value value.16 %}
-                        {% render_variant_value value.17 %}
-                        {% render_variant_value value.18 %}
-                        {% render_variant_value value.19 %}
-                        {% render_variant_value value.20 %}
-                        {% render_variant_value value.21 %}
-                        {% render_variant_value value.22 %}
-                        {% render_variant_value value.23 %}
-                        {% render_variant_value value.24 %}
-                        {% render_variant_value value.25 %}
-                        {% render_variant_value value.26 %}
-                        {% render_variant_value value.27 %}
-                        {% render_variant_value value.28 %}
-                        {% render_variant_value value.29 %}
-                        {% render_variant_value value.30 %}
-                        {% render_variant_value value.31 %}
-                        {% render_variant_value value.32 %}
-                        {% render_variant_value value.33 %}
-                        {% render_variant_value value.34 %}
-                        {% render_variant_value value.35 %}
-                        {% render_variant_value value.36 %}
-                        {% render_variant_value value.37 %}
-                        {% render_variant_value value.38 %}
-                        {% render_variant_value value.39 %}
-                        {% render_variant_value value.40 %}
-                        {% render_variant_value value.41 %}
-                        {% render_variant_value value.42 %}
-                        {% render_variant_value value.43 %}
-                        {% render_variant_value value.44 %}
-                        {% render_variant_value value.45 %}
-                        {% render_variant_value value.46 %}
-                        {% render_variant_value value.47 %}
-                        {% render_variant_value value.48 %}
-                        {% render_variant_value value.49 %}
-
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                <br/>
+        <div class="row">
+            <div class="col-md-3">
+                {{ filter_form }}
             </div>
+            <div class="col-md-9">
+                <div class="gene-table-container">
+                    {% include '_buttons.html' %}
+                    <div id="structures_scrollable_table">
+                        <table class="display compact text-nowrap" id="structures_scrollable">
+                            <thead id="headers">
+                            <tr class="table-filter-dropdown">
+                                <th style="text-align: left; width:150px">Variant</th>
+                                <th>Transcript</th>
+                                <th>cDNA_</br>position</th>
+                                <th>CDS_</br>position</th>
+                                <th>Protein_</br>position</th>
+                                <th>Amino_</br>acids</th>
+                                <th>Codons</th>
+                                <th>Strand</th>
+                                <!-- Impact block -->
+                                <th>Conse_</br>quence</th>
+                                <th>Impact</th>
+                                <!-- Score block -->
+                                <th>BayesDel_</br>addAF</th>
+                                <th>BayesDel_</br>noAF</th>
+                                <th>CADD_</br>raw</th>
+                                <th>ClinPred</th>
+                                <th>DANN</th>
 
+                                <th>DEOGEN2</th>
+                                <th>Eigen_PC_</br>raw_coding</th>
+                                <th>Eigen_raw_</br>coding</th>
+                                <th>FATHMM_</br>converted</th>
+                                <th>GERP_RS</th>
 
+                                <th>GM12878_</br>fitCons</th>
+                                <th>Geno</br>Canyon</th>
+                                <th>H1_hESC_</br>fitCons</th>
+                                <th>HUVEC_</br>fitCons</th>
+                                <th>LIST_S2</th>
+
+                                <th>LRT_</br>converted</th>
+                                <th>M_CAP</th>
+                                <th>MPC</th>
+                                <th>MVP</th>
+                                <th>MetaLR</th>
+
+                                <th>MetaRNN</th>
+                                <th>MetaSVM</th>
+                                <th>MutPred</th>
+                                <th>Mutation</br>Assessor</th>
+                                <th>Mutation</br>Taster_</br>converted</th>
+
+                                <th>PROVEAN_</br>converted</th>
+                                <th>Polyphen2_</br>HDIV</th>
+                                <th>Polyphen2_</br>HVAR</th>
+                                <th>PrimateAI</th>
+                                <th>REVEL</th>
+
+                                <th>SIFT4G_</br>converted</th>
+                                <th>SIFT_</br>converted</th>
+                                <th>SiPhy_</br>29way_</br>logOdds</th>
+                                <th>VEST4</th>
+                                <th>bStatistic</br>converted</th>
+
+                                <th>Fathmm_</br>MKL_coding</th>
+                                <th>Fathmm_XF</br>_coding</th>
+                                <th>Integrated_</br>fitCons</th>
+                                <th>PhastCons</br>30way_</br>mammalian</th>
+                                <th>Phylo_</br>P30way_</br>mammalian</th>
+                            </tr>
+
+                            </thead>
+                            <tbody id='structures_scrollable_body'>
+                            {% for value in array %}
+                                <tr>
+                                    <td class="align-left">{{ value.0 }}</td>
+                                    <td class="align-left">{{ value.1 }}</td>
+                                    <td class="align-left">{{ value.3 }}</td>
+                                    <td class="align-left">{{ value.4 }}</td>
+                                    <td class="align-left">{{ value.5 }}</td>
+                                    <td class="align-left">{{ value.6 }}</td>
+                                    <td class="align-left">{{ value.7 }}</td>
+                                    <td class="align-left">{{ value.9 }}</td>
+                                    <td class="align-left">{{ name_dic.value.2 }}</td>
+                                    <td class="align-left">{{ name_dic.value.8 }}</td>
+
+                                    {% render_variant_value value.10 %}
+                                    {% render_variant_value value.11 %}
+                                    {% render_variant_value value.12 %}
+                                    {% render_variant_value value.13 %}
+                                    {% render_variant_value value.14 %}
+                                    {% render_variant_value value.15 %}
+                                    {% render_variant_value value.16 %}
+                                    {% render_variant_value value.17 %}
+                                    {% render_variant_value value.18 %}
+                                    {% render_variant_value value.19 %}
+                                    {% render_variant_value value.20 %}
+                                    {% render_variant_value value.21 %}
+                                    {% render_variant_value value.22 %}
+                                    {% render_variant_value value.23 %}
+                                    {% render_variant_value value.24 %}
+                                    {% render_variant_value value.25 %}
+                                    {% render_variant_value value.26 %}
+                                    {% render_variant_value value.27 %}
+                                    {% render_variant_value value.28 %}
+                                    {% render_variant_value value.29 %}
+                                    {% render_variant_value value.30 %}
+                                    {% render_variant_value value.31 %}
+                                    {% render_variant_value value.32 %}
+                                    {% render_variant_value value.33 %}
+                                    {% render_variant_value value.34 %}
+                                    {% render_variant_value value.35 %}
+                                    {% render_variant_value value.36 %}
+                                    {% render_variant_value value.37 %}
+                                    {% render_variant_value value.38 %}
+                                    {% render_variant_value value.39 %}
+                                    {% render_variant_value value.40 %}
+                                    {% render_variant_value value.41 %}
+                                    {% render_variant_value value.42 %}
+                                    {% render_variant_value value.43 %}
+                                    {% render_variant_value value.44 %}
+                                    {% render_variant_value value.45 %}
+                                    {% render_variant_value value.46 %}
+                                    {% render_variant_value value.47 %}
+                                    {% render_variant_value value.48 %}
+                                    {% render_variant_value value.49 %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <br/>
+                    </div>
+                </div>
+            </div>
         </div>
     {% endautoescape %}
 {% endblock content %}
 
 {% block addon_js %}
-    <!--addon_js from gene_browser.html -->
     <script src="{% static 'home/js/datatables.min.js' %}"></script>
     <script src="{% static 'home/js/bootstrap2-toggle.min.js' %}"></script>
-    {% comment %} <script src="{% static 'home/js/jquery.dataTables.min.js' %}"> </script> {% endcomment %}
     <script src="{% static 'home/js/jquery.dataTables.yadcf.js' %}"></script>
     <script src="{% static 'home/js/dataTables.buttons.min.js' %}"></script>
     <script src="{% static 'home/js/select2.js' %}"></script>
     <script src="{% static 'home/js/grayscale.js' %}"></script>
     <script src="{% static 'home/js/gpcrdb.js' %}"></script>
     <script src="{% static 'home/js/signprot-multitabtable.js' %}"></script>
+    <script src="{% static 'gene/js/table-filter.js' %}"></script>
+
+
     <script>
-
         $(document).ready(function () {
+                $("#id_mean_vep_score").on('change', function () {
+                        // let table = $('#structures_table').DataTable();
+                        // table.draw();
+                        let url = "{% url 'gene:filter-gene-detail-page' gene.gene_id %}";
+                        let mean_vep_score = $("#id_mean_vep_score").val();
+                        console.log("mean_vep_score: " + mean_vep_score);
+                        console.log("url: " + url);
 
-            $("#structures_scrollable").show();
-            oTable1 = $("#structures_scrollable").DataTable({
-                deferRender: true,
-                scrollY: true,
-                scrollX: true,
-                scrollCollapse: true,
-                scroller: true,
-                paging: true,
-                bSortCellsTop: false, //prevent sort arrows going on bottom row
-                aaSorting: [],
-                autoWidth: true,
-                bInfo: true,
-                //order: [[7, "asc"]],
-                pagingType: 'full_numbers',
-                lengthMenu: [
-                    [10, 25, 50, 100, 200, -1],
-                    [10, 25, 50, 100, 200, 'All'],
-                ],
-            })
-
-            <!-- Below shows the way to access the data in the table -->
-            oTable1.on('draw.dt', function () {
-                {#let data = oTable1.rows({search: 'applied'});#}
-                {#console.log('The table has ' + data.count() + ' records');#}
-                {#debugger;#}
-                // get data of an individual row
-                // data.row(1).data()
-//						console.log(data[0])
-            });
-
-            let column_filters = [];
-
-            // Variant
-            column_filters = column_filters.concat(createYADCFfilters(0, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
-
-            // Transcript
-            column_filters = column_filters.concat(createYADCFfilters(1, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
-
-            // cDNA_position
-            column_filters = column_filters.concat(createYADCFfilters(2, 1, "multi_select", "select2", 'Select', false, null, null, "80px"));
-
-            // CDS_position
-            column_filters = column_filters.concat(createYADCFfilters(3, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
-
-            // Protein_position
-            column_filters = column_filters.concat(createYADCFfilters(4, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
-
-            // Amino_acids
-            column_filters = column_filters.concat(createYADCFfilters(5, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
-
-            // Codons
-            column_filters = column_filters.concat(createYADCFfilters(6, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
-
-            // Consequence
-            column_filters = column_filters.concat(createYADCFfilters(8, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
-
-            // Impact
-            column_filters = column_filters.concat(createYADCFfilters(9, 1, "multi_select", "select2", "Select", false, null, null, "80px"));
-
-            // BayesDel_addAF_rankscore
-            column_filters = column_filters.concat(createYADCFfilters(10, 40, "range_number", null, ["Min", "Max"], false, null, null, "40px"))
-
-            yadcf.init(oTable1.draw(), column_filters, {
-                cumulative_filtering: false
-            });
-
-            //yadcf.exFilterColumn(oTable1, [[8, ["mis"]]], true);
-
-            gray_scale_table($("#structures_scrollable"));
-            console.log("We are here");
-            $("#reset").click(function () {
-                yadcf.exResetAllFilters(oTable1);
-            });
-        });
+                        $.get(
+                            {
+                                url: "{% url 'gene:filter-gene-detail-page' gene.gene_id %}",
+                                data: {
+                                    'mean_vep_score': mean_vep_score,
+                                },
+                                success: function (data) {
+                                    console.log("success");
+                                    console.log(data);
+                                    $("#structures_scrollable_body").html(data);
+                                },
+                            }
+                        )
+                    }
+                )
+            }
+        )
     </script>
 {% endblock addon_js %}
