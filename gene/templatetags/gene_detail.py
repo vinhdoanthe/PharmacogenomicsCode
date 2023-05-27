@@ -49,6 +49,7 @@ def render_variant_value(value):
         'value': value,
     }
 
+<<<<<<< HEAD
 
 @register.filter 
 def keyvalue(dict, key): 
@@ -58,3 +59,5 @@ def keyvalue(dict, key):
         rs.append(dict.get(k))
     return ", ".join(rs)
     
+=======
+>>>>>>> b67ca38ea11c2c2f9ce0f2df9626eb6c6a74ac01

@@ -1,7 +1,9 @@
+name: "pharmacogenomics-db"
+
 version: "3"
+
 services:
   postgresql:
-    container_name: pharmacogenomics-postgresql
     image: postgres:15
     env_file:
       - .env.postgresql

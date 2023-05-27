@@ -1,3 +1,4 @@
+import decimal
 import hashlib
 import itertools
 import json
@@ -11,33 +12,27 @@ from random import SystemRandom
 from copy import deepcopy
 from collections import defaultdict, OrderedDict
 
+from django.db.models.functions import Cast
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView, DetailView
 
-from django.db.models import Q, Count, Subquery, OuterRef
+from django.db.models import Q, Count, Subquery, OuterRef, IntegerField, F
 from django.views.decorators.csrf import csrf_exempt
 
 from django.core.cache import cache
 
+from gene.forms import FilterForm
 from variant.models import Variant, VepVariant, GenebassVariant, VariantPhenocode
 from gene.models import Gene
 
 from django.views.generic import ListView
 
 
-# Create your views here.
-
-
 class GeneDetailBrowser(TemplateView):
 
-    # @cache_page(60 * 60 * 24 * 7)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def get(self, request, slug=None):
-        # Your view code here
-        return render(request, 'gene_detail.html', self.get_context_data(slug=slug))
+    template_name = 'gene_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -103,8 +98,7 @@ class GeneDetailBrowser(TemplateView):
             if slug.startswith("ENSG"):
                 marker_ID_data = Variant.objects.filter(Gene_ID=slug).values_list(
                     "VariantMarker")
-                # import pdb
-                # pdb.set_trace()
+
             else:
                 geneid = Gene.objects.filter(genename=slug).values_list("gene_id")[0][0]
                 marker_ID_data = Variant.objects.filter(Gene_ID=geneid).values_list(
@@ -246,7 +240,12 @@ class GeneDetailBrowser(TemplateView):
             context["name_dic"] = name_dic
 
             context["consequence_dict"] = consequence_dict
-            print("context : ", context)
+
+            # Mean of Vep scores form
+            filter_form = FilterForm()
+
+            context['filter_form'] = filter_form
+            context['gene'] = Gene.objects.filter(gene_id=slug).first()
 
         return context
 
@@ -305,35 +304,21 @@ class genebassVariantListView(TemplateView):
 
         return context
 
-    # def __generate_sample_data(self):
-    #     """Generate sample data for testing purposes
-    #     """
-    #     num_of_genebass_variant = 1000
-    #
-    #     list_of_genebass_variants = []
-    #     marker = Variant.objects.all().last()
-    #     phenocode = VariantPhenocode.objects.all().last()
-    #     for i in range(num_of_genebass_variant):
-    #         list_of_genebass_variants.append(
-    #             {
-    #                 'markerID': marker.VariantMarker,
-    #                 'n_cases': random.randint(0, 100),
-    #                 'n_controls': random.randint(0, 100),
-    #                 'description': phenocode.description,
-    #                 'phenocode': phenocode.phenocode,
-    #                 'n_cases_defined': random.randint(0, 100),
-    #                 'n_cases_both_sexes': random.randint(0, 100),
-    #                 'n_cases_females': random.randint(0, 100),
-    #                 'n_cases_males': random.randint(0, 100),
-    #                 'category': random.choice(['A', 'B', 'C', 'D']),
-    #                 'AC': random.randint(0, 100),
-    #                 'AF': random.randint(0, 100),
-    #                 'BETA': random.randint(0, 100),
-    #                 'SE': random.randint(0, 100),
-    #                 'AF_Cases': random.randint(0, 100),
-    #                 'AF_Controls': random.randint(0, 100),
-    #                 'Pvalue': random.randint(0, 100),
-    #             }
-    #         )
-    #
-    #     return list_of_genebass_variants
+
+@require_http_methods(["GET"])
+def filter_gene_detail_page(request, id):
+    """
+    Filter gene detail page by
+    * mean_of_vep_score
+    """
+    mean_vep_score = request.GET.get('mean_vep_score', 0.5)
+    mean_vep_score = float(mean_vep_score)
+    # Filter by mean_vep_score
+    list_vep_variants = VepVariant.objects.filter(Variant_marker__in=Variant.objects.filter(Gene_ID=id).values_list('VariantMarker',
+                                                                                                flat=True)
+                              ).exclude(Protein_position__contains="-").annotate(
+                                                                            protein_pos_int=Cast('Protein_position', IntegerField()),
+                                                                            mean_vep_score=(F('BayesDel_addAF_rankscore') + F('BayesDel_noAF_rankscore')) / 2
+    ).filter(mean_vep_score__gte=mean_vep_score).exclude(mean_vep_score=decimal.Decimal('NaN')).order_by('protein_pos_int')
+
+    return None
