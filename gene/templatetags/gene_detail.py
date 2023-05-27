@@ -48,3 +48,13 @@ def render_variant_value(value):
         'color': color,
         'value': value,
     }
+
+
+@register.filter 
+def keyvalue(dict, key): 
+    keys = key.split(",")
+    rs = []
+    for k in keys:
+        rs.append(dict.get(k))
+    return ", ".join(rs)
+    

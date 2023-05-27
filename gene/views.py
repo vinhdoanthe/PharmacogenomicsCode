@@ -231,7 +231,7 @@ class GeneDetailBrowser(TemplateView):
                         'sd5': 'splice_donor_5th_base', 'sdr': 'splice_donor_region',
                         'spt': 'splice_polypyrimidine_tract', 'sre': 'splice_region', '_sl': 'start_lost',
                         '_sr': 'start_retained', 'sga': 'stop_gained', 'sl_': 'stop_lost', 'sr_': 'stop_retained',
-                        'syn': 'synonymous', 'H': 'high', 'M': 'Medium', 'L': 'Low'}
+                        'syn': 'synonymous', 'H': 'high', 'M': 'medium', 'L': 'low'}
             for i in range(length):
                 values = table["Consequence"][i].split(",")
                 for value in values:
