@@ -24,6 +24,12 @@
                 {{ filter_form }}
             </div>
             <div class="col-md-9">
+                <div class="row">
+                    <div class="col-xs-12">
+                        2D Chart
+                        <div id="gene-2d-chart"></div>
+                    </div>
+                </div>
                 <div class="gene-table-container">
                     {% include '_buttons.html' %}
                     <div id="structures_scrollable_table">
@@ -153,6 +159,14 @@
                         <br/>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6" id="gene-3d-chart">
+                        This is for 3D chart
+                    </div>
+                    <div class="col-md-6" id="genebass-variant-list">
+                        This is for list of genebass variants
+                    </div>
+                </div>
             </div>
         </div>
     {% endautoescape %}
@@ -168,8 +182,10 @@
     <script src="{% static 'home/js/gpcrdb.js' %}"></script>
     <script src="{% static 'home/js/signprot-multitabtable.js' %}"></script>
     <script src="{% static 'gene/js/table-filter.js' %}"></script>
+    <script src='https://cdn.plot.ly/plotly-2.20.0.min.js'></script>
 
 
+    {% comment %}
     <script>
         $(document).ready(function () {
                 $("#id_mean_vep_score").on('change', function () {
@@ -197,5 +213,53 @@
                 )
             }
         )
+    </script>
+    {% endcomment %}
+
+
+    <script>
+        let list_vep_variants_pos = [];
+        let list_vep_variants_mean_vep_score = [];
+        let list_vep_variants_consequence = [];
+        {% for element in array %}
+            list_vep_variants_pos.push({{element.5}});
+            list_vep_variants_mean_vep_score.push({{element|last}});
+            list_vep_variants_consequence.push("{{element.2}}");
+        {% endfor %}
+        list_colors = [];
+        for (let i=0; i<list_vep_variants_consequence.length; i++) {
+            if (list_vep_variants_consequence[i].includes('mis')) {
+                list_colors.push('red');
+            } else if (list_vep_variants_consequence[i].includes('syn')) {
+                list_colors.push('blue');
+            } else if (list_vep_variants_consequence[i].includes('fsh')) {
+                list_colors.push('green');
+            } else if (list_vep_variants_consequence[i].includes('sga')) {
+                list_colors.push('yellow')
+            } else if (list_vep_variants_consequence[i].includes('sl_')) {
+                list_colors.push('orange')
+            } else {
+                list_colors.push('black');
+            }
+        }
+        console.log(list_vep_variants_pos);
+        console.log(list_vep_variants_mean_vep_score);
+        console.log(list_vep_variants_consequence);
+        console.log(list_colors);
+        let trace1 = {
+            x: list_vep_variants_pos,
+            y: list_vep_variants_mean_vep_score,
+            mode: 'markers',
+             marker: {
+    size: 5,
+    color: list_colors,
+  },
+            type: 'scatter'
+        };
+
+        let data = [trace1];
+
+        Plotly.newPlot('gene-2d-chart', data);
+
     </script>
 {% endblock addon_js %}
