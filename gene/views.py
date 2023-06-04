@@ -274,6 +274,23 @@ class GeneDetailBrowser(TemplateView):
             context['filter_form'] = filter_form
             context['gene'] = Gene.objects.filter(gene_id=slug).first()
 
+            transcripts = [item[1] for item in table_with_protein_pos_int]
+            context['transcripts'] = list(set(transcripts))
+            variants = [item[0] for item in table_with_protein_pos_int]
+            context['variants'] = list(set(variants))
+
+            consequences = []
+            for item in table_with_protein_pos_int:
+                coseq = item[2].split(",")
+                if len(coseq) >= 1:
+                    consequences += coseq
+
+            context['consequences'] = list(set(consequences))
+
+            print(f"transcripts: {len(context['transcripts'])} {context['transcripts']}")
+            print(f"variants: {len(context['variants'])}")
+            print(f"consequences: {len(context['consequences'])} {context['consequences']}")
+
         return context
 
 
