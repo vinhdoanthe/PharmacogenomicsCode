@@ -110,8 +110,8 @@
                                     <td class="align-left">{{ value.6 }}</td>
                                     <td class="align-left">{{ value.7 }}</td>
                                     <td class="align-left">{{ value.9 }}</td>
-                                    <td class="align-left">{{ name_dic.value.2 }}</td>
-                                    <td class="align-left">{{ name_dic.value.8 }}</td>
+                                    <td class="align-left">{{ value.2 }}</td>
+                                    <td class="align-left">{{ value.8 }}</td>
                                     <td>{{ value|last }}</td>
 
                                     {% render_variant_value value.10 %}
@@ -261,8 +261,8 @@
                 //order: [[7, "asc"]],
                 pagingType: 'full_numbers',
                 lengthMenu: [
-                    [25, 50, 100, 200, -1],
-                    [25, 50, 100, 200, 'All'],
+                    [10, 25, 50, 100, 200, -1],
+                    [10, 25, 50, 100, 200, 'All'],
                 ],
             })
             $('#mean_vep_score').change(function () {
@@ -370,10 +370,6 @@
             let consequence_check = true;
             if (filter_values.consequence.length !== 0) {
                 const intersection = consequence.split(",").filter(element => filter_values.consequence.includes(element));
-                //consequence.split(",")
-                //if (filter_values.consequence.indexOf(consequence) === -1) {
-                //    consequence_check = false;
-                //}
                 if (intersection.length === 0) {
                     consequence_check = false;
                 }
@@ -389,14 +385,57 @@
         }
 
         function redraw_vep_variants_datatable(filter_values) {
+            let vep_variants_table = $("#structures_scrollable").DataTable();
             //filter by transcript
             let transcript_search_terms = []
             for (let i = 0; i < filter_values.transcript.length; i++) {
                 transcript_search_terms.push("^" + filter_values.transcript[i] + "$")
             }
-            console.log(transcript_search_terms)
-            $("#structures_scrollable").DataTable().column(1).search(transcript_search_terms.join('|'), true, false, true).draw();
+            vep_variants_table.column(1).search(transcript_search_terms.join('|'), true, false, true).draw();
+
+            //filter by variants
+            let variant_search_terms = []
+            for (let i = 0; i < filter_values.variant.length; i++) {
+                variant_search_terms.push("^" + filter_values.variant[i] + "$")
+            }
+            vep_variants_table.column(0).search(variant_search_terms.join('|'), true, false, true).draw();
+
+            //filter by consequence
+            let consequence_search_terms = []
+            for (let i = 0; i < filter_values.consequence.length; i++) {
+                consequence_search_terms.push(filter_values.consequence[i])
+            }
+            vep_variants_table.column(8).search(consequence_search_terms.join('|'), true, false, true).draw();
         }
+
+        $(document).ready(function (){
+            let minEl= $('#mean_vep_score')
+            $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+                let min = parseFloat(minEl.val()) || 0.0;
+                let max = 1;
+                let mean_vep_score = parseFloat(data[10]) || 0; // use data for the mean_vep_score column
+                console.log(min, max, mean_vep_score)
+
+                if(
+                    (isNaN(min) && isNaN(max)) ||
+                    (isNaN(min) && mean_vep_score <= max) ||
+                    (min <= mean_vep_score && isNaN(max)) ||
+                    (min <= mean_vep_score && mean_vep_score <= max)
+                ) {
+                    return true;
+                }
+
+                return false;
+            });
+
+               let table = $('#structures_scrollable').DataTable();
+
+                // Changes to the inputs will trigger a redraw to update the table
+                minEl.change(function () {
+                    console.log(minEl.val())
+                    table.draw();
+                });
+        })
 
     </script>
 {% endblock addon_js %}
