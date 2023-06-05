@@ -102,7 +102,9 @@
                             <tbody id='structures_scrollable_body'>
                             {% for value in array %}
                                 <tr>
-                                    <td class="align-left">{{ value.0 }}</td>
+                                    <td class="align-left"><a href="#" class="variants-table-row"
+                                                              data-remote-url="{% url 'variant:get-genebass-tables' %}"
+                                                              data-variant-marker="{{ value.0 }}">{{ value.0 }}</a></td>
                                     <td class="align-left">{{ value.1 }}</td>
                                     <td class="align-left">{{ value.3 }}</td>
                                     <td class="align-left">{{ value.4 }}</td>
@@ -437,5 +439,29 @@
                 });
         })
 
+    </script>
+
+    <script>
+    $(document).ready(function (){
+        $('.variants-table-row').click(function (e){
+            e.preventDefault();
+            let variant_marker = $(this).data('variant-marker');
+            let url = $(this).attr('remote-url');
+
+            $.ajax(
+                {
+                    url: url,
+                    type: "GET",
+                    data: {
+                        'variant_marker': variant_marker,
+                    },
+                    success: function (res) {
+
+                        console.log(res)
+                    }
+                }
+            )
+        })
+    })
     </script>
 {% endblock addon_js %}
