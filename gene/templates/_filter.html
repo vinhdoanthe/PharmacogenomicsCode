@@ -1,0 +1,39 @@
+{% load i18n %}
+<form>
+<div class="input-group">
+    <label for="mean_vep_score">{% translate 'Mean of VEP Score' %}</label>
+    <input id='mean_vep_score' class="form-control" type="range" min="0" max="1" name="mean_vep_score" step="0.01" value="0.0"/>
+</div>
+<div class="input-group">
+    <label for="transcript-select">{% translate "Transcripts" %}</label>
+    <select class="transcript-select-multiple" name="transcripts[]" multiple="multiple" id="transcript-select">
+        {% for transcript in transcripts %}
+            <option value="{{ transcript }}"> {{ transcript }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="input-group">
+    <label for="variant-select">{% translate "Variants" %}</label>
+    <select class="variant-select-multiple" name="variants[]" multiple="multiple" id="variant-select">
+        {% for variant in variants %}
+            <option value="{{ variant }}"> {{ variant }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="input-group">
+    <label for="consequence-select">{% translate "Consequences" %}</label>
+    <select class="consequence-select-multiple" name="consequences[]" multiple="multiple" id="consequence-select">
+        {% for consequence in consequences %}
+            <option value="{{ consequence }}"> {{ consequence }}</option>
+        {% endfor %}
+    </select>
+</div>
+</form>
+
+<script>
+    $(document).ready(function() {
+    $('.transcript-select-multiple').select2();
+    $('.variant-select-multiple').select2();
+    $('.consequence-select-multiple').select2();
+});
+</script>
