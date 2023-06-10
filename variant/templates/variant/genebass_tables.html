@@ -1,8 +1,26 @@
-<div>
-    <table>
+{% load i18n %}
+{% load variant_tags %}
 
-    </table>
-
-
-    <p>{{ list_genebass }}</p>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="modalLabel">{% translate 'Variant marker: ' %}<span style="color: orangered;">{{ variant.VariantMarker }}</span> {% translate ', Transcripts: [' %}<span style="color: orangered">{{ transcript_ids|join:","|escape }}</span>{% translate "], Gene: " %}<span style="color: orangered">{{ gene.genename }}</span></h4>
+</div>
+<div class="modal-body">
+    <div class="table-responsive">
+        <table class="table" id="genebass-tables">
+            <thead>
+            {% include 'variant/table-header.html' %}
+            </thead>
+            <tbody>
+            {% for genebass in list_genebass %}
+                {% render_genebass_variant_row genebass %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 </div>
