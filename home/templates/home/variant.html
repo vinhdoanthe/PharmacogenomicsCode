@@ -3,19 +3,11 @@
 <!-- ARRESTINS -->
 <li class="dropdown arrestin {% if current_site == 'arrestin' %}highlight_menu{% endif %}" id="arrestindb_menu">
     <a href="{{ hosts.arrestin }}/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-        Variants<span class="caret"></span>
+    Variants<span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
-        <li><a role="button" id='cite_arrestindb'>Citing ArrestinDb</a></li>
+        <li><a role="button" id='cite_arrestindb'>Variant statistics</a></li>
         <li class="divider"></li>
-        <li><a href="{{ hosts.arrestin }}/signprot/arrestin">Arrestin page</a></li>
-
-        <!-- ARRESTIN COUPLING -->
-        <li class="divider"></li>
-        <li class="nav-header disabled text-left"><a>ARRESTIN COUPLING</a></li>
-        <li><a href="{{ hosts.arrestin }}/signprot/arrestincouplings">Arrestin couplings</a></li>
-        <li><a href="{{ hosts.arrestin }}/signprot/arrestin_venn">Arrestin selectivity Venn</a></li>
-        
-
+        <li><a href="{{ hosts.arrestin }}/signprot/arrestin">Variant lookup</a></li>
     </ul>
 </li>

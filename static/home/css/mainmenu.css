@@ -109,7 +109,7 @@ li#gproteindb_menu,
 li#biasedsignalingatlas_menu,
 li#arrestindb_menu {
   background-repeat: no-repeat;
-  background-size: 50px;
+  background-size: 55px;
   padding-left: 30px;
   margin-bottom: 8px;
   /* display: inline-block; */
@@ -135,12 +135,12 @@ li#arrestindb_menu .dropdown-toggle {
 }
 
 li#gpcrdb_menu {
-  background-image: url("/static/home/logo/gpcr/DrugBank.png");
+  background-image: url("/static/home/logo/gpcr/drug.png");
 }
 
 li#gproteindb_menu {
   background-position: 10px 8px;
-  background-image: url("/static/home/logo/target/R.png");
+  background-image: url("/static/home/logo/target/main.png");
 }
 
 li#arrestindb_menu {

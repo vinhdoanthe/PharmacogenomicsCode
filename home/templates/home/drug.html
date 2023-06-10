@@ -6,59 +6,30 @@
         Drugs<span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
-        <li><a role="button" id='cite_gpcrdb'>Citing GPCRdb</a></li>
+        <li><a role="button" id='cite_gpcrdb'>Drug statistics</a></li>
         <li class="divider"></li>
-        <li><a href="{{ hosts.gpcr }}/protein">Receptor page
-            <button mp4="https://files.gpcrdb.org/video/receptors1.mp4"
+        <li><a href="{{ hosts.gpcr }}/protein">Drug lookup</a></li>
+        <li class="divider"></li>
+        <li><a href="{{ hosts.gpcr }}/protein">Drug ATC code lookup
+            <!-- <button mp4="https://files.gpcrdb.org/video/receptors1.mp4"
                     class="videoLink pull-right btn btn-xs btn-default">
                 <span class="glyphicon glyphicon-film"></span>
-            </button>
+            </button> -->
         </a></li>
 
-        <!-- SEQUENCES -->
         <li class="divider"></li>
-        <li class="nav-header disabled text-left"><a>SEQUENCES</a></li>
         <li>
-        <a href="{{ hosts.gpcr }}/alignment/targetselection">Sequence alignments
-            <button mp4="https://files.gpcrdb.org/video/sequences1.mp4" type="button"
+        <a href="{{ hosts.gpcr }}/alignment/targetselection">Drug-target network visualization
+            <!-- <button mp4="https://files.gpcrdb.org/video/sequences1.mp4" type="button"
                     class="videoLink pull-right btn btn-xs btn-default">
                 <span class="glyphicon glyphicon-film"></span>
-            </button>
+            </button> -->
         </a>
         </li>
-        <li><a href="{{ hosts.gpcr }}/residue/residuetable">Generic residue number tables</a></li>
-        <li class="dropdown-submenu">
-            <a tabindex="0" href="#">Genetic variants</a>
-            <ul class="dropdown-menu">
-            <li><a href="{{ hosts.gpcr }}/mutational_landscape/statistics">Variation coverage</a></li>
-            <li><a href="{{ hosts.gpcr }}/mutational_landscape">Receptor variants</a></li>
-            <li><a href="{{ hosts.gpcr }}/mutational_landscape/economicburden">Estimated economic burden</a></li>
-            </ul>
-        </li>
-        <li><a href="{{ hosts.gpcr }}/protein/isoforms">Isoforms</a></li>
+       
 
     </ul>
         
 </li>
 
-
-
-<!-- DRUGS -->
-{% comment %}
-<li class="dropdown">
-    <a href="/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-        Drugs<span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu" role="menu">
-        <li class="nav-header disabled"><a>DATA</a></li>
-        <li><a href="{{ hosts.gpcr }}/drugs/drugstatistics">Drug statistics</a></li>
-        <li><a href="{{ hosts.gpcr }}/drugs/drugmapping">Drug target mapping</a></li>
-        <li><a href="{{ hosts.gpcr }}/drugs/drugbrowser">Drug browser</a></li>
-    </ul>
-</li>
-{% endcomment %}
-
-
-
-<!-- DRUGS AND LIGANDS -->
 

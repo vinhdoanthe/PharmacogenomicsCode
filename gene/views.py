@@ -232,6 +232,7 @@ class GeneDetailBrowser(TemplateView):
                 for marker in marker_ID_data:
                     # Retrieve all VEP scores for each variant marker
                     vep_scores = VepVariant.objects.filter(
+                        #*: passing every element of a list to values_list rather than passing a list as one argument
                         Variant_marker=marker).exclude(Protein_position__icontains='-').values_list(*self.list_necessary_columns)
                     for vep_score in vep_scores:
                         data_subset = self.parse_marker_data(marker, vep_score)
@@ -269,9 +270,9 @@ class GeneDetailBrowser(TemplateView):
             context["name_dic"] = self.name_dic
 
             # Mean of Vep scores form
-            filter_form = FilterForm()
+            # filter_form = FilterForm()
 
-            context['filter_form'] = filter_form
+            # context['filter_form'] = filter_form
             context['gene'] = Gene.objects.filter(gene_id=slug).first()
 
             transcripts = [item[1] for item in table_with_protein_pos_int]

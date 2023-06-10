@@ -3,20 +3,11 @@
 <!-- G PROTEINS -->
 <li class="dropdown gprotein {% if current_site == 'gprotein' %}highlight_menu{% endif %}" id="gproteindb_menu">
     <a href="{{ hosts.gprotein }}/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-        Targets<span class="caret"></span>
+        &nbsp;&nbsp;Targets<span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
-        <li><a role="button" id='cite_gproteindb'>Citing GproteinDb</a></li>
+        <li><a role="button" id='cite_gproteindb'>Target statistics</a></li>
         <li class="divider"></li>
-        <li><a href="{{ hosts.gprotein }}/signprot/gprotein">G protein page</a></li>
-
-        <!-- GPCR-G PROTEIN COUPLING -->
-        <li class="divider"></li>
-        <li class="nav-header disabled text-left"><a>G Protein coupling</a></li>
-        <li><a href="{{ hosts.gprotein }}/signprot/couplings">G protein couplings</a></li>
-        <li><a href="{{ hosts.gprotein }}/signprot/statistics_venn">G protein selectivity Venn</a></li>
-        <li><a href="{{ hosts.gprotein }}/signprot/statistics_tree">G protein selectivity tree</a></li>
-
-        
+        <li><a href="{{ hosts.gprotein }}/signprot/gprotein">Target lookup</a></li>
     </ul>
 </li>

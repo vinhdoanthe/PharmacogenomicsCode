@@ -5,7 +5,7 @@ from .views import (
     filter_gene_detail_page
 )
 
-app_name = 'gene'
+app_name = 'gene' # to distingush different app names when using url names
 
 urlpatterns = [
     path('gene/<slug:slug>/', GeneDetailBrowser.as_view(), name='gene'),

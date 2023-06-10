@@ -20,10 +20,15 @@
 {% block content %}
     {% autoescape off %}
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-12">
+                Below shows details about variants associated with gene {{gene}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2" >
                 {% include '_filter.html' with transcripts=transcripts consequences=consequences variants=variants %}
             </div>
-            <div class="col-md-9">
+            <div class="col-md-10" >
                 <div class="row">
                     <div class="col-xs-12">
                         2D Chart
@@ -164,10 +169,10 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6" id="gene-3d-chart">
+                    <div class="col-md-6" id="gene-3d-chart" >
                         This is for 3D chart
                     </div>
-                    <div class="col-md-6" id="genebass-variant-list">
+                    <div class="col-md-6" id="genebass-variant-list" >
                         This is for list of genebass variants
                     </div>
                 </div>
