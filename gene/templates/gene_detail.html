@@ -100,7 +100,7 @@
 
                             </thead>
                             <tbody id='structures_scrollable_body'>
-                            {% for value in array|slice:"1:50" %}
+                            {% for value in array %}
                                 <tr>
                                     <td class="align-left"><a href="#" class="variants-table-row"
                                                               data-remote-url="{% url 'variant:get-genebass-tables' %}"
