@@ -1,39 +1,104 @@
 {% load i18n %}
-<form>
-<div class="input-group">
-    <label for="mean_vep_score">{% translate 'Mean of VEP Score' %}</label>
-    <input id='mean_vep_score' class="form-control" type="range" min="0" max="1" name="mean_vep_score" step="0.01" value="0.0"/>
-</div>
-<div class="input-group">
-    <label for="transcript-select">{% translate "Transcripts" %}</label>
-    <select class="transcript-select-multiple" name="transcripts[]" multiple="multiple" id="transcript-select">
-        {% for transcript in transcripts %}
-            <option value="{{ transcript }}"> {{ transcript }}</option>
-        {% endfor %}
-    </select>
-</div>
-<div class="input-group">
-    <label for="variant-select">{% translate "Variants" %}</label>
-    <select class="variant-select-multiple" name="variants[]" multiple="multiple" id="variant-select">
-        {% for variant in variants %}
-            <option value="{{ variant }}"> {{ variant }}</option>
-        {% endfor %}
-    </select>
-</div>
-<div class="input-group">
-    <label for="consequence-select">{% translate "Consequences" %}</label>
-    <select class="consequence-select-multiple" name="consequences[]" multiple="multiple" id="consequence-select">
-        {% for consequence in consequences %}
-            <option value="{{ consequence }}"> {{ consequence }}</option>
-        {% endfor %}
-    </select>
-</div>
-</form>
+{% load static %}
+{% block addon_css %}   
+<link rel="stylesheet" href="{% static 'gene/css/filter-gene-detail.css' %}" type="text/css"/>
+{% endblock addon_css %}
 
+<style>
+    .input-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .input-group label {
+        margin-right: 10px;
+        font-weight: bold;
+    }
+
+    .input-group input[type="range"] {
+        width: 200px;
+        margin-right: 10px;
+    }
+
+    .form-group .range-values {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 200px;
+    }
+</style>
+
+<form action="">
+
+    <label style="color: #337ab7; padding:0; margin:0;" for="mean_vep_score">{% translate 'Select MEAN of VEP scores' %}</label>
+    <div class="slider-container">
+        <input id="mean_vep_score" type="range" min="0.0" max="1.0" step="0.01" class="slider">
+    </div>
+
+    <div class="form-group">
+        <label for="transcript-select">{% translate "Select transcript(s)" %}</label>
+        <select  style="border: 0; width:200px;" class="transcript-select-multiple" name="transcripts[]" multiple="multiple" id="transcript-select">
+            {% for transcript in transcripts %}
+                <option style="min-width: 100px;" value="{{ transcript }}"> {{ transcript }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="variant-select">{% translate "Select variant(s)" %}</label>
+        <select style="border: 0; width:200px;" class="variant-select-multiple" name="variants[]" multiple="multiple" id="variant-select">
+            {% for variant in variants %}
+                <option style="min-width: 100px;" value="{{ variant }}"> {{ variant }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="consequence-select">{% translate "Select consequence(s)" %}</label>
+        <select style="border: 0; width:200px;" class="consequence-select-multiple" name="consequences[]" multiple="multiple" id="consequence-select">
+            {% for consequence in consequences %}
+                <option style="min-width: 50px; border-radius: 5px;" value="{{ consequence }}"> {{ consequence }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+</form>
+  
+  
 <script>
-    $(document).ready(function() {
-    $('.transcript-select-multiple').select2();
-    $('.variant-select-multiple').select2();
-    $('.consequence-select-multiple').select2();
-});
+    $(document).ready( function() {
+        document.querySelectorAll('.slider-container').forEach(container => {
+        let slider = container.querySelector('.slider');
+        
+        // Insert slider value tag and limit labels
+        container.insertAdjacentHTML('beforeEnd', `  
+        <div class="slider-value">
+            ${slider.value}
+        </div>
+
+        <div class="slider-labels">
+            <p>${slider.min}</p>
+            <p>${slider.max}</p>
+        </div>
+        `);
+        
+        // Init slider background
+        let percentage = 100*(slider.value-slider.min)/(slider.max-slider.min);
+        slider.style.background = `linear-gradient(90deg, #FFE169, #76520E ${percentage}%, aliceblue ${percentage}%)`;
+        
+        // Update when value changes
+        slider.addEventListener('input', event => {
+            // Update background gradient
+            let s = event.target;
+            let percentage = 100*(s.value-s.min)/(s.max-s.min);
+            event.target.style.background = `linear-gradient(90deg, #FFE169, #76520E ${percentage}%, aliceblue ${percentage}%)`;
+            
+            // Update value tag
+            s.parentNode.querySelector('.slider-value').innerHTML = s.value;
+        });
+        });
+
+        $('.transcript-select-multiple').select2();
+        $('.variant-select-multiple').select2();
+        $('.consequence-select-multiple').select2();
+    });
 </script>

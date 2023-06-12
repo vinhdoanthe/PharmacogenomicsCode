@@ -20,18 +20,13 @@
 {% block content %}
     {% autoescape off %}
         <div class="row">
-            <div class="col-md-12">
-                Below shows details about variants associated with gene {{gene}}
-            </div>
-        </div>
-        <div class="row">
             <div class="col-md-2" >
+                <p style="font-size: 17px; display: block; margin-bottom: 20px;"><strong>GENE:</strong> <span style="color: #337ab7">{{geneID}} ({{gene}})</span></p>
                 {% include '_filter.html' with transcripts=transcripts consequences=consequences variants=variants %}
             </div>
             <div class="col-md-10" >
                 <div class="row">
                     <div class="col-xs-12">
-                        2D Chart
                         <div id="gene-2d-chart"></div>
                     </div>
                 </div>
@@ -50,7 +45,7 @@
                                 <th>Codons</th>
                                 <th>Strand</th>
                                 <!-- Impact block -->
-                                <th>Conse_</br>quence</th>
+                                <th>Consequence</th>
                                 <th>Impact</th>
                                 <th>Mean VEP Score</th>
                                 <!-- Score block -->
@@ -105,7 +100,7 @@
 
                             </thead>
                             <tbody id='structures_scrollable_body'>
-                            {% for value in array %}
+                            {% for value in array|slice:"1:50" %}
                                 <tr>
                                     <td class="align-left"><a href="#" class="variants-table-row"
                                                               data-remote-url="{% url 'variant:get-genebass-tables' %}"
@@ -220,11 +215,11 @@
             if (list_vep_variants_consequence[i].includes('mis')) {
                 list_colors.push('red');
             } else if (list_vep_variants_consequence[i].includes('syn')) {
-                list_colors.push('blue');
+                list_colors.push('#8338EC');
             } else if (list_vep_variants_consequence[i].includes('fsh')) {
                 list_colors.push('green');
             } else if (list_vep_variants_consequence[i].includes('sga')) {
-                list_colors.push('grey')
+                list_colors.push('#3A86FF')
             } else if (list_vep_variants_consequence[i].includes('sl_')) {
                 list_colors.push('orange')
             } else {
@@ -239,7 +234,7 @@
             y: list_vep_variants_mean_vep_score,
             mode: 'markers',
             marker: {
-                size: 10,
+                size: 7,
                 color: list_colors,
             },
             type: 'scatter'
@@ -351,7 +346,7 @@
                 y: filtered_list_vep_variants_mean_vep_score,
                 mode: 'markers',
                 marker: {
-                    size: 10,
+                    size: 7,
                     color: filtered_list_colors,
                 },
                 type: 'scatter'

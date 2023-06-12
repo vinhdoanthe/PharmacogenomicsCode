@@ -247,7 +247,7 @@ class GeneDetailBrowser(TemplateView):
                     try:
                         cleaned_values = [x for x in data_row[10:] if str(x) != '']
                         if len(cleaned_values) != 0:
-                            mean_vep_score = np.mean(cleaned_values)
+                            mean_vep_score = round(np.mean(cleaned_values),3)
                             table_with_mean_vep_score.append(np.append(data_row, mean_vep_score))
                     except Exception as e:
                         print("Error in calculating mean VEP score {0}".format(data_row[10:]))
@@ -273,7 +273,8 @@ class GeneDetailBrowser(TemplateView):
             # filter_form = FilterForm()
 
             # context['filter_form'] = filter_form
-            context['gene'] = Gene.objects.filter(gene_id=slug).first()
+            context['gene'] = Gene.objects.filter(gene_id=slug).values_list("genename", flat=True)[0]
+            context['geneID'] = slug
 
             transcripts = [item[1] for item in table_with_protein_pos_int]
             context['transcripts'] = list(set(transcripts))
@@ -287,7 +288,7 @@ class GeneDetailBrowser(TemplateView):
                     consequences += coseq
 
             context['consequences'] = list(set(consequences))
-
+            print("context gene : ", type(context['gene']), " --> ", context['gene'])
             print(f"transcripts: {len(context['transcripts'])} {context['transcripts']}")
             print(f"variants: {len(context['variants'])}")
             print(f"consequences: {len(context['consequences'])} {context['consequences']}")
