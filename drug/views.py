@@ -65,6 +65,9 @@ def drug_atc_expansion(request, drugbank_id): #put a parameter drugbank_id here
         atc_anatomical_group = AtcAnatomicalGroup.objects.filter(id=code[0][:1]).values_list('name', flat=True)[0]
 
         # Retrieve the drugs that belong to each ATC code level
+        atc_chemical_substance_group_drugs = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code[0][:7]).values_list('drug_id__drug_bankID', flat=True)
+        atc_chemical_substance_group_drugs = list(set([item for item in atc_chemical_substance_group_drugs]))
+        
         atc_chemical_group_drugs = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code[0][:5]).values_list('drug_id__drug_bankID', flat=True)
         atc_chemical_group_drugs = list(set([item for item in atc_chemical_group_drugs]))
 
@@ -78,7 +81,7 @@ def drug_atc_expansion(request, drugbank_id): #put a parameter drugbank_id here
         atc_anatomical_group_drugs = list(set([item for item in atc_anatomical_group_drugs]))
 
         # Append the information to the list
-        atcCodeInAllLevels.append({"atc_chemical_substance":code[0]+": "+atc_chemical_substance.replace('"',''), "atc_chemical_group":code[0][:5]+": "+atc_chemical_group.replace('"',''), "atc_pharmacological_group":code[0][:4]+": "+atc_pharmacological_group.replace('"',''), "atc_therapeutic_group":code[0][:3]+": "+atc_therapeutic_group.replace('"',''), "atc_anatomical_group":code[0][:1]+": "+atc_anatomical_group.replace('"',''), "atc_chemical_group_drugs":atc_chemical_group_drugs, "atc_pharmacological_group_drugs":atc_pharmacological_group_drugs, "atc_therapeutic_group_drugs":atc_therapeutic_group_drugs, "atc_anatomical_group_drugs":atc_anatomical_group_drugs})
+        atcCodeInAllLevels.append({"atc_chemical_substance":code[0]+": "+atc_chemical_substance.replace('"',''), "atc_chemical_group":code[0][:5]+": "+atc_chemical_group.replace('"',''), "atc_pharmacological_group":code[0][:4]+": "+atc_pharmacological_group.replace('"',''), "atc_therapeutic_group":code[0][:3]+": "+atc_therapeutic_group.replace('"',''), "atc_anatomical_group":code[0][:1]+": "+atc_anatomical_group.replace('"',''), "atc_chemical_group_drugs":atc_chemical_group_drugs, "atc_pharmacological_group_drugs":atc_pharmacological_group_drugs, "atc_therapeutic_group_drugs":atc_therapeutic_group_drugs, "atc_anatomical_group_drugs":atc_anatomical_group_drugs, "atc_chemical_substance_group_drugs":atc_chemical_substance_group_drugs})
 
     # Convert the list to a JSON string
     json_data = json.dumps(atcCodeInAllLevels)
@@ -88,7 +91,8 @@ def drug_atc_expansion(request, drugbank_id): #put a parameter drugbank_id here
     context['json_atcCodeInAllLevels'] = json_data
     context['atcCodeInAllLevels'] = atcCodeInAllLevels
 
-    return render(request, 'drug_atc_tabs.html', context)
+    # return render(request, 'drug_atc_tabs.html', context)
+    return render(request, 'drug_atc_tabs_horizontal.html', context)
 
 
 def search_drugs(request):

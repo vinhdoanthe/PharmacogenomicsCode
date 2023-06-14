@@ -20,7 +20,7 @@
 {% block content %}
     {% autoescape off %}
         <div class="row">
-            <div class="col-md-2" >
+            <div class="col-md-2" style="background-color: rgba(224, 225, 221, 0.3); height: inherit;">
                 <p style="font-size: 17px; display: block; margin-bottom: 20px;"><strong>GENE:</strong> <span style="color: #337ab7">{{geneID}} ({{gene}})</span></p>
                 {% include '_filter.html' with transcripts=transcripts consequences=consequences variants=variants %}
             </div>
@@ -100,7 +100,7 @@
 
                             </thead>
                             <tbody id='structures_scrollable_body'>
-                            {% for value in array %}
+                            {% for value in array|slice:"0:50" %}
                                 <tr>
                                     <td class="align-left"><a href="#" class="variants-table-row"
                                                               data-remote-url="{% url 'variant:get-genebass-tables' %}"
@@ -164,11 +164,21 @@
                         <br/>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6" id="gene-3d-chart" >
-                        This is for 3D chart
+                <div class="row" id="gene_view_3D">
+                    <!-- <div class="col-sm-3" id="gene-3d-chart-filter" >
+                        <p>Filter for 3D gene view </p>
+                        
+                        
+                    </div> -->
+                    <div class="col-sm-12" id="gene-3d-chart" >
+                        <p>3D gene view1</p>
+                    </div>
+                    <div class="col-sm-12" id="gene-3d-chart2" >
+                        <p>3D gene view2</p>
+                        {% include '_3d-view.html' %}
                     </div>
                 </div>
+                
             </div>
         </div>
         <!-- The modal -->

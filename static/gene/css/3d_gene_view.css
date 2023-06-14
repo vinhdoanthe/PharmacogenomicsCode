@@ -1,0 +1,25 @@
+
+#gene_view_3D{
+    display: flex;
+    height: 850px;
+    border: 1px solid red;
+    position: relative;
+}
+
+#gene-3d-chart-filter{
+    width: 30%;
+    margin: 5px 5px;
+    border: 1px solid green;
+    
+}
+
+#gene-3d-chart{
+    margin: 5px 5px;
+    box-sizing: border-box; 
+    border: 1px solid blue;
+
+    /* the plot for the 3d structure might bigger than the container, so set this */
+    overflow: hidden; 
+    flex: 1; /* for the div without specifying the width, flex=1 --> extend the remaining width of the container */
+}
+
