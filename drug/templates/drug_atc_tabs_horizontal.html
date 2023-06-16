@@ -20,46 +20,71 @@
     <p>Optimal: high-quality image of the drug and logo here</p>
   </div>
 
-  <div id="drug_atc_expansion">
+  <div id="drug_atc_expansion" class="col-md-6">
     <h2>ATC code and expanded hierachy here</h2>
     <span class="display">Show: </span>
-    <input checked data-tooltip='first level' id='radio-1' name='test' type='radio' /><label for="radio-1">Chemical
-      substance level</label>
-    <input id='radio-2' data-tooltip='second level' name='test' type='radio' /><label for="radio-2">Chemical group
+    <input checked id='radio-1' data-tooltip='first level' name='test' type='radio' /><label for="radio-1">Anatomical group
+      level</label>
+    <input id='radio-2' data-tooltip='second level' name='test' type='radio' /><label for="radio-2">Therapeutic group
       level</label>
     <input id='radio-3' data-tooltip='third level' name='test' type='radio' /><label for="radio-3">Pharmacological group
       level</label>
-    <input id='radio-4' data-tooltip='forth level' name='test' type='radio' /><label for="radio-4">Therapeutic group
+    <input id='radio-4' data-tooltip='forth level' name='test' type='radio' /><label for="radio-4">Chemical group
       level</label>
-    <input id='radio-5' data-tooltip='fifth level' name='test' type='radio' /><label for="radio-5">Anatomical group
-      level</label>
+    <input id='radio-5'  data-tooltip='fifth level'  name='test' type='radio' /><label for="radio-5">Chemical
+      substance level</label>
+    <!-- <input id='show-drug-list'  data-tooltip='drugs in that level'  name='test' type='button' /><label for="show-drug-list">Include a list of drugs</label> -->
 
-    <ol class="wtree">
-      {% for level in atcCodeInAllLevels %}
-      <li><span>{{level.atc_chemical_substance}}</span>
-        <ol>
+    <ul class="wtree">
+      {% for ana_group in atc_anatomical_group_list %}
+      <li><span>{{ ana_group }}</span>
+        <button  class="show-drug-list">Show drug list&nbsp;&nbsp;&nbsp;&nbsp;>>&nbsp;&nbsp;</button>
+        <ul> 
+          {% for thera_group in atc_therapeutic_group_list%}
+          {% if ana_group.0 in thera_group|slice:"0:3" %}
           <li>
-            <span>{{level.atc_chemical_group}}</span>
-            <ol>
+            <span>{{thera_group}}</span>
+            <button class="show-drug-list">Show drug list&nbsp;&nbsp;&nbsp;&nbsp;>>&nbsp;&nbsp;</button>
+            <ul>
+              {% for pharma_group in atc_pharmacological_group_list%}
+              {% if thera_group|slice:"0:3" in pharma_group|slice:"0:4" %}
               <li>
-                <span>{{level.atc_pharmacological_group}}</span>
-                <ol>
+                <span>{{pharma_group}}</span>
+                <button class="show-drug-list">Show drug list&nbsp;&nbsp;&nbsp;&nbsp;>>&nbsp;&nbsp;</button>
+                <ul>
+                  {% for che_group in atc_chemical_group_list%}
+                  {% if pharma_group|slice:"0:4" in che_group|slice:"0:5" %}
                   <li>
-                    <span>{{level.atc_therapeutic_group}}</span>
-                    <ol>
+                    <span>{{che_group}}</span>
+                    <button class="show-drug-list">Show drug list&nbsp;&nbsp;&nbsp;&nbsp;>>&nbsp;&nbsp;</button>
+                    <ul>
+                      {% for che_sub_group in atc_chemical_substance_list %}
+                      {% if che_group|slice:"0:5" in che_sub_group|slice:"0:7" %}
                       <li>
-                        <span>{{level.atc_anatomical_group}}</span>
+                        <span>{{che_sub_group}}</span>
+                        <button class="show-drug-list">Show drug list&nbsp;&nbsp;&nbsp;&nbsp;>>&nbsp;&nbsp;</button>
+                                  </li>
+                                {% endif %}
+                              {% endfor %}
+                            </ul>
+                          </li>
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
                       </li>
-                    </ol>
-                  </li>
-                </ol>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
               </li>
-            </ol>
-          </li>
-        </ol>
+            {% endif %}
+          {% endfor %}
+        </ul>
       </li>
       {% endfor %}
-    </ol>
+    </ul>
+  </div>
+  <div id="atc-association-drugs" class="col-md-6" style="background-color: violet; height: 300px;">
+    List of drugs belonging to the ATC group
   </div>
 </div>
 
@@ -67,7 +92,7 @@
 
 {% block addon_js %}
 <script>
-  alert("hi hi hi");
+  // alert("hi hi hi");
 </script>
 
 <script src="{% static 'home/js/jquery-ui.min.js' %}"></script>

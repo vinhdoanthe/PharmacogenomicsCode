@@ -5,6 +5,8 @@ import json
 import random
 import re
 import time
+import warnings
+warnings.filterwarnings('ignore')
 
 import numpy as np
 import pandas as pd
@@ -28,6 +30,7 @@ from django.core.cache import cache
 from gene.forms import FilterForm
 from variant.models import Variant, VepVariant, GenebassVariant, VariantPhenocode
 from gene.models import Gene
+from protein.models import Protein
 
 from django.views.generic import ListView
 
@@ -275,6 +278,12 @@ class GeneDetailBrowser(TemplateView):
             # context['filter_form'] = filter_form
             context['gene'] = Gene.objects.filter(gene_id=slug).values_list("genename", flat=True)[0]
             context['geneID'] = slug
+            amino_seq = Protein.objects.filter(geneID=slug).values_list("sequence", flat=True)[0]
+            amino_seq_num_list = list(range(1, len(amino_seq)+1))
+            print("amino_seq_num_list : ",amino_seq_num_list)
+            context["amino_seq"] = amino_seq
+            context["amino_seq_num_list"] = amino_seq_num_list
+            context["af_pdb"] = Protein.objects.filter(geneID=slug).values_list("af_pdb", flat=True)[0]
 
             transcripts = [item[1] for item in table_with_protein_pos_int]
             context['transcripts'] = list(set(transcripts))

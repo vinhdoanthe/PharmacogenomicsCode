@@ -48,51 +48,73 @@ def drug_atc_expansion(request, drugbank_id): #put a parameter drugbank_id here
 
     # Get the related ATC code of the drug
     atc_code = DrugAtcAssociation.objects.filter(drug_id=drug).values_list('atc_id_id')
-    context["atc_code"] = atc_code
     context["num_substance"] = len(atc_code)
     num_list = [num + 1 for num in range(len(atc_code))]
     context ['num_list'] = num_list
+    atc_anatomical_group_list = list(set([x[0][0]+" ("+AtcAnatomicalGroup.objects.filter(id=x[0][0]).values_list('name', flat=True)[0]+")" for x in atc_code]))
+    atc_therapeutic_group_list = list(set([x[0][:3]+" ("+AtcTherapeuticGroup.objects.filter(id=x[0][0:3]).values_list('name', flat=True)[0]+")" for x in atc_code]))
+    atc_pharmacological_group_list = list(set([x[0][:4]+" ("+AtcPharmacologicalGroup.objects.filter(id=x[0][0:4]).values_list('name', flat=True)[0]+")" for x in atc_code]))
+    atc_chemical_group_list = list(set([x[0][:5]+" ("+AtcChemicalGroup.objects.filter(id=x[0][0:5]).values_list('name', flat=True)[0]+")" for x in atc_code]))
+    atc_chemical_substance_list = list(set([x[0]+" ("+AtcChemicalSubstance.objects.filter(id=x[0][0:7]).values_list('name', flat=True)[0]+")" for x in atc_code]))
+    print("atc_anatomical_group_list : ", atc_anatomical_group_list)
+    print("atc_therapeutic_group_list : ", atc_therapeutic_group_list)
+    print("atc_pharmacological_group_list : ", atc_pharmacological_group_list)
+    print("atc_chemical_group_list : ", atc_chemical_group_list)
+    print("atc_chemical_substance_list : ", atc_chemical_substance_list)
 
-    atcCodeInAllLevels = []
 
-    for i, code in enumerate(atc_code):
+    drugListDict = {}
+    # codeNameListDict = {}
+    for code in atc_anatomical_group_list:
+        temp = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code).values_list('drug_id__drug_bankID', flat=True)
+        drugListDict[code] = list(set([item for item in temp]))
+        # name=AtcAnatomicalGroup.objects.filter(id=code).values_list('name', flat=True)[0]
+        # codeNameListDict[code]=name
+    for code in atc_therapeutic_group_list:
+        temp = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code).values_list('drug_id__drug_bankID', flat=True)
+        drugListDict[code] = list(set([item for item in temp]))
+        # name=AtcTherapeuticGroup.objects.filter(id=code).values_list('name', flat=True)[0]
+        # codeNameListDict[code]=name
+    for code in atc_pharmacological_group_list:
+        temp = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code).values_list('drug_id__drug_bankID', flat=True)
+        drugListDict[code] = list(set([item for item in temp]))
+        # name=AtcPharmacologicalGroup.objects.filter(id=code).values_list('name', flat=True)[0]
+        # codeNameListDict[code]=name
+    for code in atc_chemical_group_list:
+        temp = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code).values_list('drug_id__drug_bankID', flat=True)
+        drugListDict[code] = list(set([item for item in temp]))
+        # name=AtcChemicalGroup.objects.filter(id=code).values_list('name', flat=True)[0]
+        # codeNameListDict[code]=name
+    for code in atc_chemical_substance_list:
+        temp = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code).values_list('drug_id__drug_bankID', flat=True)
+        drugListDict[code] = list(set([item for item in temp]))
+        # name=AtcChemicalSubstance.objects.filter(id=code).values_list('name', flat=True)[0]
+        # codeNameListDict[code]=name
 
-        # Retrieve the related ATC codes in 5 levels
-        atc_chemical_substance = AtcChemicalSubstance.objects.filter(id=code[0]).values_list('name', flat=True)[0]
-        atc_chemical_group = AtcChemicalGroup.objects.filter(id=code[0][:5]).values_list('name', flat=True)[0]
-        atc_pharmacological_group = AtcPharmacologicalGroup.objects.filter(id=code[0][:4]).values_list('name', flat=True)[0]
-        atc_therapeutic_group = AtcTherapeuticGroup.objects.filter(id=code[0][:3]).values_list('name', flat=True)[0]
-        atc_anatomical_group = AtcAnatomicalGroup.objects.filter(id=code[0][:1]).values_list('name', flat=True)[0]
-
-        # Retrieve the drugs that belong to each ATC code level
-        atc_chemical_substance_group_drugs = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code[0][:7]).values_list('drug_id__drug_bankID', flat=True)
-        atc_chemical_substance_group_drugs = list(set([item for item in atc_chemical_substance_group_drugs]))
+    # print("codeNameListDict : ", codeNameListDict)
         
-        atc_chemical_group_drugs = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code[0][:5]).values_list('drug_id__drug_bankID', flat=True)
-        atc_chemical_group_drugs = list(set([item for item in atc_chemical_group_drugs]))
 
-        atc_pharmacological_group_drugs = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code[0][:4]).values_list('drug_id__drug_bankID', flat=True)
-        atc_pharmacological_group_drugs = list(set([item for item in atc_pharmacological_group_drugs]))
 
-        atc_therapeutic_group_drugs = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code[0][:2]).values_list('drug_id__drug_bankID', flat=True)
-        atc_therapeutic_group_drugs = list(set([item for item in atc_therapeutic_group_drugs]))
-
-        atc_anatomical_group_drugs = DrugAtcAssociation.objects.filter(atc_id__id__startswith=code[0][:1]).values_list('drug_id__drug_bankID', flat=True)
-        atc_anatomical_group_drugs = list(set([item for item in atc_anatomical_group_drugs]))
-
-        # Append the information to the list
-        atcCodeInAllLevels.append({"atc_chemical_substance":code[0]+": "+atc_chemical_substance.replace('"',''), "atc_chemical_group":code[0][:5]+": "+atc_chemical_group.replace('"',''), "atc_pharmacological_group":code[0][:4]+": "+atc_pharmacological_group.replace('"',''), "atc_therapeutic_group":code[0][:3]+": "+atc_therapeutic_group.replace('"',''), "atc_anatomical_group":code[0][:1]+": "+atc_anatomical_group.replace('"',''), "atc_chemical_group_drugs":atc_chemical_group_drugs, "atc_pharmacological_group_drugs":atc_pharmacological_group_drugs, "atc_therapeutic_group_drugs":atc_therapeutic_group_drugs, "atc_anatomical_group_drugs":atc_anatomical_group_drugs, "atc_chemical_substance_group_drugs":atc_chemical_substance_group_drugs})
 
     # Convert the list to a JSON string
-    json_data = json.dumps(atcCodeInAllLevels)
-    print("json_data: ", json_data)
+    json_drugList_data = json.dumps(drugListDict)
+    # json_codeName_data = json.dumps(codeNameListDict)
+    # print("json_data: ", json_data)
 
     # Pass the JSON string to the template context
-    context['json_atcCodeInAllLevels'] = json_data
-    context['atcCodeInAllLevels'] = atcCodeInAllLevels
+    context['json_drugList_data'] = json_drugList_data
+    context['drugListDict'] = drugListDict
+    # context['codeNameListDict'] = codeNameListDict
+    # context['json_codeName_data'] = json_codeName_data
+    context['atc_anatomical_group_list'] = atc_anatomical_group_list
+    context['atc_therapeutic_group_list'] = atc_therapeutic_group_list
+    context['atc_pharmacological_group_list'] = atc_pharmacological_group_list
+    context['atc_chemical_group_list'] = atc_chemical_group_list
+    context['atc_chemical_substance_list'] = atc_chemical_substance_list
 
     # return render(request, 'drug_atc_tabs.html', context)
     return render(request, 'drug_atc_tabs_horizontal.html', context)
+    # return render(request, 'drug_atc_tabs-leftshape.html', context)
 
 
 def search_drugs(request):

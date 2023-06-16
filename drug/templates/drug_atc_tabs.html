@@ -28,29 +28,29 @@
               <!-- <li><a href="#">TECH</a> -->
               {% for level in atcCodeInAllLevels %}
                 <li><a href="#">{{level.atc_chemical_substance}}</a></li>
-                {% for drug_bank_id in level.atc_chemical_substance_group_drugs %}
+                <!-- {% for drug_bank_id in level.atc_chemical_substance_group_drugs %}
                   <a href="#">{{drug_bank_id}}</a>
-                {% endfor %}
+                {% endfor %} -->
                 <ul>
                   <li><a href="#">{{level.atc_chemical_group}}</a></li>
-                  {% for drug_bank_id in level.atc_chemical_group_drugs %}
+                  <!-- {% for drug_bank_id in level.atc_chemical_group_drugs %}
                   <a href="#">{{drug_bank_id}}</a>
-                  {% endfor %}
+                  {% endfor %} -->
                   <ul>
                     <li><a href="#">{{level.atc_pharmacological_group}}</a></li>
-                    {% for drug_bank_id in level.atc_pharmacological_group_drugs %}
+                    <!-- {% for drug_bank_id in level.atc_pharmacological_group_drugs %}
                       <a href="#">{{drug_bank_id}}</a>
-                    {% endfor %}
+                    {% endfor %} -->
                     <ul>
                       <li><a href="#">{{level.atc_therapeutic_group}}</a></li>
-                      {% for drug_bank_id in level.atc_therapeutic_group_drugs %}
+                      <!-- {% for drug_bank_id in level.atc_therapeutic_group_drugs %}
                         <a href="#">{{drug_bank_id}}</a>
-                      {% endfor %}
+                      {% endfor %} -->
                       <ul>
                         <li><a href="#">{{level.atc_anatomical_group}}</a></li>
-                        {% for drug_bank_id in level.atc_anatomical_group_drugs %}
+                        <!-- {% for drug_bank_id in level.atc_anatomical_group_drugs %}
                           <a href="#">{{drug_bank_id}}</a>
-                        {% endfor %}
+                        {% endfor %} -->
                       </ul>
                     </ul>
                   </ul>

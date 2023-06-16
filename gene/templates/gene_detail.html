@@ -165,17 +165,53 @@
                     </div>
                 </div>
                 <div class="row" id="gene_view_3D">
-                    <!-- <div class="col-sm-3" id="gene-3d-chart-filter" >
-                        <p>Filter for 3D gene view </p>
-                        
-                        
-                    </div> -->
                     <div class="col-sm-12" id="gene-3d-chart" >
-                        <p>3D gene view1</p>
-                    </div>
-                    <div class="col-sm-12" id="gene-3d-chart2" >
-                        <p>3D gene view2</p>
-                        {% include '_3d-view.html' %}
+                        <div style="margin-bottom: 30px;">
+                            <p style="font-size: 22px;padding:0;margin:0;color:#337ab7;">Primary sequence:</p>
+                            <div class="text-area" id="myTextArea">
+                                <!-- https://help.geneiousbiologics.com/hc/en-us/articles/360045069451-Customizing-the-Color-Scheme-of-Nucleotide-and-Amino-acid-Sequences -->
+                                <p>
+                                    {% for num in amino_seq_num_list %}
+                                    {% if num|add:'-1'|divisibleby:10 %}
+                                    <span>{{ num }}</span>
+                                    {% else %}
+                                    <span>.</span>
+                                    {% endif %}
+                                    {% endfor %}
+                                    <br>
+                                </p>
+                                <p class="color-coded-text">
+                                    {% for a in amino_seq %}
+                                        {% if a in "GAVLIFWMP" %}
+                                            <span class="yellow">{{a}}</span>
+                                        {% else %}
+                                            {% if a in "STCYNQ" %}
+                                            <span class="green">{{a}}</span>
+                                            {% else %}
+                                                {% if a in "DE" %}
+                                                <span class="red">{{a}}</span>
+                                                {% else %}
+                                                    {% if a in "KHR" %}
+                                                    <span class="blue">{{a}}</span>
+                                                    {% else %}
+                                                    <span>{{a}}</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>   
+                            </div>
+                        </div>
+                        <div class="col-sm-3" > 
+                            Filter
+                        </div>
+                        <div class="col-sm-9" > 
+                            {% include '_3d-view.html' %}
+                        </div>
+                        <div style="height:500px;">
+                            Something else
+                        </div>
                     </div>
                 </div>
                 
