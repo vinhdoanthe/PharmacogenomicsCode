@@ -289,46 +289,74 @@ def SelectionAutocomplete(request):
             ps1 = Drug.objects.filter(Q(drug_bankID__icontains=q) | Q(name__icontains=q) | Q(aliases__icontains=q))
             ps2 = Gene.objects.filter(Q(gene_id__icontains=q) | Q(genename__icontains=q))
             ps3 = Protein.objects.filter(Q(uniprot_ID__icontains=q) | Q(protein_name__icontains=q))
-            if len(ps1) > 0:
-                redirect = '/drug/'
-                ps = ps1
-            if len(ps2) > 0:
-                redirect = "/gene/"
-                ps = ps2
-            if len(ps3) > 0:
-                redirect = "/protein/"
-                ps = ps3
+            # ps4 = Protein.objects.filter(Q(uniprot_ID__icontains=q) | Q(protein_name__icontains=q))
+            # if len(ps1) > 0:
+            #     redirect = '/drug/'
+            #     ps = ps1
+            # if len(ps2) > 0:
+            #     redirect = "/gene/"
+            #     ps = ps2
+            # if len(ps3) > 0:
+            #     redirect = "/protein/"
+            #     ps = ps3
 
+        for p in ps1:
+            p_json = {}
+            p_json['id'] = p.drug_bankID
+            p_json['label'] = p.name
+            p_json['type'] = 'drug'
+            p_json['redirect'] = '/drug/'
+            p_json['category'] = 'Drugs'
+            results.append(p_json)
 
-        if redirect == '/drug/':
-            for p in ps:
-                p_json = {}
-                p_json['id'] = p.drug_bankID
-                p_json['label'] = p.name
-                p_json['type'] = 'drug'
-                p_json['redirect'] = redirect
-                p_json['category'] = 'Drugs'
-                results.append(p_json)
-        else:
-            if redirect == '/gene/':
-                for p in ps:
-                    p_json = {}
-                    p_json['id'] = p.gene_id
-                    p_json['type'] = 'Gene'
-                    p_json['category'] = 'Genes'
-                    p_json['label'] = p.genename
-                    p_json['redirect'] = redirect
-                    results.append(p_json)
-            else:
-                if redirect == "/protein/":
-                    for p in ps:
-                        p_json = {}
-                        p_json['id'] = p.uniprot_ID
-                        p_json['type'] = 'Protein'
-                        p_json['category'] = 'Proteins'
-                        p_json['label'] = p.protein_name
-                        p_json['redirect'] = redirect
-                        results.append(p_json)
+        for p in ps2:
+            p_json = {}
+            p_json['id'] = p.gene_id
+            p_json['type'] = 'Gene'
+            p_json['category'] = 'Genes'
+            p_json['label'] = p.genename
+            p_json['redirect'] = '/gene/'
+            results.append(p_json)  
+        
+        for p in ps3:
+            p_json = {}
+            p_json['id'] = p.uniprot_ID
+            p_json['type'] = 'Protein'
+            p_json['category'] = 'Proteins'
+            p_json['label'] = p.protein_name
+            p_json['redirect'] = '/protein/'
+            results.append(p_json)
+            
+
+        # if redirect == '/drug/':
+        #     for p in ps:
+        #         p_json = {}
+        #         p_json['id'] = p.drug_bankID
+        #         p_json['label'] = p.name
+        #         p_json['type'] = 'drug'
+        #         p_json['redirect'] = redirect
+        #         p_json['category'] = 'Drugs'
+        #         results.append(p_json)
+        # else:
+        #     if redirect == '/gene/':
+        #         for p in ps:
+        #             p_json = {}
+        #             p_json['id'] = p.gene_id
+        #             p_json['type'] = 'Gene'
+        #             p_json['category'] = 'Genes'
+        #             p_json['label'] = p.genename
+        #             p_json['redirect'] = redirect
+        #             results.append(p_json)
+        #     else:
+        #         if redirect == "/protein/":
+        #             for p in ps:
+        #                 p_json = {}
+        #                 p_json['id'] = p.uniprot_ID
+        #                 p_json['type'] = 'Protein'
+        #                 p_json['category'] = 'Proteins'
+        #                 p_json['label'] = p.protein_name
+        #                 p_json['redirect'] = redirect
+        #                 results.append(p_json)
         data = json.dumps(results)
     else:
         data = 'fail'

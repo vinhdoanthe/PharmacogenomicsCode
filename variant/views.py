@@ -28,7 +28,6 @@ def get_genebass_tables(request):
     transcript_ids = VepVariant.objects.filter(Variant_marker=variant_marker).values_list('Transcript_ID', flat=True)
 
     list_genebass = GenebassVariant.objects.filter(markerID=variant_marker).values(
-        'gb_id',
         'n_cases',
         'n_controls',
         'phenocode__description',

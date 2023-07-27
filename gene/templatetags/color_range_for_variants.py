@@ -13,11 +13,11 @@ COLORS = [
     '#926C15',
     '#805B10',
     '#76520E',
-]
+] 
 
 
-@register.inclusion_tag('gene/variant_row.html')
-def render_variant_value(value):
+@register.inclusion_tag('gene/variant_cell.html')
+def render_variant_values_in_color_ranges(value):
     if value:
         value = float(value)
     else:
@@ -48,4 +48,5 @@ def render_variant_value(value):
         'color': color,
         'value': value,
     }
+
 

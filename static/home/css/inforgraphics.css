@@ -7,6 +7,7 @@
 
 .olcards {
   list-style: none;
+  list-style-type: none;
   counter-reset: cardCount;
   font-family: sans-serif;
   display: flex;
@@ -24,7 +25,7 @@
   margin-top: var(--labelOffset);
 }
 
-.olcards li::before {
+/* .olcards li::before {
   content: counter(cardCount, decimal-leading-zero);
   background: white;
   color: var(--cardColor);
@@ -37,13 +38,18 @@
   justify-content: center;
   align-items: center;
   padding-inline: 0.3em;
-}
+} */
 
 .olcards li .content {
+  width: 100%;
+  margin-right: 50px;
+  height: 65px;
   background-color: var(--cardColor);
   --inlinePadding: 0.3em;
   --boxPadding: 0.3em;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: var(--boxPadding) calc(var(--inlinePadding) + var(--arrowClipSize))
     var(--boxPadding) calc(var(--inlinePadding) + var(--labelOffset));
   grid-template-areas:
@@ -60,7 +66,7 @@
   );
   position: relative;
 }
-.olcards li .content::before {
+/* .olcards li .content::before {
   content: "";
   position: absolute;
   width: var(--labelOffset);
@@ -70,8 +76,8 @@
   bottom: 0;
   clip-path: polygon(0 0, 100% 0, 0 100%);
   filter: brightness(0.75);
-}
-.olcards li .content::after {
+} */
+/* .olcards li .content::after {
   content: "";
   position: absolute;
   height: var(--cardsGap);
@@ -79,7 +85,7 @@
   background: linear-gradient(to right, rgba(0, 0, 0, 0.25), transparent 50%);
   left: 0;
   top: 100%;
-}
+} */
 .olcards li .icon {
   grid-area: icon;
   align-self: center;
@@ -89,7 +95,4 @@
   grid-area: title;
   font-size: 1em;
   /* font-weight: 700; */
-}
-.olcards li .content .text {
-  grid-area: text;
 }

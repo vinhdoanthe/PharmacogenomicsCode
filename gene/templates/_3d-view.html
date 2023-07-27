@@ -7,32 +7,12 @@
     
 </style>
 
-<!-- <div style="height: 800px; width: 100%; position: relative;" class='viewer_3Dmoljs' data-element="#gene-3d-chart" data-style1='cartoon:color=spectrum' data-href="{% static 'gene/pdb-test/O00222.pdb' %}" data-backgroundcolor='0xffffff' ></div>        -->
-<div style="height: 800px; width: 100%; position: relative;" class='viewer_3Dmoljs' data-element="#gene-3d-chart2" data-style1='cartoon:color=spectrum' data-href="{% static 'gene/pdb-test/6bsz.pdb' %}" data-backgroundcolor='violet'  ></div>       
 
 <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
 <script src="https://3Dmol.org/build/3Dmol.ui-min.js"></script>  
 
-<!-- <script>
-    $(document).ready( function() {
-        var viewer = $3Dmol.createViewer(
-            'gene-3d-chart', //id of div to create canvas in
-            {
-            defaultcolors: $3Dmol.elementColors.rasmol,
-            backgroundColor: 'white'
-            }
-        );
 
-        $3Dmol.download("pdb:4wwy",viewer,{},function(){
-                var atoms = viewer.selectedAtoms({chain:'A'});
-                for(var i = 0, n = atoms.length; i < n; i++) {
-                    atoms[i].b = 0.0;
-                }
-                viewer.setStyle({cartoon:{colorscheme:{prop:'b',gradient: 'roygb', min:10, max:70}}});
-                viewer.render();
-            });
-    });
-</script> -->
-
+<div id="structure_display" style="height: 600px; width: 100%; position: relative;" class='viewer_3Dmoljs' data-element="#gene-3d-chart" 
+data-style='cartoon:color=grey' data-href="{% static 'gene/pdb-test/6bsz.pdb' %}" data-backgroundcolor="white" ></div>       
    
 
