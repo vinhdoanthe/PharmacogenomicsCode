@@ -660,30 +660,24 @@
 
     <!-- Script for filtering options of 3d-structure  -->
     <script>
-        const colorSelect = document.getElementById('colorSelect');
-        const structureDisplay = document.getElementById('structure_display');
-
-        structureDisplay.dataset.style = 'cartoon:color=blue';
+        var colorSelect = document.getElementById('colorSelect');
+        var structureDisplay = document.getElementById('structure_display');
 
         colorSelect.addEventListener('change',  (event) => {
             const selectedColor = event.target.value;
             if (selectedColor === 'grey') {
-                alert("we choose grey-------");
-                structureDisplay.dataset.style = 'cartoon:color=grey';
-                alert("color changed to: "+structureDisplay.dataset.style);
+                viewer.setStyle({}, {cartoon: {color: 'grey'}});
             } else {
-                alert("we choose spectrum");
-                structureDisplay.dataset.style = 'cartoon:color=spectrum';
+                viewer.setStyle({}, {cartoon: {color: 'spectrum'}});
             }
+            viewer.render();
         });
 
         const visibilitySelect = document.getElementById('visibilitySelect');
         visibilitySelect.addEventListener('change',  (event) => {
             const selectedvisibility = event.target.value;
             if (selectedvisibility === 'hide') {
-                alert("we choose hide");
             } else {
-                alert("we choose show");
             }
         });
         

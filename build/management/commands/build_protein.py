@@ -71,17 +71,20 @@ class Command(BaseCommand):
 
             filepath = os.sep.join([self.proteindata_data_dir, filename])
 
-            data = pd.read_csv(filepath, low_memory=False,
-                               encoding="ISO-8859-1", sep=";")
+            data = pd.read_csv(
+                filepath, low_memory=False,
+                encoding="ISO-8859-1",
+            )
 
             for index, row in enumerate(data.iterrows()):
 
-                uniprot_ID = data[index: index + 1]["uniprotID"].values[0]
-                genename = data[index: index + 1]["geneName"].values[0]
+                uniprot_ID = data[index: index + 1]["uniprot_ID"].values[0]
+                genename = data[index: index + 1]["genename"].values[0]
                 geneID = data[index: index + 1]["geneID"].values[0]
 
-                entry_name = data[index: index + 1]["entryName"].values[0]
-                protein_name = data[index: index + 1]["proteinName"].values[0]
+                entry_name = data[index: index + 1]["entry_name"].values[0]
+                protein_name = data[index: index + 1]["protein_name"].values[0]
+                sequence = data[index: index + 1]["sequence"].values[0]
 
                 # # fetch protein
                 # try:
@@ -101,6 +104,7 @@ class Command(BaseCommand):
                     geneID=geneID,
                     entry_name=entry_name,
                     protein_name=protein_name,
+                    sequence=sequence,
                 )
                 protein.save()
                 print("a record is saved")
