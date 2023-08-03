@@ -58,7 +58,7 @@
                                 <th>SIFT4G_</br>converted</th>
                                 <th>SIFT_</br>converted</th>
 
-                                <th>BayesDel_</br>addAF</th> 
+                                <th>BayesDel_</br>addAF</th>
                                 <th>BayesDel_</br>noAF</th>
                                 <th>CADD_</br>raw</th>
                                 <th>ClinPred</th>
@@ -179,48 +179,49 @@
                         <br/>
                     </div>
 
-                <div class="col-sm-12" id="gene-3d-chart" style="padding: 0px; margin-bottom: 30px;">
-                    {% include "_primary_seq.html" %}
-                    <div class="col-sm-3" style="padding: 0px;"> 
-                        <p style="font-size:16px; padding-left:0; margin-left:0; color:#337ab7;">3D structure:</p>
-                        <div id="filter_3d">
-                            <div id="filter_3d_source">
-                                <p>Source:</p>
-                                <select id="sourceSelect" name="sourceSelect">
-                                    <option value="pdb">PDB</option>
-                                    <option value="af2">AlphaFold2</option>
-                                </select>
-                            </div>
-                            <div id="filter_3d_color">
-                                <p>Color:</p>
-                                <select id="colorSelect" name="color">
-                                    <option value="spectrum" selected="selected">Spectrum</option>
-                                    <option value="grey">Grey</option>
-                                </select>
-                            </div>
-                            <div id="filter_3d_variant">
-                                <p>Variant:</p>
-                                <select id="visibilitySelect" name="variant">
-                                    <option value="hide">Hide</option>
-                                    <option value="show">Show</option>
-                                </select>
+                    <div class="col-sm-12" id="gene-3d-chart" style="padding: 0px; margin-bottom: 30px;">
+                        {% include "_primary_seq.html" %}
+                        <div class="col-sm-3" style="padding: 0px;">
+                            <p style="font-size:16px; padding-left:0; margin-left:0; color:#337ab7;">3D structure:</p>
+                            <div id="filter_3d">
+                                <div id="filter_3d_source">
+                                    <p>Source:</p>
+                                    <select id="sourceSelect" name="sourceSelect">
+                                        <option value="pdb">PDB</option>
+                                        <option value="af2">AlphaFold2</option>
+                                    </select>
+                                </div>
+                                <div id="filter_3d_color">
+                                    <p>Color:</p>
+                                    <select id="colorSelect" name="color">
+                                        <option value="spectrum" selected="selected">Spectrum</option>
+                                        <option value="grey">Grey</option>
+                                    </select>
+                                </div>
+                                <div id="filter_3d_variant">
+                                    <p>Variant:</p>
+                                    <select id="visibilitySelect" name="variant">
+                                        <option value="hide">Hide</option>
+                                        <option value="show">Show</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
+                        <div id="structure_3D" class="col-sm-9" >
+                            {% include '_3d-view.html' %}
+                        </div>
+
                     </div>
-                    <div id="structure_3D" class="col-sm-9" > 
-                        {% include '_3d-view.html' %}
-                    </div>
-                    
+
                 </div>
-                
             </div>
-        </div>
-        <!-- The modal -->
-        <div class="modal fade" id="genebassModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content" id="genebass-variant-list">
-                    Data will be loaded here by jQuery
+            <!-- The modal -->
+            <div class="modal fade" id="genebassModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" id="genebass-variant-list">
+                        Data will be loaded here by jQuery
+                    </div>
                 </div>
             </div>
         </div>
@@ -238,6 +239,8 @@
     <script src="{% static 'home/js/gpcrdb.js' %}"></script>
     <script src="{% static 'home/js/signprot-multitabtable.js' %}"></script>
     <script src='https://cdn.plot.ly/plotly-2.20.0.min.js'></script>
+    <script src="https://code.jquery.com/jquery-migrate-1.4.1.min.js"></script>
+
 
     <!-- Script for ploting the 2D gene viewer -->
     <script>
@@ -260,14 +263,14 @@
         let minIndex = 0; // Initialize minIndex with 0
 
         for (let i = 1; i < list_vep_variants_pos.length; i++) {
-        if (list_vep_variants_pos[i] > maxValue) {
-            maxValue = list_vep_variants_pos[i];
-            maxIndex = i;
-        }
-        if (list_vep_variants_pos[i] < minValue) {
-            minValue = list_vep_variants_pos[i];
-            minIndex = i;
-        }
+            if (list_vep_variants_pos[i] > maxValue) {
+                maxValue = list_vep_variants_pos[i];
+                maxIndex = i;
+            }
+            if (list_vep_variants_pos[i] < minValue) {
+                minValue = list_vep_variants_pos[i];
+                minIndex = i;
+            }
         }
 
         // console.log("Number of variants:" + list_variants.length);
@@ -305,8 +308,8 @@
             y: list_vep_variants_mean_vep_score,
             mode: 'markers',
             marker: {
-            size: 7,
-            color: list_colors,
+                size: 7,
+                color: list_colors,
             },
             type: 'scatter',
             text: list_variants.map((variant, index) => `Variant: ${variant}`),
@@ -381,6 +384,7 @@
             })
             $('#lower_mean').change(function () {
                     let filter_params = get_filter_params();
+                    //update_filter_options(filter_params)
                     update_data(filter_params)
                 }
             );
@@ -389,28 +393,35 @@
                     update_data(filter_params)
                 }
             );
-            $('#variant-select').change(function () {
+
+            // GET_FILTER_PARAMS
+            // Thay doi tu su kien 'change' sang 'select2:select' de tranh bi lap lai
+            $('#variant-select').on('select2:select', (function () {
                     let filter_params = get_filter_params();
                     update_data(filter_params)
                 }
-            );
-            $('#transcript-select').change(function () {
+            ));
+            // GET_FILTER_PARAMS
+            // Thay doi tu su kien 'change' sang 'select2:select' de tranh bi lap lai
+            $('#transcript-select').on('select2:select', (function () {
 
                     let filter_params = get_filter_params();
                     update_data(filter_params)
                 }
-            );
-            $('#consequence-select').change(function () {
+            ));
+            // GET_FILTER_PARAMS
+            // Thay doi tu su kien 'change' sang 'select2:select' de tranh bi lap lai
+            $('#consequence-select').on('select2:select', (function () {
 
                     let filter_params = get_filter_params();
                     update_data(filter_params)
                 }
-            );
+            ));
         })
 
         // Get the filter values
         function get_filter_params() {
-            
+
             let mean_vep_score_lower = $('#lower_mean').val();
             let mean_vep_score_upper = $('#upper_mean').val();
             let transcript = $('#transcript-select').val();
@@ -439,23 +450,49 @@
             let filtered_list_vep_variants_consequence = [];
             let filtered_list_colors = [];
 
+            let list_variants_options = [];
+            let list_transcripts_options = [];
+            let list_consequences_options = [];
+
             for (let i = 0; i < list_vep_variants_pos.length; i++) {
                 if (condition_check(list_vep_variants_mean_vep_score[i], list_variants[i], list_vep_variants_consequence[i], list_transcripts[i], filter_values)) {
                     filtered_list_vep_variants_pos.push(list_vep_variants_pos[i]);
                     filtered_list_vep_variants_mean_vep_score.push(list_vep_variants_mean_vep_score[i]);
                     filtered_list_vep_variants_consequence.push(list_vep_variants_consequence[i]);
                     filtered_list_colors.push(list_colors[i]);
+
+                    // UPDATE_FILTER_PARAMS Test viec update filter options
+                    if (!list_variants_options.includes(list_variants[i])) {
+                        list_variants_options.push(list_variants[i]);
+                    }
+
+                    if (!list_transcripts_options.includes(list_transcripts[i])) {
+                        list_transcripts_options.push(list_transcripts[i]);
+                    }
+
+                    if (!list_consequences_options.includes(list_vep_variants_consequence[i])) {
+                        list_consequences_options.push(list_vep_variants_consequence[i]);
+                    }
                 }
             }
+
+            // UPDATE_FILTER_PARAMS
+            var $el = $('#transcript-select').select2();
+            $el.empty(); // remove old options
+            for (var i_tr = 0; i_tr < list_transcripts_options.length; i_tr++) {
+                var newOption = new Option(list_transcripts_options[i_tr], list_transcripts_options[i_tr], false, false);
+                $el.append(newOption);
+            }
+            $el.change() // notify only Select2 of changes
 
             let trace1 = {
                 x: filtered_list_vep_variants_pos,
                 y: filtered_list_vep_variants_mean_vep_score,
                 mode: 'markers',
                 marker: {
-                size: 7,
-                color: list_colors,
-                // hovertemplate: 'Mean VEP score: %{y}<br>Position: %{x}<br>Variant: %{text}<br>Transcript: %{transcript}',
+                    size: 7,
+                    color: list_colors,
+                    // hovertemplate: 'Mean VEP score: %{y}<br>Position: %{x}<br>Variant: %{text}<br>Transcript: %{transcript}',
                 },
                 type: 'scatter',
                 text: list_variants.map((variant, index) => `Variant: ${variant}`),
@@ -465,40 +502,40 @@
             let data = [trace1];
 
             let layout = {
-            xaxis: {
-                title: {
-                    text: 'Position on protein sequence',
-                    font: {
-                        size: 14,
-                        color: '#337ab7'
-                    }
+                xaxis: {
+                    title: {
+                        text: 'Position on protein sequence',
+                        font: {
+                            size: 14,
+                            color: '#337ab7'
+                        }
+                    },
+                    range: [-2, parseInt(max_xaxis * 1.05)],
+                    showline: true, // Show x-axis line
+                    showgrid: true, // Show x-axis grid lines
+                    zeroline: false, // Show the x-axis zero line
+
                 },
-                range: [-2, parseInt(max_xaxis * 1.05)],
-                showline: true, // Show x-axis line
-                showgrid: true, // Show x-axis grid lines
-                zeroline: false, // Show the x-axis zero line
-                
-            },
-            yaxis: {
-                title: {
-                    text: 'Mean of VEP scores',
-                    font: {
-                        size: 14,
-                        color: '#337ab7'
-                    }
+                yaxis: {
+                    title: {
+                        text: 'Mean of VEP scores',
+                        font: {
+                            size: 14,
+                            color: '#337ab7'
+                        }
+                    },
+                    range: [0.01, 1.05],
+                    showline: true, // Show y-axis line
+                    showgrid: true, // Show y-axis grid lines
+                    zeroline: false, // Show the y-axis zero line
+
                 },
-                range: [0.01, 1.05],
-                showline: true, // Show y-axis line
-                showgrid: true, // Show y-axis grid lines
-                zeroline: false, // Show the y-axis zero line
-                
-            },
-            margin: {
-                t: 10, // Increase the top margin for the title and plot container
-                b: 60, // Bottom margin for the x-axis labels and title
-                l: 60, // Left margin for the y-axis labels and title
-                r: 40, // Right margin
-            }
+                margin: {
+                    t: 10, // Increase the top margin for the title and plot container
+                    b: 60, // Bottom margin for the x-axis labels and title
+                    l: 60, // Left margin for the y-axis labels and title
+                    r: 40, // Right margin
+                }
             }
             Plotly.newPlot('gene-2d-chart', data, layout);
         }
@@ -680,7 +717,7 @@
             } else {
             }
         });
-        
+
         const sourceSelect = document.getElementById('sourceSelect');
         sourceSelect.addEventListener('change',  (event) => {
             const sourceSelect = event.target.value;
@@ -690,7 +727,7 @@
                 alert("we choose af2");
             }
         });
-        </script>
+    </script>
 
-    
+
 {% endblock addon_js %}
