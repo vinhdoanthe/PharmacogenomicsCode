@@ -82,6 +82,26 @@
 
   #filter_3d {
     display: flex;
-    gap: 30px;
+    flex-direction: column;
   }
+
+  #filter_3d_row1, #filter_3d_row2 {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+  }
+
+  #filter_3d_row3 {
+    display: flex;
+  }
+
+  .three_dimension_struct_filter p{
+    margin: 0px;
+  }
+
+  .three_dimension_struct_filter select{
+    border-radius: 4px;
+    background-color: rgba(224, 225, 221, 0.3);
+  }
+  
   
