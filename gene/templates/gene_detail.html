@@ -208,7 +208,7 @@
                         </div>
                     </div>
                     <div id="structure_3D" class="col-sm-9" > 
-                        {% include '_3d-view.html' %}
+                        {% include '_3d_view.html' %}
                     </div>
                     
                 </div>
@@ -302,6 +302,8 @@
         }
 
         max_xaxis = Math.max(...list_vep_variants_pos);
+        let variant_transcripts = list_variants.map((val, index) => `Variant: ${val}, in transcript: ${list_transcripts[index]}`);
+
 
         let trace1 = {
             x: list_vep_variants_pos,
@@ -312,11 +314,14 @@
                 color: list_colors,
             },
             type: 'scatter',
-            text: list_variants.map((variant, index) => `Variant: ${variant}`),
+            text: variant_transcripts.map((variant_transcript, index) => `${variant_transcript}`),
             transcript: list_transcripts,
             cliponaxis: false,
-        };
+            hovertemplate: '%{text}' +
+                '<br><span style="margin-top: 10px;">at position: %{x}</span>' +
+                '<br><span style="margin-top: 10px;">with mean VEP Score: %{y}</span><extra></extra>',
 
+        };
 
         let data = [trace1];
 
@@ -359,7 +364,7 @@
 
     </script>
 
-    <!-- Script for showing datatable of variants and VEP scores  -->
+    <!-- Script for showing datatable of variants and VEP scores initially -->
     <script>
         $(document).ready(function () {
             let structures_scrollable = $("#structures_scrollable")
@@ -383,51 +388,77 @@
                 ],
             })
             $('#lower_mean').change(function () {
-                    let filter_params = get_filter_params();
-                    //update_filter_options(filter_params)
-                    update_data(filter_params)
+                    let filter_values = get_updated_filter_params();
+                    update_selection();
+                    redraw_chart_and_table(filter_values);
                 }
             );
             $('#upper_mean').change(function () {
-                    let filter_params = get_filter_params();
-                    update_data(filter_params)
+                    let filter_values = get_updated_filter_params();
+                    update_selection();
+                    redraw_chart_and_table(filter_values);
                 }
             );
 
             // UPDATE_FILTER_PARAMS
             // Thay doi tu su kien 'change' sang 'select2:select' de tranh bi lap lai
-            $('#variant-select').on('select2:select', (function () {
-                    let filter_params = get_filter_params();
-                    update_data(filter_params)
+            $('#transcript-select').on('select2:select', (function () {
+                    let filter_values = get_updated_filter_params();
+                    redraw_chart_and_table(filter_values)
                 }
             ));
             // UPDATE_FILTER_PARAMS
             // Thay doi tu su kien 'change' sang 'select2:select' de tranh bi lap lai
-            $('#transcript-select').on('select2:select', (function () {
-
-                    let filter_params = get_filter_params();
-                    update_data(filter_params)
+            $('#variant-select').on('select2:select', (function () {
+                    let filter_values = get_updated_filter_params();
+                    redraw_chart_and_table(filter_values)
                 }
             ));
             // UPDATE_FILTER_PARAMS
             // Thay doi tu su kien 'change' sang 'select2:select' de tranh bi lap lai
             $('#consequence-select').on('select2:select', (function () {
-
-                    let filter_params = get_filter_params();
-                    update_data(filter_params)
+                    let filter_values = get_updated_filter_params();
+                    redraw_chart_and_table(filter_values)
                 }
-            ));
-        })
+                ));
+            })
+           // this function returns true if a variant, along with its transcript, consequence and vep score pass all the 4 filters
+           function condition_check(vep_score, transcript, variant, consequence, filter_values) {
+                let vep_score_check = true;
+                if ((filter_values.mean_vep_score_lower !== null || filter_values.mean_vep_score_upper !== null) &&
+                    (vep_score < filter_values.mean_vep_score_lower || vep_score > filter_values.mean_vep_score_upper)) {
+                    vep_score_check = false;
+                }
+                let variant_check = true;
+                if (filter_values.variant.length !== 0) {
+                    if (filter_values.variant.indexOf(variant) === -1) {
+                        variant_check = false;
+                    }
+                }
+                let consequence_check = true;
+                if (filter_values.consequence.length !== 0) {
+                    const intersection = consequence.split(",").filter(element => filter_values.consequence.includes(element));
+                    if (intersection.length === 0) {
+                        consequence_check = false;
+                    }
+                }
+                let transcript_check = true;
+                if (filter_values.transcript.length !== 0) {
+                    if (filter_values.transcript.indexOf(transcript) === -1) {
+                        transcript_check = false;
+                    }
+                }
+                return vep_score_check && variant_check && consequence_check && transcript_check;
+        }
 
         // Get the filter values
-        function get_filter_params() {
-
+        function get_updated_filter_params() {
             let mean_vep_score_lower = $('#lower_mean').val();
             let mean_vep_score_upper = $('#upper_mean').val();
             let transcript = $('#transcript-select').val();
             let variant = $('#variant-select').val();
             let consequence = $('#consequence-select').val();
-
+            
             return {
                 mean_vep_score_lower: mean_vep_score_lower,
                 mean_vep_score_upper: mean_vep_score_upper,
@@ -437,31 +468,18 @@
             };
         }
 
-        function update_data(filter_values) {
-            // alert("update data function is called")
-            redraw_2d_chart(filter_values)
-            redraw_vep_variants_datatable(filter_values)
-        }
+        // return 3 list of transcript, variant, consequence corresponding to new mean VEP inputs
+        function get_updated_select_values(){
 
-        function redraw_2d_chart(filter_values) {
-            // Test data
-            let filtered_list_vep_variants_pos = [];
-            let filtered_list_vep_variants_mean_vep_score = [];
-            let filtered_list_vep_variants_consequence = [];
-            let filtered_list_colors = [];
-
-            let list_variants_options = [];
+            let filter_values = get_updated_filter_params();
             let list_transcripts_options = [];
+            let list_variants_options = [];
             let list_consequences_options = [];
 
             for (let i = 0; i < list_vep_variants_pos.length; i++) {
                 if (condition_check(list_vep_variants_mean_vep_score[i], list_variants[i], list_vep_variants_consequence[i], list_transcripts[i], filter_values)) {
-                    filtered_list_vep_variants_pos.push(list_vep_variants_pos[i]);
-                    filtered_list_vep_variants_mean_vep_score.push(list_vep_variants_mean_vep_score[i]);
-                    filtered_list_vep_variants_consequence.push(list_vep_variants_consequence[i]);
-                    filtered_list_colors.push(list_colors[i]);
 
-                    // UPDATE_FILTER_PARAMS Test viec update filter options
+                    // UPDATE_FILTER_PARAMS 
                     if (!list_variants_options.includes(list_variants[i])) {
                         list_variants_options.push(list_variants[i]);
                     }
@@ -476,27 +494,109 @@
                 }
             }
 
-            // UPDATE_FILTER_PARAMS
-            var $el = $('#transcript-select').select2();
-            $el.empty(); // remove old options
-            for (var i_tr = 0; i_tr < list_transcripts_options.length; i_tr++) {
-                var newOption = new Option(list_transcripts_options[i_tr], list_transcripts_options[i_tr], false, false);
-                $el.append(newOption);
-            }
-            $el.change() // notify only Select2 of changes
+            return {
+                list_transcripts_options: list_transcripts_options,
+                list_variants_options: list_variants_options,
+                list_consequences_options: list_consequences_options,
+                
+            };
+        }
 
+        function get_filtered_data_for_redrawing_chart(){
+
+            let filter_values = get_updated_filter_params();
+            let filtered_list_vep_variants_pos = [];
+            let filtered_list_vep_variants_mean_vep_score = [];
+            let filtered_list_vep_variants_consequence = [];
+            let filtered_list_vep_variants_transcript = [];
+            let filtered_list_vep_variants_variant = [];
+            let filtered_list_colors = [];
+
+            for (let i = 0; i < list_vep_variants_pos.length; i++) {
+                if (condition_check(list_vep_variants_mean_vep_score[i], list_variants[i], list_vep_variants_consequence[i], list_transcripts[i], filter_values)) {
+                    filtered_list_vep_variants_pos.push(list_vep_variants_pos[i]);
+                    filtered_list_vep_variants_mean_vep_score.push(list_vep_variants_mean_vep_score[i]);
+                    filtered_list_vep_variants_consequence.push(list_vep_variants_consequence[i]);
+                    filtered_list_vep_variants_transcript.push(list_transcripts[i]);
+                    filtered_list_vep_variants_variant.push(list_variants[i]);
+                    filtered_list_colors.push(list_colors[i]);
+                }
+            }
+
+            return {
+                filtered_list_vep_variants_pos: filtered_list_vep_variants_pos,
+                filtered_list_vep_variants_mean_vep_score: filtered_list_vep_variants_mean_vep_score,
+                filtered_list_vep_variants_consequence: filtered_list_vep_variants_consequence,
+                filtered_list_colors: filtered_list_colors,
+                filtered_list_vep_variants_transcript: filtered_list_vep_variants_transcript,
+                filtered_list_vep_variants_variant: filtered_list_vep_variants_variant,
+            }
+        }
+
+
+        function update_selection(){
+            // alert("I am here");
+            values=get_updated_select_values();
+            // alert("values.list_transcripts_options.length: "+values.list_transcripts_options.length);
+            // alert("values.list_variants_options.length: "+values.list_variants_options.length);
+            // alert("values.list_consequences_options.length: "+values.list_consequences_options.length);
+            // UPDATE_FILTER_PARAMS FOR TRANSCRIPT SELECT
+            var $trans = $('#transcript-select').select2();
+            $trans.empty(); // remove old options
+            for (var i_tr = 0; i_tr < values.list_transcripts_options.length; i_tr++) {
+                var newOption = new Option(values.list_transcripts_options[i_tr], values.list_transcripts_options[i_tr], false, false);
+                $trans.append(newOption);
+            }
+            $trans.change() // notify only Select2 of changes
+            
+            // UPDATE_FILTER_PARAMS FOR VARIANT SELECT
+            var $variants = $('#variant-select').select2();
+            $variants.empty(); // remove old options
+            for (var i_tr = 0; i_tr < values.list_variants_options.length; i_tr++) {
+                var newOption = new Option(values.list_variants_options[i_tr], values.list_variants_options[i_tr], false, false);
+                $variants.append(newOption);
+            }
+            $variants.change() // notify only Select2 of changes
+            
+            // UPDATE_FILTER_PARAMS FOR CONSEQUENCE SELECT
+            var $consequences = $('#consequence-select').select2();
+            $consequences.empty(); // remove old options
+            for (var i_tr = 0; i_tr < values.list_consequences_options.length; i_tr++) {
+                var newOption = new Option(values.list_consequences_options[i_tr], values.list_consequences_options[i_tr], false, false);
+                $consequences.append(newOption);
+            }
+            $consequences.change() // notify only Select2 of changes
+        }
+
+        function redraw_chart_and_table(filter_values) {
+            redraw_2d_chart(filter_values)
+            redraw_vep_variants_datatable(filter_values)
+        }
+
+        function redraw_2d_chart(filter_values) {
+            redraw_data = get_filtered_data_for_redrawing_chart();
+            alert("redraw_2d_chart is called, redraw_data.variant_position.length = "+redraw_data.filtered_list_vep_variants_pos.length);
+            let variant = redraw_data.filtered_list_vep_variants_variant;
+            let transcript = redraw_data.filtered_list_vep_variants_transcript;
+            let variant_transcripts = variant.map((val, index) => `Variant: ${val}, in transcript: ${transcript[index]}`);
+
+            alert("variant length: "+ variant.length);
+            alert("transcript length: "+ transcript.length);
             let trace1 = {
-                x: filtered_list_vep_variants_pos,
-                y: filtered_list_vep_variants_mean_vep_score,
+                x: redraw_data.filtered_list_vep_variants_pos,
+                y: redraw_data.filtered_list_vep_variants_mean_vep_score,
                 mode: 'markers',
                 marker: {
                     size: 7,
                     color: list_colors,
-                    // hovertemplate: 'Mean VEP score: %{y}<br>Position: %{x}<br>Variant: %{text}<br>Transcript: %{transcript}',
                 },
                 type: 'scatter',
-                text: list_variants.map((variant, index) => `Variant: ${variant}`),
-                transcript: list_transcripts,
+                text: variant_transcripts.map((variant_transcript, index) => `${variant_transcript}`),
+                cliponaxis: false,
+                hovertemplate: '%{text}' +
+                '<br><span style="margin-top: 10px;">at position: %{x}</span>' +
+                '<br><span style="margin-top: 10px;">with mean VEP Score: %{y}</span><extra></extra>',
+
             };
 
             let data = [trace1];
@@ -540,38 +640,10 @@
             Plotly.newPlot('gene-2d-chart', data, layout);
         }
 
-        // this function returns true if a variant, along with its transcript, consequence and vep score pass all the 4 filters
-        function condition_check(vep_score, transcript, variant, consequence, filter_values) {
-            let vep_score_check = true;
-            if ((filter_values.mean_vep_score_lower !== null || filter_values.mean_vep_score_upper !== null) &&
-                (vep_score < filter_values.mean_vep_score_lower || vep_score > filter_values.mean_vep_score_upper)) {
-                vep_score_check = false;
-            }
-            let variant_check = true;
-            if (filter_values.variant.length !== 0) {
-                if (filter_values.variant.indexOf(variant) === -1) {
-                    variant_check = false;
-                }
-            }
-            let consequence_check = true;
-            if (filter_values.consequence.length !== 0) {
-                const intersection = consequence.split(",").filter(element => filter_values.consequence.includes(element));
-                if (intersection.length === 0) {
-                    consequence_check = false;
-                }
-            }
-            let transcript_check = true;
-            if (filter_values.transcript.length !== 0) {
-                if (filter_values.transcript.indexOf(transcript) === -1) {
-                    transcript_check = false;
-                }
-            }
-
-            return vep_score_check && variant_check && consequence_check && transcript_check;
-        }
+     
 
         function redraw_vep_variants_datatable(filter_values) {
-            // alert("redraw_vep_variants_datatable is called, filter_values.transcript.length = "+filter_values.transcript.length)
+            alert("redraw_vep_variants_datatable is called, filter_values.variant.length = "+filter_values.variant.length);
             let vep_variants_table = $("#structures_scrollable").DataTable();
             //filter by transcript
             let transcript_search_terms = []
@@ -712,35 +784,27 @@
         }
         // alert("Number of chains: "+chains.size);
         
-        const chainSelect = document.getElementById('chainSelect');
-        // chainSelect.innerHTML = ""; //Clear existing options
-        const chainArray = Array.from(chains); // Convert the set to an array for easier manipulation
-        chainArray.sort(); // Sort the chains in alphabetical order (optional)
-        for (const chain of chainArray) 
-        {
-            const option = document.createElement("option");
-            option.value = chain;
-            option.textContent = chain;
-            chainSelect.appendChild(option);
-        }
+        // const chainSelect = document.getElementById('chainSelect');
+        // const chainArray = Array.from(chains); // Convert the set to an array for easier manipulation
+        // chainArray.sort(); // Sort the chains in alphabetical order (optional)
+        // for (const chain of chainArray) 
+        // {
+        //     const option = document.createElement("option");
+        //     option.value = chain;
+        //     option.textContent = chain;
+        //     chainSelect.appendChild(option);
+        // }
         
-        chainSelect.addEventListener('change',  (event) => {
-            var selectedChain = chainSelect.value;
-            alert("selectedChain:"+selectedChain+"----"+typeof selectedChain);
-            // Clear previous styles before setting new style
-            // viewer.removeAllModels();
-            // viewer.addModel(pdbUrl, "pdb");
-            alert("viewer: "+viewer);
+        // chainSelect.addEventListener('change',  (event) => {
+        //     var selectedChain = chainSelect.value;
+        //     alert("selectedChain:"+selectedChain+"----"+typeof selectedChain);
+        //     alert("viewer: "+viewer);
             
-            if (selectedChain !== "") {
-                // let chain = { chain: selectedChain };
-                // let style = {cartoon: { color: "spectrum" } };
-                viewer.setStyle({chain: selectedChain}, {cartoon: { color: "pink" } });
-                // viewer.setStyle({chain: 'A'}, {cartoon: {colorfunc: colorVariantPosition1}});  
-                // viewer.setStyle({chain: 'B'}, {cartoon: {colorfunc: colorVariantPosition2}});  
-            }
-            viewer.render();
-        });
+        //     if (selectedChain !== "") {
+        //         viewer.setStyle({chain: selectedChain}, {cartoon: { color: "pink" } });
+        //     }
+        //     viewer.render();
+        // });
         
         let colorVariantPosition = function(atom, color1, color2) 
         {
