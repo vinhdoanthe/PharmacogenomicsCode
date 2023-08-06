@@ -243,16 +243,16 @@
 
 <script>
 	var tableToExcel = (function () {
-		var encabezado = '<html><head><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/><style> table, td {border:thin solid black} table {border-collapse:collapse}</style></head><body><table>';
+		var encabezado = '<table>';
 		var dataTable = document.getElementById('drugdata').innerHTML;
-		var piePagina = "</table></body></html>";
+		var piePagina = "</table>";
 		var tabla = encabezado + dataTable + piePagina;
 		var myBlob =  new Blob( [tabla] , {type:'text/html'});
 		var url = window.URL.createObjectURL(myBlob);
 		var a = document.createElement("a");
 		document.body.appendChild(a);
 		a.href = url;
-		a.download = "DrugBrowserData.xls";
+		a.download = "DrugBrowserData.xlsx";
 		a.click();
 
 		setTimeout(function() {window.URL.revokeObjectURL(url);},0);

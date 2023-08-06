@@ -179,52 +179,52 @@
                         <br/>
                     </div>
 
-                <div class="col-sm-12" id="gene-3d-chart" style="padding: 0px; margin-bottom: 30px;">
-                    {% include "_primary_seq.html" %}
-                    <div class="col-sm-3" style="padding: 0px;"> 
-                        <p style="font-size:16px; padding-left:0; margin-left:0; color:#337ab7;">3D structure:</p>
-                        <div id="filter_3d">
-                            <div id="filter_3d_source">
-                                <p>Source:</p>
-                                <select id="sourceSelect" name="sourceSelect">
-                                    <option value="pdb">PDB</option>
-                                    <option value="af2">AlphaFold2</option>
-                                </select>
-                            </div>
-                            <div id="filter_3d_color">
-                                <p>Color:</p>
-                                <select id="colorSelect" name="color">
-                                    <option value="spectrum" selected="selected">Spectrum</option>
-                                    <option value="grey">Grey</option>
-                                </select>
-                            </div>
-                            <div id="filter_3d_variant">
-                                <p>Variant:</p>
-                                <select id="visibilitySelect" name="variant">
-                                    <option value="hide">Hide</option>
-                                    <option value="show">Show</option>
-                                </select>
+                    <div class="col-sm-12" id="gene-3d-chart" style="padding: 0px; margin-bottom: 30px;">
+                        {% include "_primary_seq.html" %}
+                        <div class="col-sm-3" style="padding: 0px;">
+                            <p style="font-size:16px; padding-left:0; margin-left:0; color:#337ab7;">3D structure:</p>
+                            <div id="filter_3d">
+                                <div id="filter_3d_source">
+                                    <p>Source:</p>
+                                    <select id="sourceSelect" name="sourceSelect">
+                                        <option value="pdb">PDB</option>
+                                        <option value="af2">AlphaFold2</option>
+                                    </select>
+                                </div>
+                                <div id="filter_3d_color">
+                                    <p>Color:</p>
+                                    <select id="colorSelect" name="color">
+                                        <option value="spectrum" selected="selected">Spectrum</option>
+                                        <option value="grey">Grey</option>
+                                    </select>
+                                </div>
+                                <div id="filter_3d_variant">
+                                    <p>Variant:</p>
+                                    <select id="visibilitySelect" name="variant">
+                                        <option value="hide">Hide</option>
+                                        <option value="show">Show</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="structure_3D" class="col-sm-9" > 
-                        {% include '_3d_view.html' %}
-                    </div>
-                    
-                </div>
-                
-            </div>
-        </div>
-        <!-- The modal -->
-        <div class="modal fade" id="genebassModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content" id="genebass-variant-list">
-                    Data will be loaded here by jQuery
-                </div>
-            </div>
-        </div>
+                        <div id="structure_3D" class="col-sm-9" >
+                            {% include '_3d_view.html' %}
+                        </div>
 
+                    </div>
+
+                </div>
+            </div>
+            <!-- The modal -->
+            <div class="modal fade" id="genebassModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" id="genebass-variant-list">
+                        Data will be loaded here by jQuery
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endautoescape %}
 {% endblock content %}
 
@@ -240,7 +240,43 @@
     <script src='https://cdn.plot.ly/plotly-2.20.0.min.js'></script>
     <script src="https://code.jquery.com/jquery-migrate-1.4.1.min.js"></script>
 
+<script>
+	var tableToExcel = (function () {
+		var encabezado = '<html><head><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/><style> table, td {border:thin solid black} table {border-collapse:collapse}</style></head><body><table>';
 
+        var header_el = $('#headers')
+        var header_th_els = header_el.find('th')
+        var header = ''
+        for (var th_i = 0; th_i < header_th_els.length; th_i++) {
+            header += '<th>' + header_th_els[th_i].textContent + '</th>'
+        }
+        header = '<tr>' + header + '</tr>'
+        header = '<thead>' + header + '</thead>'
+        var excel_content = ''
+        // Lay toan bo data trong datatable, chi lay cac rows thoa man dieu kien filter
+        var rows = $('#structures_scrollable').DataTable().rows({search: 'applied'}).data()
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i]
+            excel_content += '<tr>'
+            for (var j = 0; j < row.length; j++) {
+                excel_content += '<td>' + row[j] + '</td>'
+            }
+            excel_content += '</tr>'
+        }
+
+		var piePagina = "</table></body></html>";
+		var tabla = encabezado + header + excel_content + piePagina;
+		var myBlob =  new Blob( [tabla] , {type:'application/vnd.ms-excel'});
+		var url = window.URL.createObjectURL(myBlob);
+		var a = document.createElement("a");
+		document.body.appendChild(a);
+		a.href = url;
+		a.download = "DrugBrowserData.xls";
+		a.click();
+
+		setTimeout(function() {window.URL.revokeObjectURL(url);},0);
+	});
+</script>
     <!-- Script for ploting the 2D gene viewer -->
     <script>
         let list_variants = [];
@@ -420,35 +456,35 @@
                     let filter_values = get_updated_filter_params();
                     redraw_chart_and_table(filter_values)
                 }
-                ));
-            })
-           // this function returns true if a variant, along with its transcript, consequence and vep score pass all the 4 filters
-           function condition_check(vep_score, transcript, variant, consequence, filter_values) {
-                let vep_score_check = true;
-                if ((filter_values.mean_vep_score_lower !== null || filter_values.mean_vep_score_upper !== null) &&
-                    (vep_score < filter_values.mean_vep_score_lower || vep_score > filter_values.mean_vep_score_upper)) {
-                    vep_score_check = false;
+            ));
+        })
+        // this function returns true if a variant, along with its transcript, consequence and vep score pass all the 4 filters
+        function condition_check(vep_score, transcript, variant, consequence, filter_values) {
+            let vep_score_check = true;
+            if ((filter_values.mean_vep_score_lower !== null || filter_values.mean_vep_score_upper !== null) &&
+                (vep_score < filter_values.mean_vep_score_lower || vep_score > filter_values.mean_vep_score_upper)) {
+                vep_score_check = false;
+            }
+            let variant_check = true;
+            if (filter_values.variant.length !== 0) {
+                if (filter_values.variant.indexOf(variant) === -1) {
+                    variant_check = false;
                 }
-                let variant_check = true;
-                if (filter_values.variant.length !== 0) {
-                    if (filter_values.variant.indexOf(variant) === -1) {
-                        variant_check = false;
-                    }
+            }
+            let consequence_check = true;
+            if (filter_values.consequence.length !== 0) {
+                const intersection = consequence.split(",").filter(element => filter_values.consequence.includes(element));
+                if (intersection.length === 0) {
+                    consequence_check = false;
                 }
-                let consequence_check = true;
-                if (filter_values.consequence.length !== 0) {
-                    const intersection = consequence.split(",").filter(element => filter_values.consequence.includes(element));
-                    if (intersection.length === 0) {
-                        consequence_check = false;
-                    }
+            }
+            let transcript_check = true;
+            if (filter_values.transcript.length !== 0) {
+                if (filter_values.transcript.indexOf(transcript) === -1) {
+                    transcript_check = false;
                 }
-                let transcript_check = true;
-                if (filter_values.transcript.length !== 0) {
-                    if (filter_values.transcript.indexOf(transcript) === -1) {
-                        transcript_check = false;
-                    }
-                }
-                return vep_score_check && variant_check && consequence_check && transcript_check;
+            }
+            return vep_score_check && variant_check && consequence_check && transcript_check;
         }
 
         // Get the filter values
@@ -458,7 +494,7 @@
             let transcript = $('#transcript-select').val();
             let variant = $('#variant-select').val();
             let consequence = $('#consequence-select').val();
-            
+
             return {
                 mean_vep_score_lower: mean_vep_score_lower,
                 mean_vep_score_upper: mean_vep_score_upper,
@@ -498,7 +534,7 @@
                 list_transcripts_options: list_transcripts_options,
                 list_variants_options: list_variants_options,
                 list_consequences_options: list_consequences_options,
-                
+
             };
         }
 
@@ -548,7 +584,7 @@
                 $trans.append(newOption);
             }
             $trans.change() // notify only Select2 of changes
-            
+
             // UPDATE_FILTER_PARAMS FOR VARIANT SELECT
             var $variants = $('#variant-select').select2();
             $variants.empty(); // remove old options
@@ -557,7 +593,7 @@
                 $variants.append(newOption);
             }
             $variants.change() // notify only Select2 of changes
-            
+
             // UPDATE_FILTER_PARAMS FOR CONSEQUENCE SELECT
             var $consequences = $('#consequence-select').select2();
             $consequences.empty(); // remove old options
@@ -575,13 +611,13 @@
 
         function redraw_2d_chart(filter_values) {
             redraw_data = get_filtered_data_for_redrawing_chart();
-            alert("redraw_2d_chart is called, redraw_data.variant_position.length = "+redraw_data.filtered_list_vep_variants_pos.length);
+            //alert("redraw_2d_chart is called, redraw_data.variant_position.length = "+redraw_data.filtered_list_vep_variants_pos.length);
             let variant = redraw_data.filtered_list_vep_variants_variant;
             let transcript = redraw_data.filtered_list_vep_variants_transcript;
             let variant_transcripts = variant.map((val, index) => `Variant: ${val}, in transcript: ${transcript[index]}`);
 
-            alert("variant length: "+ variant.length);
-            alert("transcript length: "+ transcript.length);
+            //alert("variant length: "+ variant.length);
+            //alert("transcript length: "+ transcript.length);
             let trace1 = {
                 x: redraw_data.filtered_list_vep_variants_pos,
                 y: redraw_data.filtered_list_vep_variants_mean_vep_score,
@@ -594,8 +630,8 @@
                 text: variant_transcripts.map((variant_transcript, index) => `${variant_transcript}`),
                 cliponaxis: false,
                 hovertemplate: '%{text}' +
-                '<br><span style="margin-top: 10px;">at position: %{x}</span>' +
-                '<br><span style="margin-top: 10px;">with mean VEP Score: %{y}</span><extra></extra>',
+                    '<br><span style="margin-top: 10px;">at position: %{x}</span>' +
+                    '<br><span style="margin-top: 10px;">with mean VEP Score: %{y}</span><extra></extra>',
 
             };
 
@@ -640,10 +676,10 @@
             Plotly.newPlot('gene-2d-chart', data, layout);
         }
 
-     
+
 
         function redraw_vep_variants_datatable(filter_values) {
-            alert("redraw_vep_variants_datatable is called, filter_values.variant.length = "+filter_values.variant.length);
+            //alert("redraw_vep_variants_datatable is called, filter_values.variant.length = "+filter_values.variant.length);
             let vep_variants_table = $("#structures_scrollable").DataTable();
             //filter by transcript
             let transcript_search_terms = []
@@ -773,7 +809,7 @@
         // let positionsToColor = [10, 25, 40, 80, 120, 129, 140, 160, 170, 200, 220];
         let positionsToColor = [...new Set(list_vep_variants_pos)];
         // alert("number of unique variant positions: "+ positionsToColor.length);
-        
+
         // Count the number of chains
         const chains = new Set();
         const atoms = viewer.getModel().selectedAtoms({});
@@ -783,7 +819,7 @@
             chains.add(atom.chain);
         }
         // alert("Number of chains: "+chains.size);
-        
+
         // const chainSelect = document.getElementById('chainSelect');
         // const chainArray = Array.from(chains); // Convert the set to an array for easier manipulation
         // chainArray.sort(); // Sort the chains in alphabetical order (optional)
@@ -794,36 +830,36 @@
         //     option.textContent = chain;
         //     chainSelect.appendChild(option);
         // }
-        
+
         // chainSelect.addEventListener('change',  (event) => {
         //     var selectedChain = chainSelect.value;
         //     alert("selectedChain:"+selectedChain+"----"+typeof selectedChain);
         //     alert("viewer: "+viewer);
-            
+
         //     if (selectedChain !== "") {
         //         viewer.setStyle({chain: selectedChain}, {cartoon: { color: "pink" } });
         //     }
         //     viewer.render();
         // });
-        
-        let colorVariantPosition = function(atom, color1, color2) 
+
+        let colorVariantPosition = function(atom, color1, color2)
         {
             // Check if the current residue position is in the list
             if (positionsToColor.includes(atom.resi)) {
-                return color1; 
+                return color1;
             } else {
-                return color2; 
+                return color2;
             }
         };
-       
+
         const visibilitySelect = document.getElementById('visibilitySelect');
         visibilitySelect.addEventListener('change',  (event) => {
             const selectedvisibility = event.target.value;
             if (selectedvisibility === 'hide') {
             } else {
                 // Highlight the specified residues using select and style functions
-                viewer.setStyle({chain: 'A'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'green')}});  
-                viewer.setStyle({chain: 'B'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'red')}});  
+                viewer.setStyle({chain: 'A'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'green')}});
+                viewer.setStyle({chain: 'B'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'red')}});
             }
             viewer.render();
         });
@@ -838,8 +874,8 @@
                 // Loop through the options and set the selected attribute on the appropriate option
                 for (const option of visibilitySelect.options) {
                     if (option.value === "hide") {
-                    option.selected = true;
-                    break;
+                        option.selected = true;
+                        break;
                     }
                 }
             }
@@ -855,7 +891,7 @@
                 alert("we choose af2");
             }
         });
-        </script>
+    </script>
 
-    
+
 {% endblock addon_js %}
