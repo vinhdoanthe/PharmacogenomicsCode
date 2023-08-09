@@ -181,32 +181,56 @@
 
                     <div class="col-sm-12" id="gene-3d-chart" style="padding: 0px; margin-bottom: 30px;">
                         {% include "_primary_seq.html" %}
-                        <div class="col-sm-3" style="padding: 0px;">
+                        <div class="col-sm-3" style="padding: 0px;"> 
                             <p style="font-size:16px; padding-left:0; margin-left:0; color:#337ab7;">3D structure:</p>
                             <div id="filter_3d">
-                                <div id="filter_3d_source">
-                                    <p>Source:</p>
-                                    <select id="sourceSelect" name="sourceSelect">
-                                        <option value="pdb">PDB</option>
-                                        <option value="af2">AlphaFold2</option>
-                                    </select>
+                                <div id="filter_3d_row1">
+                                    <div id="filter_3d_source">
+                                        <p>Source:</p>
+                                        <select id="sourceSelect" name="sourceSelect">
+                                            <option value="pdb">PDB</option>
+                                            <option value="af2">AlphaFold2</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div id="filter_3d_color">
-                                    <p>Color:</p>
-                                    <select id="colorSelect" name="color">
-                                        <option value="spectrum" selected="selected">Spectrum</option>
-                                        <option value="grey">Grey</option>
-                                    </select>
+                                <div id="filter_3d_row2">
+                                    <div id="filter_chain">
+                                        <p>Chain:</p>
+                                        <select id="chainSelect" name="chain">
+                                            <option value="all" selected="selected">All</option>
+                                            <!-- <option value="B">B</option> -->
+                                        </select>
+                                    </div>
+                                    <div id="filter_3d_color">
+                                        <p>Color:</p>
+                                        <select id="colorSelect" name="color">
+                                            <option value="spectrum" selected="selected">Spectrum</option>
+                                            <option value="grey">Grey</option>
+                                        </select>
+                                    </div>
+                                    <div id="filter_3d_source">
+                                        <p>2nd structure:</p>
+                                        <select id="secondStructSelect" name="secondStructSelect">
+                                            <option value="all" selected="selected">All</option>
+                                            <option value="a">Alpha-helix</option>
+                                            <option value="b">Beta-strand</option>
+                                            <option value="c">Coil</option>
+                                            <option value="l">Loop</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div id="filter_3d_variant">
-                                    <p>Variant:</p>
-                                    <select id="visibilitySelect" name="variant">
-                                        <option value="hide">Hide</option>
-                                        <option value="show">Show</option>
-                                    </select>
+                                <div id="filter_3d_row3">
+                                    <div id="filter_3d_variant">
+                                        <p>Variant:</p>
+                                        <select id="visibilitySelect" name="variant">
+                                            <option value="hide">Hide</option>
+                                            <option value="show">Show</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        
                         <div id="structure_3D" class="col-sm-9" >
                             {% include '_3d_view.html' %}
                         </div>
@@ -253,11 +277,11 @@
 
         function toggleVepScoreAlgorithms () {
             var table = $('#structures_scrollable').DataTable();
-            // var column_8 = table.column(8);
-            // var column_9 = table.column(9);
-            // var column_10 = table.column(10);
-            // var column_11 = table.column(11);
-            // var column_12 = table.column(12);
+            var column_8 = table.column(8);
+            var column_9 = table.column(9);
+            var column_10 = table.column(10);
+            var column_11 = table.column(11);
+            var column_12 = table.column(12);
             var column_13 = table.column(13);
             var column_14 = table.column(14);
             var column_15 = table.column(15);
@@ -294,11 +318,11 @@
             var column_46 = table.column(46);
             var column_47 = table.column(47);
 
-            // column_8.visible(!column_8.visible());
-            // column_9.visible(!column_9.visible());
-            // column_10.visible(!column_10.visible());
-            // column_11.visible(!column_11.visible());
-            // column_12.visible(!column_12.visible());
+            column_8.visible(!column_8.visible());
+            column_9.visible(!column_9.visible());
+            column_10.visible(!column_10.visible());
+            column_11.visible(!column_11.visible());
+            column_12.visible(!column_12.visible());
             column_13.visible(!column_13.visible());
             column_14.visible(!column_14.visible());
             column_15.visible(!column_15.visible());
@@ -912,60 +936,74 @@
     <!-- Script for filtering options of 3d-structure  -->
     <script>
         var structureDisplay = document.getElementById('structure_display');
-        // let positionsToColor = [10, 25, 40, 80, 120, 129, 140, 160, 170, 200, 220];
         let positionsToColor = [...new Set(list_vep_variants_pos)];
-        // alert("number of unique variant positions: "+ positionsToColor.length);
-
+        
         // Count the number of chains
         const chains = new Set();
         const atoms = viewer.getModel().selectedAtoms({});
-        // alert("number of atom: "+atoms.length);
         for (let i = 0; i < atoms.length; i++) {
             const atom = atoms[i];
             chains.add(atom.chain);
         }
-        // alert("Number of chains: "+chains.size);
-
-        // const chainSelect = document.getElementById('chainSelect');
-        // const chainArray = Array.from(chains); // Convert the set to an array for easier manipulation
-        // chainArray.sort(); // Sort the chains in alphabetical order (optional)
-        // for (const chain of chainArray) 
-        // {
-        //     const option = document.createElement("option");
-        //     option.value = chain;
-        //     option.textContent = chain;
-        //     chainSelect.appendChild(option);
-        // }
+        
+        const chainSelect = document.getElementById('chainSelect');
+        const chainArray = Array.from(chains); // Convert the set to an array for easier manipulation
+        chainArray.sort(); // Sort the chains in alphabetical order (optional)
+        for (const chain of chainArray) 
+        {
+            const option = document.createElement("option");
+            option.value = chain;
+            option.textContent = chain;
+            chainSelect.appendChild(option);
+        }
+        
+        chainSelect.addEventListener('change',  (event) => {
+            var selectedChain = chainSelect.value;
+            
+            if (selectedChain !== "") {
+                viewer.setStyle({chain: selectedChain}, {cartoon: { color: "pink" } });
+            }
+            viewer.render();
+        });
 
         // chainSelect.addEventListener('change',  (event) => {
         //     var selectedChain = chainSelect.value;
-        //     alert("selectedChain:"+selectedChain+"----"+typeof selectedChain);
-        //     alert("viewer: "+viewer);
+        //     var model = viewer.getModel();
+        //     alert("model: "+model);
+
+        //     // Clear all existing styles to reset the structure
+        //     viewer.removeAllModels();
+        //     viewer.addModel(model, "pdb");
 
         //     if (selectedChain !== "") {
+        //         // Set the style for the selected chain to pink
         //         viewer.setStyle({chain: selectedChain}, {cartoon: { color: "pink" } });
+        //     } else {
+        //         // If no chain is selected, show the whole structure
+        //         viewer.setStyle({}, {cartoon: {} });
         //     }
+            
         //     viewer.render();
         // });
 
-        let colorVariantPosition = function(atom, color1, color2)
+        
+        let colorVariantPosition = function(atom, color1, color2) 
         {
             // Check if the current residue position is in the list
             if (positionsToColor.includes(atom.resi)) {
-                return color1;
+                return color1; 
             } else {
-                return color2;
+                return color2; 
             }
         };
-
+       
         const visibilitySelect = document.getElementById('visibilitySelect');
         visibilitySelect.addEventListener('change',  (event) => {
             const selectedvisibility = event.target.value;
             if (selectedvisibility === 'hide') {
             } else {
-                // Highlight the specified residues using select and style functions
-                viewer.setStyle({chain: 'A'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'green')}});
-                viewer.setStyle({chain: 'B'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'red')}});
+                viewer.setStyle({chain: 'A'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'green')}});  
+                viewer.setStyle({chain: 'B'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'pink')}});  
             }
             viewer.render();
         });
@@ -977,11 +1015,10 @@
                 viewer.setStyle({}, {cartoon: {color: 'grey'}});
             } else {
                 viewer.setStyle({}, {cartoon: {color: 'spectrum'}});
-                // Loop through the options and set the selected attribute on the appropriate option
                 for (const option of visibilitySelect.options) {
                     if (option.value === "hide") {
-                        option.selected = true;
-                        break;
+                    option.selected = true;
+                    break;
                     }
                 }
             }
