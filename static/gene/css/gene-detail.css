@@ -171,14 +171,14 @@ table.dataTable.compact thead th.rightborder {
 }
 
 #structures_scrollable_table {
-    margin-top: 20px;
+    margin-top: 60px;
     max-width: 100%;
 
 }
 
-#structures_scrollable_table tr td.color5 {
+/* #structures_scrollable_table tr td.color5 {
     margin-right: 10px;
-}
+} */
 
 table {
     border-spacing: 10px;

@@ -48,7 +48,7 @@
                                 <th rowspan="2">Consequence</th>
                                 <!-- <th>Impact</th> -->
                                 <th rowspan="2">Mean <br> VEP scores</th>
-                                <th rowspan="2"><a id="show-all-vep-score" href="#">Show all VEP Scores</a> </th>
+                                <th rowspan="2"><a id="show-all-vep-score" href="#">Show all<br> VEP Scores</a> </th>
                                 <th colspan="40">VEP scores from different algorithms <a href="#" id="vep-score-algorithms">Hide all</a> </th>
                             </tr>
                             <tr>
@@ -127,7 +127,7 @@
                                     <td class="align-left">{{ value.2 }}</td>
                                     <!-- <td class="align-left">{{ value.8 }}</td> -->
                                     <td>{{ value|last }}</td>
-                                    <td>-</td>
+                                    <td><a href="#">Show variant's VEP statistics</a></td>
 
                                     {% render_variant_values_in_color_ranges value.36 %} <!-- Polyphen2 HDIV-->
                                     {% render_variant_values_in_color_ranges value.37 %} <!-- Polyphen2 HVAR-->
@@ -297,6 +297,14 @@
                 column.visible(false);
             }
             table.column(8).visible(true);
+            var vep_table_header_inner = document.querySelector("#structures_scrollable_wrapper .dataTables_scroll .dataTables_scrollHeadInner")
+            vep_table_header_inner.style.width = "100%";
+            
+            var vep_table_header_inner_table = vep_table_header_inner.querySelector(".dataTable")
+            vep_table_header_inner_table.style.width = "100%";
+
+            var vep_table_body = document.querySelector("#structures_scrollable_wrapper .dataTables_scroll .dataTables_scrollBody .dataTable");
+            vep_table_body.style.width = "100%";
         }
 
         function showAllVepScoreColumns() {
