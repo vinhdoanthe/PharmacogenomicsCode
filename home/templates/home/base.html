@@ -9,7 +9,6 @@
     <title>{{ site_title }}</title>
 
     <!-- SEO for multiple domains -->
-    {% comment %} <link rel="canonical" href="{{ canonical_tag }}" /> {% endcomment %}
     <!-- Bootstrap -->
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'bootstrap/css/bootstrap-submenu.min.css' %}" rel="stylesheet">
@@ -24,25 +23,10 @@
     <link href="{% static 'home/css/inforgraphics.css' %}" rel="stylesheet">
     <!-- flowplayer skin -->
     <link href="{% static 'flowplayer/flowplayer.css' %}" rel="stylesheet">
-    <!-- Comply with GDPR Minified Cookie Consent from https://github.com/osano/cookieconsent -->
-    {% comment %} <link href="{% static 'home/css/cookieconsent.min.css' %}" rel="stylesheet"> {% endcomment %}
     <!-- Additional CSS -->
     {% block addon_css %}
     {% endblock addon_css %}
 
-
-    {% comment %} {% if google_analytics %}
-      {% with 'home/ga_'|add:current_site|add:'.html' as ga_template %}
-        {% include ga_template %}
-      {% endwith %}
-    {% endif %} {% endcomment %}
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 <body>
 {% include 'home/mainmenu.html' %}
@@ -83,83 +67,7 @@
 <script src="{% static 'home/js/gpcrdb.js' %}"></script>
 <script src="{% static 'home/js/cookieconsent.min.js' %}"></script>
 
-{% comment %}
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('[data-submenu]').submenupicker();
 
-        // Enable hover open/close on parent menu items in navbar
-        $('.navbar .dropdown').hover(function() {
-          $(this).find('.dropdown-menu').first().stop(true, true).delay(250).slideDown();
-        }, function() {
-          $(this).find('.dropdown-menu').first().stop(true, true).delay(100).slideUp();
-        });
-
-        // Enable click on parent menu items in navbar
-        $('.navbar .dropdown > a').click(function(){
-          location.href = this.href;
-        });
-    });
-</script>
-{% endcomment %}
-{% comment %} <script>
-    $('.videoLink').click(function (e) {
-        e.preventDefault();
-
-        $("#fp-modal").remove();
-        $("body").append("<div id=\"fp-modal\"></div>");
-
-        mp4 = $(this).attr('mp4');
-        flowplayer("#fp-modal", {
-            // ratio: 9/16,
-            // overlay plugin using bootstrap modal vendor
-            overlay: {
-                trigger: "#fp-modal",
-                vendor: "bootstrap",
-                title: mp4,
-                size: "lg"
-            },
-            clip: {
-                sources: [{
-                    type: "video/mp4",
-                    src: mp4
-                }]
-            }
-        });
-        $("#fp-modal").click();
-    });
-
-    $('.refLink').click(function (e) {
-        e.preventDefault();
-        url = $(this).attr('url');
-        window.open(url);
-    });
-
-    $('.refLink').tooltip();
-</script> {% endcomment %}
-
-<!-- Include custom ajax functions -->
-{% comment %} {% block addon_js %}{% endblock %} {% endcomment %}
-
-<!-- GDPR Banner Customize -->
-{% comment %} <script>
-    window.cookieconsent.initialise({
-        palette: {
-            popup: {
-                background: "#edeff5",
-                text: "#838391"
-            },
-            button: {
-                background: "#4b81e8"
-            },
-        },
-        content: {
-            href: "https://docs.gpcrdb.org/legal_notice.html"
-        }
-    });
-</script> {% endcomment %}
-
-<!-- Additional Script -->
 
 <!-- Additional JS -->
 {% block addon_js %}

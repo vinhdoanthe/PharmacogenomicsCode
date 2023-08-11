@@ -11,6 +11,7 @@ class Protein(models.Model):
     protein_name = models.TextField()  # long string values
     sequence = models.TextField(null=True)
     af_pdb = models.TextField(null=True)
+    Protein_class = models.TextField(null=True)
 
     def __str__(self):
         return "Protein with UniProt ID: " + self.uniprot_ID + " and genename: " + self.genename

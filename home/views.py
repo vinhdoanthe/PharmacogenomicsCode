@@ -31,3 +31,9 @@ class Home(TemplateView):
     template_name = 'index_pharmcodb.html'
     context = {}
 
+
+
+def drug_target_network(request):
+    context = {'message': 'Hello from drug_and_target_network.html page!'}
+    return render(request, 'home/drug_and_target_network.html', context)
+    # return render(request, 'home/drug_and_target_network copy.html', context)

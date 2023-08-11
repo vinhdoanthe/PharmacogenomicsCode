@@ -165,6 +165,8 @@ class Drug(models.Model):
     pubChemSubstance = models.ForeignKey(
         "drug.drugpubchemsubstance", on_delete=models.CASCADE)
     
+    Clinical_status = models.IntegerField(null=True)
+    
 
 
     # def __str__(self):
