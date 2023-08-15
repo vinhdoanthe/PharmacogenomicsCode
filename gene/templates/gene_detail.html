@@ -111,7 +111,7 @@
                             </thead>
                             <tbody id='structures_scrollable_body'>
                             {% for value in array %}
-                                <tr>
+                                <tr class="data-row">
                                     <td class="align-left"><a href="#" class="variants-table-row"
                                                               data-remote-url="{% url 'variant:get-genebass-tables' %}"
                                                               data-variant-marker="{{ value.0 }}" data-toggle="modal"
@@ -855,6 +855,35 @@
                     }
                 )
             })
+
+            $('.data-row').click( function (e) {
+                // XU LY CLICK VAO LINK VARIANT STATISTIC THI HANDLE SU KIEN
+                if ($(e.target).attr('class').includes('variant_statistic')) {
+                    console.log("we will call draw_variant_plot_modal");
+                    //alert("a link is clicked");
+                    e.preventDefault();
+                    let variant_marker = $(this).data('variant-marker');
+                    let url = $(this).data('remote-url');
+                    //alert("url = "+url);
+                    $("#variantPlots").html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> The plot will be shown...')
+
+                    $.ajax(
+                        {
+                            url: url,
+                            type: "GET",
+                            data: {
+                                'variant_marker': variant_marker,
+                            },
+                            success: function (response) {
+                                $("#genebass-variant-list").html(response)
+                                console.log("response : "+response)
+                                draw_variant_plot_modal()
+                            }
+                        }
+                    )
+
+                }
+            })
         })
 
         function redraw_genebass_modal() {
@@ -903,30 +932,7 @@
     <!-- take data from server for drawing variant statistics plots -->
     <script>
         $(document).ready(function () {
-            $('.variant_statistics').click(function (e) {
-                console.log("we will call draw_variant_plot_modal");
-                alert("a link is clicked");
-                e.preventDefault();
-                let variant_marker = $(this).data('variant-marker');
-                let url = $(this).data('remote-url');
-                alert("url = "+url);
-                $("#variantPlots").html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> The plot will be shown...')
 
-                $.ajax(
-                    {
-                        url: url,
-                        type: "GET",
-                        data: {
-                            'variant_marker': variant_marker,
-                        },
-                        success: function (response) {
-                            $("#genebass-variant-list").html(response)
-                            console.log("response : "+response)
-                            draw_variant_plot_modal()
-                        }
-                    }
-                )
-            })
         })
 
         function draw_variant_plot_modal() {
