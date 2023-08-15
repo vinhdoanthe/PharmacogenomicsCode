@@ -77,6 +77,7 @@ def get_variant_vep_scores_and_plot(request):
     )
 
     vep_scores_data = {
+        # DA FIX DE CHAY DUOC VAO DAY. NHUNG HAM DUOI DANG KHONG DUNG, CHUA RO CAN DATA NTN DE VE BOX PLOT
         "x": list(list_vep_scores.keys()),
         "y": [list(scores) for scores in list_vep_scores.values()],
         "type": "box",
