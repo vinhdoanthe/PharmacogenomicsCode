@@ -1,0 +1,15 @@
+<div id="plotly-plot"></div>
+<script>
+    var vep_scores_data = JSON.parse('{{ vep_scores_data | safe }}');
+    alert("we are here")
+    var layout = {
+        title: "Box Plot of Variant Scores",
+        xaxis: {
+            title: "Score Type",
+        },
+        yaxis: {
+            title: "Score",
+        },
+    };
+    Plotly.newPlot("plotly-plot", [vep_scores_data], layout);
+</script>

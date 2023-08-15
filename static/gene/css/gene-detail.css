@@ -240,3 +240,8 @@ td.align-left {
   min-height: 100%;
   border-radius: 0;
 }
+
+a.variant_statistics {
+    color: #eb9d09;
+    /* color: #FFE169; */
+}

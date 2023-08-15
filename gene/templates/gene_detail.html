@@ -127,7 +127,11 @@
                                     <td class="align-left">{{ value.2 }}</td>
                                     <!-- <td class="align-left">{{ value.8 }}</td> -->
                                     <td>{{ value|last }}</td>
-                                    <td><a href="#">Show variant's VEP statistics</a></td>
+                                    <td><a href="#" class="variant_statistics"
+                                                    data-remote-url="{% url 'variant:get-plots' %}"
+                                                    data-variant-marker="{{ value.0 }}" data-toggle="modal"
+                                                    data-target="#variantPlots">Show variant's VEP statistics</a></td>
+                                        
 
                                     {% render_variant_values_in_color_ranges value.36 %} <!-- Polyphen2 HDIV-->
                                     {% render_variant_values_in_color_ranges value.37 %} <!-- Polyphen2 HVAR-->
@@ -241,7 +245,7 @@
 
                 </div>
             </div>
-            <!-- The modal -->
+            <!-- The genebass modal -->
             <div class="modal fade" id="genebassModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -250,6 +254,17 @@
                     </div>
                 </div>
             </div>
+
+            <!-- The variant plots modal -->
+            <div class="modal fade" id="variantPlots" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" id="variantPlots_content">
+                        Variant statistics plots will be shown 1
+                    </div>
+                </div>
+            </div>
+
         </div>
     {% endautoescape %}
 {% endblock content %}
@@ -814,9 +829,11 @@
 
     </script>
 
+    <!-- take data from server for drawing genebass modal  -->
     <script>
         $(document).ready(function () {
             $('.variants-table-row').click(function (e) {
+                alert("variants-table-row is clicked");
                 e.preventDefault();
                 let variant_marker = $(this).data('variant-marker');
                 let url = $(this).data('remote-url');
@@ -883,6 +900,52 @@
         }
     </script>
 
+    <!-- take data from server for drawing variant statistics plots -->
+    <script>
+        $(document).ready(function () {
+            $('.variant_statistics').click(function (e) {
+                console.log("we will call draw_variant_plot_modal");
+                alert("a link is clicked");
+                e.preventDefault();
+                let variant_marker = $(this).data('variant-marker');
+                let url = $(this).data('remote-url');
+                alert("url = "+url);
+                $("#variantPlots").html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> The plot will be shown...')
+
+                $.ajax(
+                    {
+                        url: url,
+                        type: "GET",
+                        data: {
+                            'variant_marker': variant_marker,
+                        },
+                        success: function (response) {
+                            $("#genebass-variant-list").html(response)
+                            console.log("response : "+response)
+                            draw_variant_plot_modal()
+                        }
+                    }
+                )
+            })
+        })
+
+        function draw_variant_plot_modal() {
+            alert("we are inside draw_variant_plot_modal")
+            let plot_area = $("#variantPlots_content")
+            var vep_scores_data = JSON.parse('{{ vep_scores_data | safe }}');
+            var layout = {
+                title: "Box Plot of Variant Scores",
+                xaxis: {
+                    title: "Score Type",
+                },
+                yaxis: {
+                    title: "Score",
+                },
+            };
+            Plotly.newPlot("plotly-plot", [vep_scores_data], layout);
+        }
+    </script>
+
     <!-- Script for filtering options of 3d-structure  -->
     <script>
         var structureDisplay = document.getElementById('structure_display');
@@ -915,26 +978,6 @@
             }
             viewer.render();
         });
-
-        // chainSelect.addEventListener('change',  (event) => {
-        //     var selectedChain = chainSelect.value;
-        //     var model = viewer.getModel();
-        //     alert("model: "+model);
-
-        //     // Clear all existing styles to reset the structure
-        //     viewer.removeAllModels();
-        //     viewer.addModel(model, "pdb");
-
-        //     if (selectedChain !== "") {
-        //         // Set the style for the selected chain to pink
-        //         viewer.setStyle({chain: selectedChain}, {cartoon: { color: "pink" } });
-        //     } else {
-        //         // If no chain is selected, show the whole structure
-        //         viewer.setStyle({}, {cartoon: {} });
-        //     }
-            
-        //     viewer.render();
-        // });
 
         
         let colorVariantPosition = function(atom, color1, color2) 
