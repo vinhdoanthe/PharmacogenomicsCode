@@ -234,6 +234,15 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div id="filter_3d_row3">
+                                    <div id="filter_3d_resi_label">
+                                        <p>Residue label:</p>
+                                        <select id="resiLabelSelect" name="resiLabel">
+                                            <option value="hide">Hide</option>
+                                            <option value="show">Show</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
@@ -980,7 +989,8 @@
             var selectedChain = chainSelect.value;
             
             if (selectedChain !== "") {
-                viewer.setStyle({chain: selectedChain}, {cartoon: { color: "pink" } });
+                viewer.setStyle({}, {cartoon: {color:'grey', opacity:0.5}});
+                viewer.addStyle({chain: selectedChain}, {cartoon: {color:'spectrum' , opacity:1}});
             }
             viewer.render();
         });
@@ -1000,12 +1010,17 @@
         visibilitySelect.addEventListener('change',  (event) => {
             const selectedvisibility = event.target.value;
             if (selectedvisibility === 'hide') {
+                alert("hide is chosen");
+                viewer.setStyle({}, {cartoon: { color: "spectrum" } });
             } else {
+                alert("show is chosen");
                 viewer.setStyle({chain: 'A'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'green')}});  
                 viewer.setStyle({chain: 'B'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'pink')}});  
             }
             viewer.render();
         });
+
+        
 
         var colorSelect = document.getElementById('colorSelect');
         colorSelect.addEventListener('change',  (event) => {
