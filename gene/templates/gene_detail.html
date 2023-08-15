@@ -858,13 +858,13 @@
 
             $('.data-row').click( function (e) {
                 // XU LY CLICK VAO LINK VARIANT STATISTIC THI HANDLE SU KIEN
-                if ($(e.target).attr('class').includes('variant_statistic')) {
+                if ($(e.target).attr('class').includes('variant_statistics')) {
                     console.log("we will call draw_variant_plot_modal");
-                    //alert("a link is clicked");
                     e.preventDefault();
-                    let variant_marker = $(this).data('variant-marker');
-                    let url = $(this).data('remote-url');
-                    //alert("url = "+url);
+                    let variant_marker = $(e.target).data('variant-marker');
+                    let url = $(e.target).data('remote-url');
+                    console.log("variant_marker : "+variant_marker)
+                    console.log("url : "+url)
                     $("#variantPlots").html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> The plot will be shown...')
 
                     $.ajax(
@@ -885,7 +885,21 @@
                 }
             })
         })
-
+        function draw_variant_plot_modal() {
+            //alert("we are inside draw_variant_plot_modal")
+            let plot_area = $("#variantPlots_content")
+            var vep_scores_data = JSON.parse('{{ vep_scores_data | safe }}');
+            var layout = {
+                title: "Box Plot of Variant Scores",
+                xaxis: {
+                    title: "Score Type",
+                },
+                yaxis: {
+                    title: "Score",
+                },
+            };
+            Plotly.newPlot("plotly-plot", [vep_scores_data], layout);
+        }
         function redraw_genebass_modal() {
             let genebass_table = $("#genebass-tables")
             genebass_table.show()
@@ -929,28 +943,6 @@
         }
     </script>
 
-    <!-- take data from server for drawing variant statistics plots -->
-    <script>
-        $(document).ready(function () {
-
-        })
-
-        function draw_variant_plot_modal() {
-            alert("we are inside draw_variant_plot_modal")
-            let plot_area = $("#variantPlots_content")
-            var vep_scores_data = JSON.parse('{{ vep_scores_data | safe }}');
-            var layout = {
-                title: "Box Plot of Variant Scores",
-                xaxis: {
-                    title: "Score Type",
-                },
-                yaxis: {
-                    title: "Score",
-                },
-            };
-            Plotly.newPlot("plotly-plot", [vep_scores_data], layout);
-        }
-    </script>
 
     <!-- Script for filtering options of 3d-structure  -->
     <script>
