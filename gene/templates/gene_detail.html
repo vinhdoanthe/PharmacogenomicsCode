@@ -233,13 +233,20 @@
                                             <option value="show">Show</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div id="filter_3d_row3">
                                     <div id="filter_3d_resi_label">
                                         <p>Residue label:</p>
                                         <select id="resiLabelSelect" name="resiLabel">
                                             <option value="hide">Hide</option>
                                             <option value="show">Show</option>
+                                        </select>
+                                    </div>
+                                    <div id="filter_3d_style">
+                                        <p>Style:</p>
+                                        <select id="styleSelect" name="styleSelect">
+                                            <option value="cartoon">Cartoon</option>
+                                            <option value="label">Label</option>
+                                            <option value="stick">Stick</option>
+                                            <option value="line">Line</option>
                                         </select>
                                     </div>
                                 </div>
@@ -952,11 +959,16 @@
         }
     </script>
 
+    
+
 
     <!-- Script for filtering options of 3d-structure  -->
     <script>
         var structureDisplay = document.getElementById('structure_display');
         let positionsToColor = [...new Set(list_vep_variants_pos)];
+        // alert("positionsToColor : "+positionsToColor);
+
+        viewer_bkup = viewer;
         
         // Count the number of chains
         const chains = new Set();
@@ -998,20 +1010,39 @@
             }
         };
        
+        const resiLabelSelect = document.getElementById('resiLabelSelect');
+        let toremoveLabel = null;
+        resiLabelSelect.addEventListener('change',  (event) => {
+            const selectedResiVisibility = event.target.value;
+            if (selectedResiVisibility === 'hide') {
+                if (toremoveLabel!= null){
+                    alert("toremoveLabel = "+toremoveLabel.length);
+                    viewer.removeLabel(toremoveLabel);
+                    toremoveLabel = null;
+                }
+            } else {
+                alert("toremoveLabel = "+toremoveLabel);
+                toremoveLabel = viewer.addResLabels({hetflag:false}, {font: 'Arial', fontSize: 6,  fontColor:'black',showBackground:false, screenOffset: {x:0,y:0}});
+            }
+            viewer.render();
+        });
+        
         const visibilitySelect = document.getElementById('visibilitySelect');
         visibilitySelect.addEventListener('change',  (event) => {
             const selectedvisibility = event.target.value;
             if (selectedvisibility === 'hide') {
-                alert("hide is chosen");
+                alert("hiding variant is chosen");
                 viewer.setStyle({}, {cartoon: { color: "spectrum" } });
             } else {
-                alert("show is chosen");
-                viewer.setStyle({chain: 'A'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'green')}});  
-                viewer.setStyle({chain: 'B'}, {cartoon: {colorfunc: colorVariantPosition.bind(null, 'white', 'pink')}});  
+                alert("showing variant is chosen");
+                viewer.setStyle({}, {cartoon: {color:'grey', thickness:0.5}});  
+                // viewer.setStyle({resi: positionsToColor}, {cartoon: {color:'green', thickness:1.0}});  
+                // viewer.addStyle({resi: positionsToColor}, {stick: {colorscheme:'greenCarbon'}});  
+                // viewer.addStyle({resi: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]}, {stick: {colorscheme:'greenCarbon'}});  
+                viewer.addStyle({resi: [5, 10, 15, 20, 25, 30, 35, 40]}, {stick: {colorscheme:'greenCarbon'}});  
             }
             viewer.render();
         });
-
         
 
         var colorSelect = document.getElementById('colorSelect');
@@ -1041,6 +1072,44 @@
             }
         });
     </script>
+
+<script>
+
+    // Add a label for a specific residue at position "nth"
+    function addLabelForResidueNth(nth, labelText, labelOptions) {
+        const labels = viewer.addResLabels({ resi: nth }, labelOptions);
+        return labels;
+    }
+
+    
+    $(document).ready(function () {
+        // Get all the color-coded text spans within the DOM
+        const colorCodedSpans = document.querySelectorAll('.color-coded-text');
+
+        let chunkSize = 10;
+
+        // Iterate over the color-coded text spans
+        colorCodedSpans.forEach((span, index) => {
+            // Calculate the absolute position of the character
+            const absolutePosition = index+1;
+
+            // Add a data attribute to the span to store the absolute position
+            span.setAttribute("data-absolutePosition", absolutePosition);
+
+        });
+        
+        $("a span.color-coded-text").on("click", function(e){
+            let position = e.target.dataset.absoluteposition;
+            let labelText = e.target.textContent;
+            alert(position +" "+labelText);
+
+            // addLabelForResidueNth(position, labelText, "residue");
+
+        }
+    );
+
+    });
+</script>
 
 
 {% endblock addon_js %}

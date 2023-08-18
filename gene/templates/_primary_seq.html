@@ -11,33 +11,6 @@
     <!-- https://help.geneiousbiologics.com/hc/en-us/articles/360045069451-Customizing-the-Color-Scheme-of-Nucleotide-and-Amino-acid-Sequences -->
     
     {% for d in chunks %}
-            <!-- <div  style="text-align: right; width: 155px; margin-right: 4px; background-color: bisque; margin-bottom: 4px;">
-            
-                <span style="margin-right: 5px;font-size: 10px;">{{ d.position }}</span> <br>
-                <div class="amino_acid_chunk" style="display: flex; align-items: center;
-                justify-content: space-between; margin: 0 7px;">
-                        {% for a in d.chunk %}
-                            {% if a in "GAVLIFWMP" %}
-                                <div><a href=""><span class="yellow color-coded-text">{{a}}</span></a></div>
-                            {% else %}
-                                {% if a in "STCYNQ" %}
-                                <div><a href=""><span class="green color-coded-text">{{a}}</span></a></div>
-                                {% else %}
-                                    {% if a in "DE" %}
-                                    <div><a href=""><span class="red color-coded-text">{{a}}</span></a></div>
-                                    {% else %}
-                                        {% if a in "KHR" %}
-                                        <div><a href=""><span class="blue color-coded-text">{{a}}</span></a></div>
-                                        {% else %}
-                                        <div><a href=""><span class="color-coded-text">{{a}}</span></a></div>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                </div>
-            </div> -->
-
         <div
             {% if not forloop.last %}
                 style="text-align: right; width: 155px; margin-right: 4px; background-color: bisque; margin-bottom: 4px;"
