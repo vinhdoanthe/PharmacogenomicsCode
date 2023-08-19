@@ -1,8 +1,9 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render
 import numpy as np
 import json
+import math
 
 from .models import (
     GenebassVariant,
@@ -74,23 +75,21 @@ def get_variant_vep_scores_and_plot(request):
                     "PhastCons30way_mammalian_rankscore",
                     "PhyloP30way_mammalian_rankscore",
                     "LINSIGHT_rankscore",
+    ).first()
+
+    if list_vep_scores:
+        list_vep_scores = list(list_vep_scores.values())
+    else:
+        list_vep_scores = []
+
+    # Remove NaN values
+    list_vep_scores = list(filter(lambda value: not math.isnan(value), list_vep_scores))
+
+    return JsonResponse(
+        {
+            "list_vep_scores": list_vep_scores,
+        }
     )
-
-    vep_scores_data = {
-        # DA FIX DE CHAY DUOC VAO DAY. NHUNG HAM DUOI DANG KHONG DUNG, CHUA RO CAN DATA NTN DE VE BOX PLOT
-        "x": list(list_vep_scores.keys()),
-        "y": [list(scores) for scores in list_vep_scores.values()],
-        "type": "box",
-        "name": "Variant Scores",
-    }
-
-    context = {
-        "vep_scores_data": json.dumps(vep_scores_data),
-    }
-
-    return render(request, "variant_plot.html", context)
-
-
 
 
 def get_genebass_tables(request):

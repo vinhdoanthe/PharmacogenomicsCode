@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="{% static 'gene/css/gene-detail.css' %}" type="text/css"/>
 {% endblock addon_css %}
 
-
 {% block content %}
     {% autoescape off %}
         <div class="row">
@@ -879,10 +878,7 @@
                     e.preventDefault();
                     let variant_marker = $(e.target).data('variant-marker');
                     let url = $(e.target).data('remote-url');
-                    console.log("variant_marker : "+variant_marker)
-                    console.log("url : "+url)
-                    $("#variantPlots").html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> The plot will be shown...')
-
+                    $("#variantPlots_content").html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> The plot will be shown...')
                     $.ajax(
                         {
                             url: url,
@@ -891,30 +887,46 @@
                                 'variant_marker': variant_marker,
                             },
                             success: function (response) {
-                                $("#genebass-variant-list").html(response)
-                                console.log("response : "+response)
-                                draw_variant_plot_modal()
-                            }
+                                draw_variant_plot_modal(response)
+                            },
+                            error: function (response) {
+                                console.log(response)
+                            },
                         }
-                    )
-
+                    ) 
                 }
             })
         })
-        function draw_variant_plot_modal() {
-            //alert("we are inside draw_variant_plot_modal")
-            let plot_area = $("#variantPlots_content")
-            var vep_scores_data = JSON.parse('{{ vep_scores_data | safe }}');
+        function draw_variant_plot_modal(response) {
+            $('#variantPlots_content').html('');  // clear data
+            var data = [{
+                type: 'violin',
+                // y: unpack(rows, 'total_bill'),
+                y: response.list_vep_scores,
+                points: 'none',
+                box: {
+                    visible: true
+                },
+                boxpoints: false,
+                line: {
+                    color: 'black'
+                },
+                fillcolor: '#8dd3c7',
+                opacity: 0.6,
+                meanline: {
+                    visible: true
+                },
+                x0: "Total Bill"
+            }]
+        
             var layout = {
-                title: "Box Plot of Variant Scores",
-                xaxis: {
-                    title: "Score Type",
-                },
+                title: "",
                 yaxis: {
-                    title: "Score",
-                },
-            };
-            Plotly.newPlot("plotly-plot", [vep_scores_data], layout);
+                    zeroline: false
+                }
+            }
+        
+            Plotly.newPlot('variantPlots_content', data, layout);
         }
         function redraw_genebass_modal() {
             let genebass_table = $("#genebass-tables")
@@ -958,9 +970,6 @@
             });
         }
     </script>
-
-    
-
 
     <!-- Script for filtering options of 3d-structure  -->
     <script>
