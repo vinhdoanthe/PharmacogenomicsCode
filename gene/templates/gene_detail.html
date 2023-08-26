@@ -1108,6 +1108,7 @@
         });
         
         $("a span.color-coded-text").on("click", function(e){
+            e.preventDefault();
             let position = e.target.dataset.absoluteposition;
             let labelText = e.target.textContent;
             alert(position +" "+labelText);
