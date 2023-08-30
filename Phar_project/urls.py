@@ -27,4 +27,5 @@ urlpatterns = [
     path("", include("gene.urls")),
     path("", include("sitesearch.urls")),
     path("", include("variant.urls")),
+    path("api/", include("api.urls")),
 ]
