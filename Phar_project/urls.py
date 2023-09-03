@@ -28,4 +28,6 @@ urlpatterns = [
     path("", include("sitesearch.urls")),
     path("", include("variant.urls")),
     path("api/", include("api.urls")),
+    path('api-auth/', include('rest_framework.urls')),
+    path("rest-api/", include("restapi.urls")),
 ]

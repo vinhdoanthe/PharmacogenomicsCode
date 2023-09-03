@@ -28,3 +28,9 @@ All APIs are developed in `api` app.
 
 #### Example
 `GET /api/v1/gene/{gene_id}/` to get gene information
+
+#### DRF (Django Rest Framework)
+* Install (pip install -r requirements.txt)
+* Add urls to /restapi/urls.py
+* Add views to /restapi/views.py
+* [DRF browsable API](https://www.django-rest-framework.org/topics/browsable-api/)
