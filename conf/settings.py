@@ -76,7 +76,7 @@ if DEBUG:
         'livereload.middleware.LiveReloadScript',
     ]
 
-ROOT_URLCONF = "Phar_project.urls"
+ROOT_URLCONF = "conf.urls"
 
 TEMPLATES = [
     {

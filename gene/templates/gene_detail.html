@@ -289,7 +289,7 @@
     <script src="{% static 'home/js/bootstrap2-toggle.min.js' %}"></script>
     <script src="{% static 'home/js/jquery.dataTables.yadcf.js' %}"></script>
     <script src="{% static 'home/js/dataTables.buttons.min.js' %}"></script>
-    <script src="{% static 'home/js/select2.js' %}"></script>
+    <script src="{% static 'home/js/select2.full.js' %}"></script>
     <script src="{% static 'home/js/grayscale.js' %}"></script>
     <script src="{% static 'home/js/gpcrdb.js' %}"></script>
     <script src="{% static 'home/js/signprot-multitabtable.js' %}"></script>
@@ -820,8 +820,6 @@
             Plotly.newPlot('gene-2d-chart', data, layout);
         }
 
-
-
         function redraw_vep_variants_datatable(filter_values) {
             let vep_variants_table = $("#structures_scrollable").DataTable();
             //filter by transcript
@@ -987,11 +985,22 @@
             let column_filters = [];
 
             // Phenocode
-            column_filters = column_filters.concat(createYADCFfilters(3, 1, "multi_select", "select2", "Select", false, null, null));
+            //column_filters = column_filters.concat(createYADCFfilters(3, 1, "multi_select", "select2", "Select", false, null, null));
 
-            yadcf.init(genebass_variant_table.draw(), column_filters, {
+            yadcf.init(
+                genebass_variant_table, 
+                //column_filters, 
+                [
+                    {
+                        column_number: 3,
+                        filter_type: "multi_select",
+                        select_type: "select2",
+                    },
+                ],
+                {
                 cumulative_filtering: false
-            });
+                } 
+            );
 
             gray_scale_table(genebass_table);
 

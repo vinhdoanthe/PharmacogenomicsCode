@@ -103,3 +103,7 @@ venv
 
 # VS Code files
 .vscode/
+
+.idea
+
+.ipynb_checkpoints
