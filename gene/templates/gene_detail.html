@@ -37,15 +37,12 @@
                             <tr class="table-filter-dropdown">
                                 <th rowspan="2" style="text-align: left">Variant</th>
                                 <th rowspan="2">Transcript</th>
-                                <!-- <th>cDNA_</br>position</th>
-                                <th>CDS_</br>position</th> -->
+                                <th rowspan="2">Primary</th>
                                 <th rowspan="2">Sequence<br>position</th>
                                 <th rowspan="2">Wildtype AA</th>
                                 <th rowspan="2">Mutant AA</th>
                                 <th rowspan="2">Codons</th>
-                                <!-- <th>Strand</th> -->
                                 <th rowspan="2">Consequence</th>
-                                <!-- <th>Impact</th> -->
                                 <th rowspan="2">Mean <br> VEP scores</th>
                                 <th rowspan="2"><a id="show-all-vep-score" href="#">Show all<br> VEP Scores</a> </th>
                                 <th colspan="40">VEP scores from different algorithms <a href="#" id="vep-score-algorithms">Hide all</a> </th>
@@ -89,13 +86,9 @@
                                 <th>Mutation</br>Taster_</br>converted</th>
 
                                 <th>PROVEAN_</br>converted</th>
-                                <!-- <th>Polyphen2_</br>HDIV</th>
-                                <th>Polyphen2_</br>HVAR</th> -->
                                 <th>PrimateAI</th>
                                 <th>REVEL</th>
 
-                                <!-- <th>SIFT4G_</br>converted</th>
-                                <th>SIFT_</br>converted</th> -->
                                 <th>SiPhy_</br>29way_</br>logOdds</th>
                                 <th>VEST4</th>
                                 <th>bStatistic</br>converted</th>
@@ -116,15 +109,12 @@
                                                               data-variant-marker="{{ value.0 }}" data-toggle="modal"
                                                               data-target="#genebassModal">{{ value.0 }}</a></td>
                                     <td class="align-left">{{ value.1 }}</td>
-                                    <!-- <td class="align-left">{{ value.3 }}</td>
-                                    <td class="align-left">{{ value.4 }}</td> -->
+                                    <td class="align-left">{{ value.51 }}</td>
                                     <td class="align-left">{{ value.5 }}</td>
                                     <td class="align-left">{{ value.6|slice:":1" }}</td>
                                     <td class="align-left">{{ value.6|slice:"2:3" }}</td>
                                     <td class="align-left">{{ value.7 }}</td>
-                                    <!-- <td class="align-left">{{ value.9 }}</td> -->
                                     <td class="align-left">{{ value.2 }}</td>
-                                    <!-- <td class="align-left">{{ value.8 }}</td> -->
                                     <td>{{ value|last }}</td>
                                     <td><a href="#" class="variant_statistics"
                                                     data-remote-url="{% url 'variant:get-plots' %}"
@@ -163,12 +153,8 @@
                                     {% render_variant_values_in_color_ranges value.33 %}
                                     {% render_variant_values_in_color_ranges value.34 %}
                                     {% render_variant_values_in_color_ranges value.35 %}
-                                    <!-- {% render_variant_values_in_color_ranges value.36 %}
-                                    {% render_variant_values_in_color_ranges value.37 %} -->
                                     {% render_variant_values_in_color_ranges value.38 %}
                                     {% render_variant_values_in_color_ranges value.39 %}
-                                    <!-- {% render_variant_values_in_color_ranges value.40 %}
-                                    {% render_variant_values_in_color_ranges value.41 %} -->
                                     {% render_variant_values_in_color_ranges value.42 %}
                                     {% render_variant_values_in_color_ranges value.43 %}
                                     {% render_variant_values_in_color_ranges value.44 %}
@@ -289,7 +275,7 @@
     <script src="{% static 'home/js/bootstrap2-toggle.min.js' %}"></script>
     <script src="{% static 'home/js/jquery.dataTables.yadcf.js' %}"></script>
     <script src="{% static 'home/js/dataTables.buttons.min.js' %}"></script>
-    <script src="{% static 'home/js/select2.full.js' %}"></script>
+    <script src="{% static 'home/js/select2.js' %}"></script>
     <script src="{% static 'home/js/grayscale.js' %}"></script>
     <script src="{% static 'home/js/gpcrdb.js' %}"></script>
     <script src="{% static 'home/js/signprot-multitabtable.js' %}"></script>
@@ -573,6 +559,18 @@
                     [10, 25, 50, 100, 200, 'All'],
                 ],
             })
+
+            // update filters
+            yadcf.init(
+                oTable1,
+                [
+                    // Filter of Primary column
+                    {
+                        column_number: 2,
+                        filter_type: "select",
+                    },
+                ],
+            )
             oTable1.column(8).visible(false); // Hide the column `Show all VEP Scores` initially
             $('#lower_mean').change(function () {
                     let filter_values = get_updated_filter_params();

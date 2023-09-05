@@ -2,6 +2,7 @@ import decimal
 import warnings
 
 from django.core.cache import cache
+import random
 from django.db.models import (
     F,
     IntegerField,
@@ -207,7 +208,6 @@ class GeneDetailBaseView(object):
         if slug is not None:
             if cache.get("variant_data_" + slug) is not None:
                 table_with_protein_pos_int = cache.get("variant_data_" + slug)
-                print("Cache hit")
             else:
                 browser_columns = self.browser_columns
 
@@ -240,12 +240,10 @@ class GeneDetailBaseView(object):
                 table_index=0
                 cleaned_value_index=0
                 for data_row in table.to_numpy():
-                    print("table index ", table_index)
                     table_index+=1
                     try:
                         cleaned_values = [x for x in data_row[10:] if str(x) != '']
                         if len(cleaned_values) != 0:
-                            print("cleaned_value_index : ",cleaned_value_index)
                             cleaned_value_index+=1
                             mean_vep_score = round(np.mean(cleaned_values),2)
                             table_with_mean_vep_score.append(np.append(data_row, mean_vep_score))
@@ -253,11 +251,14 @@ class GeneDetailBaseView(object):
                         print("Error in calculating mean VEP score {0}".format(data_row[10:]))
                         print("-------------------")
                         print(e)
-                print("table_with_mean_vep_score : ", len(table_with_mean_vep_score))
                 table_with_protein_pos_int = []
                 for data_row in table_with_mean_vep_score:
                     try:
-                        data_row[5] = int(data_row[5]) #protein position
+                        data_row[5] = int(data_row[5])  # protein position
+                        # BELOW CODE LINE IS FOR MOCK DATA PURPOSE
+                        primary = bool(random.getrandbits(1))
+                        data_row = np.append(data_row, [primary])
+
                         table_with_protein_pos_int.append(data_row)
                     except Exception as e:
                         print("Error in converting protein position to int {0}".format(data_row[5]))
@@ -267,8 +268,6 @@ class GeneDetailBaseView(object):
                 cache.set("variant_data_" + slug, table_with_protein_pos_int, 60 * 60)
 
             context['array'] = table_with_protein_pos_int
-            print("type of table_with_protein_pos_int: ", type(table_with_protein_pos_int))
-            print("len of table_with_protein_pos_int: ", len(table_with_protein_pos_int))
             context['length'] = len(table_with_protein_pos_int)
             context["name_dic"] = self.name_dic
 
@@ -346,8 +345,6 @@ class genebassVariantListView(TemplateView):
             'AF_Controls',
             'Pvalue',
         )
-
-        print(f"genebass_variants_list count: {genebass_variants_list.count()}")
 
         genebass_variants_list = genebass_variants_list[:5000]
 
