@@ -26,7 +26,7 @@ class Command(BaseCommand):
     logger = logging.getLogger(__name__)
 
     # source file directory
-    genedata_data_dir = os.sep.join([settings.DATA_DIR, "gene_data"])
+    genedata_data_dir = os.sep.join([settings.DATA_DIR, "gene_primary_transcript_data"])
 
     print("checkpoint1")
 
@@ -62,7 +62,7 @@ class Command(BaseCommand):
             filenames = [
                 fn
                 for fn in os.listdir(self.genedata_data_dir)
-                if fn.endswith("gene_data.csv")
+                if fn.endswith("gene_primary_transcript_data.csv")
             ]
             print("checkpoint2")
             print(filenames)
@@ -84,11 +84,13 @@ class Command(BaseCommand):
 
                 gene_id = data[index: index + 1]["GeneID"].values[0]
                 genename = data[index: index + 1]["Gene name"].values[0]
+                pt = data[index: index + 1]["Primary_transcript"].values[0]
                 
 
                 gene, created = Gene.objects.get_or_create(
                     gene_id=gene_id,
                     genename=genename,
+                    primary_transcript=pt,
                     )
                 gene.save()
                 print("a record is saved")

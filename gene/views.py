@@ -142,8 +142,18 @@ class GeneDetailBaseView(object):
                 'spt': 'splice_polypyrimidine_tract', 'sre': 'splice_region', '_sl': 'start_lost',
                 '_sr': 'start_retained', 'sga': 'stop_gained', 'sl_': 'stop_lost', 'sr_': 'stop_retained',
                 'syn': 'synonymous', 'H': 'high', 'M': 'Medium', 'L': 'Low'}
-
+    
+    
     def parse_marker_data(self, marker, vep_variant):
+
+        def is_primary_ts(ts):
+                # Check if any row in the Gene model has the specified 'ts' in the 'primary_transcript' field
+                exists = Gene.objects.filter(primary_transcript=ts).exists()
+                if exists:
+                    return "YES"
+                else:
+                    return "NO"
+
         data_subset = {}
         data_subset["Variant_marker"] = marker[0]
         data_subset["Transcript_ID"] = vep_variant[0]
@@ -199,11 +209,13 @@ class GeneDetailBaseView(object):
         data_subset["Integrated_fitCons_rankscore"] = vep_variant[46]
         data_subset["PhastCons30way_mammalian_rankscore"] = vep_variant[47]
         data_subset["PhyloP30way_mammalian_rankscore"] = vep_variant[48]
-        # data_subset["LINSIGHT_rankscore"] = vep_variant[49]
+        data_subset["primary"] = is_primary_ts(vep_variant[0])
 
         return data_subset
 
     def get_gene_detail_data(self, slug):
+        
+
         context = {}
         if slug is not None:
             if cache.get("variant_data_" + slug) is not None:
@@ -242,7 +254,7 @@ class GeneDetailBaseView(object):
                 for data_row in table.to_numpy():
                     table_index+=1
                     try:
-                        cleaned_values = [x for x in data_row[10:] if str(x) != '']
+                        cleaned_values = [x for x in data_row[10:-1] if str(x) != '']
                         if len(cleaned_values) != 0:
                             cleaned_value_index+=1
                             mean_vep_score = round(np.mean(cleaned_values),2)
@@ -256,8 +268,8 @@ class GeneDetailBaseView(object):
                     try:
                         data_row[5] = int(data_row[5])  # protein position
                         # BELOW CODE LINE IS FOR MOCK DATA PURPOSE
-                        primary = bool(random.getrandbits(1))
-                        data_row = np.append(data_row, [primary])
+                        # primary = bool(random.getrandbits(1))
+                        # data_row = np.append(data_row, [primary])
 
                         table_with_protein_pos_int.append(data_row)
                     except Exception as e:
@@ -266,7 +278,7 @@ class GeneDetailBaseView(object):
                         print(e)
 
                 cache.set("variant_data_" + slug, table_with_protein_pos_int, 60 * 60)
-
+            # print("table_with_protein_pos_int : ", table_with_protein_pos_int) 
             context['array'] = table_with_protein_pos_int
             context['length'] = len(table_with_protein_pos_int)
             context["name_dic"] = self.name_dic
@@ -306,14 +318,12 @@ class GeneDetailBrowser(
     GeneDetailBaseView,
     TemplateView,
 ):
-
     template_name = 'gene_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         slug = kwargs.get('slug')
         context.update(self.get_gene_detail_data(slug))
-
         return context
 
 

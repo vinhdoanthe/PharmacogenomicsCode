@@ -78,7 +78,7 @@ class Command(BaseCommand):
 
             print("filename ", filename, " is processing ")
             for index, row in enumerate(data.iterrows()):
-                print(f"index {index} is processing")
+                # print(f"index {index} is processing")
                 markerID = data[index: index + 1]["markerID"].values[0]
                 if markerID.startswith("chr1:"):
                     markerID = data[index: index + 1]["markerID"].values[0][5:]
@@ -94,13 +94,11 @@ class Command(BaseCommand):
                                               1]["n_cases_females"].values[0]
                 n_cases_males = data[index: index +
                                             1]["n_cases_males"].values[0]
-                category = data[index: index + 1]["category"].values[0]
+                category = data[index: index + 1]["category"].values[0] # refer to id of GenebassCategory model
                 AC = data[index: index + 1]["AC"].values[0]
                 AF = data[index: index + 1]["AF"].values[0]
                 BETA = data[index: index + 1]["BETA"].values[0]
                 SE = data[index: index + 1]["SE"].values[0]
-
-                # breakpoint()
                 AF_Cases = data[index: index + 1]["AF_Cases"].values[0]
                 AF_Controls = data[index: index + 1]["AF_Controls"].values[0]
                 Pvalue = data[index: index + 1]["Pvalue"].values[0]
@@ -149,6 +147,6 @@ class Command(BaseCommand):
                     Pvalue=Pvalue,
                 )
                 gb_variant.save()
-                print(filename, " a record is saved")
+                print(index, " -- ", filename, " a record is saved")
 
         self.logger.info("COMPLETED CREATING GENEBASS VARIANT DATA")
