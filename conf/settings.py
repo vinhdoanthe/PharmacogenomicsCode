@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
 
     "rest_framework",
+    "drf_yasg",
 
     "protein.apps.ProteinConfig",
     "gene.apps.GeneConfig",

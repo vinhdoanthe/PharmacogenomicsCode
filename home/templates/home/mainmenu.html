@@ -1,61 +1,62 @@
 {% load static %}
+{% load i18n %}
 {% block addon_css %}
-<!-- script and CSS dependencies -->
-<link href="{% static 'home/css/mainmenu.css' %}" rel="stylesheet">
-<link href="{% static 'home/css/modal.css' %}" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="{% static 'home/css/jquery.powertip.css' %}" />
+    <!-- script and CSS dependencies -->
+    <link href="{% static 'home/css/mainmenu.css' %}" rel="stylesheet">
+    <link href="{% static 'home/css/modal.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'home/css/jquery.powertip.css' %}" />
 
-<style>
-  #center_menu ul {
-      padding: 0;
-      margin: 15px;
-  }
+    <style>
+        #center_menu ul {
+            padding: 0;
+            margin: 15px;
+        }
 
-  #center_menu li {
-     margin: 0;
-     padding: 0px;
-  }
-  #releases ul {
-      padding: 0;
-      margin: 15px;
-  }
+        #center_menu li {
+            margin: 0;
+            padding: 0px;
+        }
+        #releases ul {
+            padding: 0;
+            margin: 15px;
+        }
 
-  #releases li {
-     margin: 0;
-     padding: 0px;
-  }
-</style>
+        #releases li {
+            margin: 0;
+            padding: 0px;
+        }
+    </style>
 {% endblock addon_css %}
 
 {% block addon_js %}
-<script src="{% static 'home/js/jquery-3.1.1.min.js' %}"></script>
-<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-<script>
-  $(document).ready(function() {
+    <script src="{% static 'home/js/jquery-3.1.1.min.js' %}"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
 
-    $('#cite').click(function() {
-      citation_tool(window.location.href);
-    })
-    
-    $('#icon_citation').click(function() {
-      citation_tool(window.location.href);
-    })
-    $('.dropdown-menu').on('click', '.article_option', function() {
-      highlight_article($(this).parent().attr('id'));
-      var anchor_id = $('#' + $(this).parent().attr('id').toString() + '_tag').parent().parent().parent().attr('id')
-      document.getElementById(anchor_id).scrollIntoView(true);
-      $('#page_select_button').html($(this).text());
-    })
-  });
-</script>
+            $('#cite').click(function() {
+                citation_tool(window.location.href);
+            })
+
+            $('#icon_citation').click(function() {
+                citation_tool(window.location.href);
+            })
+            $('.dropdown-menu').on('click', '.article_option', function() {
+                highlight_article($(this).parent().attr('id'));
+                var anchor_id = $('#' + $(this).parent().attr('id').toString() + '_tag').parent().parent().parent().attr('id')
+                document.getElementById(anchor_id).scrollIntoView(true);
+                $('#page_select_button').html($(this).text());
+            })
+        });
+    </script>
 
 {% endblock addon_js %}
 
 
 <!-- Fixed navbar -->
 <nav class="navbar navbar-inverse navbar-static-top">
-  <div class="container">
-    {% comment %} <div class="navbar-header">
+    <div class="container">
+        {% comment %} <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
@@ -64,31 +65,36 @@
       </button>
       <a class="navbar-brand" href="/" alt="{{ site_title }}"><img src="{% static 'home/logo/uni_cph.png' %}" class="main-logo"></a>
     </div> {% endcomment %}
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-left">
-        <!-- INFO -->
-        {% include "home/common.html" %}
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-left">
+                <!-- INFO -->
+                {% include "home/common.html" %}
 
-        <!-- Drug -->
-        {% include "home/drug.html" %}
+                <!-- Drug -->
+                {% include "home/drug.html" %}
 
-        <!-- Target -->
-        {% include "home/target.html" %}
+                <!-- Target -->
+                {% include "home/target.html" %}
 
-        <!-- Variant -->
-        {% include "home/variant.html" %}
+                <!-- Variant -->
+                {% include "home/variant.html" %}
 
-      </ul>
-      <form class="navbar-form navbar-right" role="search">
-        <div class="input-group">
-          <!-- <input class="form-control" name="srch-term" id="srch-term"> -->
-          <input type="text" id="nav-selection-autocomplete" class="optional form-control ui-autocomplete-input" size="55" autocomplete="on" placeholder="Quick search - please enter Gene, Drug or Protein information">
-          <div class="input-group-btn">
-            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-          </div>
+                <!-- Link to APIs documentation -->
+                <li>
+                    <a href="{% url 'schema-swagger-ui' %}" target="_blank">{% trans 'APIs' %}</a>
+                </li>
+
+            </ul>
+            <form class="navbar-form navbar-right" role="search">
+                <div class="input-group">
+                    <!-- <input class="form-control" name="srch-term" id="srch-term"> -->
+                    <input type="text" id="nav-selection-autocomplete" class="optional form-control ui-autocomplete-input" size="55" autocomplete="on" placeholder="Quick search - please enter Gene, Drug or Protein information">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
         </div>
-      </form>
+        <!--/.nav-collapse -->
     </div>
-    <!--/.nav-collapse -->
-  </div>
 </nav>
