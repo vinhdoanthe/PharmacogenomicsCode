@@ -92,8 +92,8 @@ class GenebassVariant(models.Model):
     n_cases_females = models.FloatField()
     n_cases_males = models.FloatField()
 
-    # category = phenocode.description
-    category = models.CharField(max_length=10)  # encoded as categorical data
+    category = models.ForeignKey(
+        "variant.genebasscategory", on_delete=models.CASCADE, default="None")
     AC = models.FloatField()
     AF = models.FloatField()
     BETA = models.FloatField()
@@ -103,3 +103,8 @@ class GenebassVariant(models.Model):
     Pvalue = models.FloatField()
     # AC_calstat = models.FloatField()
     # AF_calstat = models.FloatField()
+
+
+class GenebassCategory(models.Model):
+    category_code = models.IntegerField(primary_key=True)
+    category_description = models.TextField(null=True)
