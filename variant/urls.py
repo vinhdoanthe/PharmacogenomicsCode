@@ -1,6 +1,9 @@
 from django.urls import path
 
-from .views import get_genebass_tables, get_variant_vep_scores_and_plot
+from .views import (
+    get_genebass_tables,
+    get_variant_vep_scores_and_plot,
+)
 
 app_name = 'variant'
 

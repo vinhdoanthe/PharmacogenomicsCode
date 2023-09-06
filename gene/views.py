@@ -1,44 +1,35 @@
 import decimal
-import hashlib
-import itertools
-import json
-import random
-import re
-import time
 import warnings
-warnings.filterwarnings('ignore')
+
+from django.core.cache import cache
+import random
+from django.db.models import (
+    F,
+    IntegerField,
+)
+from django.db.models.functions import Cast
+from django.http import (
+    HttpResponseBadRequest,
+    JsonResponse,
+)
+from django.views import View
+from django.views.decorators.http import require_http_methods
+from django.views.generic import TemplateView
 
 import numpy as np
 import pandas as pd
-import urllib
-
-from random import SystemRandom
-from copy import deepcopy
-from collections import defaultdict, OrderedDict
-
-from django.db.models.functions import Cast
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseBadRequest
-from django.views.decorators.http import require_http_methods
-from django.views.generic import TemplateView, DetailView
-
-from django.db.models import Q, Count, Subquery, OuterRef, IntegerField, F
-from django.views.decorators.csrf import csrf_exempt
-
-from django.core.cache import cache
-
-from gene.forms import FilterForm
-from variant.models import Variant, VepVariant, GenebassVariant, VariantPhenocode
 from gene.models import Gene
 from protein.models import Protein
+from variant.models import (
+    GenebassVariant,
+    Variant,
+    VepVariant,
+)
 
-from django.views.generic import ListView
+warnings.filterwarnings('ignore')
 
 
-class GeneDetailBrowser(TemplateView):
-
-    template_name = 'gene_detail.html'
-
+class GeneDetailBaseView(object):
     browser_columns = [
         "Variant_marker",  # MarkerID
         "Transcript_ID",
@@ -212,14 +203,11 @@ class GeneDetailBrowser(TemplateView):
 
         return data_subset
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        slug = kwargs.get('slug')
-
+    def get_gene_detail_data(self, slug):
+        context = {}
         if slug is not None:
             if cache.get("variant_data_" + slug) is not None:
                 table_with_protein_pos_int = cache.get("variant_data_" + slug)
-                print("Cache hit")
             else:
                 browser_columns = self.browser_columns
 
@@ -245,8 +233,6 @@ class GeneDetailBrowser(TemplateView):
                         table = table.append(data_subset, ignore_index=True)
 
                 table.fillna('', inplace=True)
-                print("type of table ", type(table))
-                print("shape of table ", table.shape)
 
                 context = dict()
 
@@ -254,12 +240,10 @@ class GeneDetailBrowser(TemplateView):
                 table_index=0
                 cleaned_value_index=0
                 for data_row in table.to_numpy():
-                    print("table index ", table_index)
                     table_index+=1
                     try:
                         cleaned_values = [x for x in data_row[10:] if str(x) != '']
                         if len(cleaned_values) != 0:
-                            print("cleaned_value_index : ",cleaned_value_index)
                             cleaned_value_index+=1
                             mean_vep_score = round(np.mean(cleaned_values),2)
                             table_with_mean_vep_score.append(np.append(data_row, mean_vep_score))
@@ -267,11 +251,14 @@ class GeneDetailBrowser(TemplateView):
                         print("Error in calculating mean VEP score {0}".format(data_row[10:]))
                         print("-------------------")
                         print(e)
-                print("table_with_mean_vep_score : ", len(table_with_mean_vep_score))
                 table_with_protein_pos_int = []
                 for data_row in table_with_mean_vep_score:
                     try:
-                        data_row[5] = int(data_row[5]) #protein position
+                        data_row[5] = int(data_row[5])  # protein position
+                        # BELOW CODE LINE IS FOR MOCK DATA PURPOSE
+                        primary = bool(random.getrandbits(1))
+                        data_row = np.append(data_row, [primary])
+
                         table_with_protein_pos_int.append(data_row)
                     except Exception as e:
                         print("Error in converting protein position to int {0}".format(data_row[5]))
@@ -281,16 +268,10 @@ class GeneDetailBrowser(TemplateView):
                 cache.set("variant_data_" + slug, table_with_protein_pos_int, 60 * 60)
 
             context['array'] = table_with_protein_pos_int
-            print("type of table_with_protein_pos_int: ", type(table_with_protein_pos_int))
-            print("len of table_with_protein_pos_int: ", len(table_with_protein_pos_int))
-            # print("table_with_protein_pos_int: ", table_with_protein_pos_int[0])
             context['length'] = len(table_with_protein_pos_int)
             context["name_dic"] = self.name_dic
 
             # Mean of Vep scores form
-            # filter_form = FilterForm()
-
-            # context['filter_form'] = filter_form
             context['gene'] = Gene.objects.filter(gene_id=slug).values_list("genename", flat=True)[0]
             context['geneID'] = slug
             amino_seq = Protein.objects.filter(geneID=slug).values_list("sequence", flat=True)[0]
@@ -317,6 +298,21 @@ class GeneDetailBrowser(TemplateView):
                     consequences += coseq
 
             context['consequences'] = list(set(consequences))
+
+        return context
+
+
+class GeneDetailBrowser(
+    GeneDetailBaseView,
+    TemplateView,
+):
+
+    template_name = 'gene_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = kwargs.get('slug')
+        context.update(self.get_gene_detail_data(slug))
 
         return context
 
@@ -349,8 +345,6 @@ class genebassVariantListView(TemplateView):
             'AF_Controls',
             'Pvalue',
         )
-
-        print(f"genebass_variants_list count: {genebass_variants_list.count()}")
 
         genebass_variants_list = genebass_variants_list[:5000]
 
@@ -405,3 +399,26 @@ def genebass_variants(request):
         # TODO: Filter genebass variants by variant_id
     else:
         return HttpResponseBadRequest()
+
+
+### API
+class GeneDetailApiView(
+    View,
+    GeneDetailBaseView,
+):
+
+    def get(self, request, *args, **kwargs):
+        """
+        Return a list of genebass variants by variant_id
+        """
+        gene_id = self.kwargs.get('gene_id', None)
+        data = self.get_gene_detail_data(gene_id)
+
+        # Convert np.array to list to make it JSON serializable
+        array = data['array']
+        array_in_list = []
+        for item in array:
+            array_in_list.append(item.tolist())
+        data['array'] = array_in_list
+
+        return JsonResponse(data, safe=False)

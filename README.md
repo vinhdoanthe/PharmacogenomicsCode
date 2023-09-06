@@ -22,3 +22,15 @@
 * Download data from [this Google Drive link](https://drive.google.com/file/d/1atLQWvx2kSH_iF5ueNi1ZBcoIfxHT2z-/view?usp=sharing)
 * Create `data` folder then extract data to this folder
 * Run command `python scripts/run_many_builds.py` to import data to database
+
+### Develop API
+All APIs are developed in `api` app.
+
+#### Example
+`GET /api/v1/gene/{gene_id}/` to get gene information
+
+#### DRF (Django Rest Framework)
+* Install (pip install -r requirements.txt)
+* Add urls to /restapi/urls.py
+* Add views to /restapi/views.py
+* [DRF browsable API](https://www.django-rest-framework.org/topics/browsable-api/)

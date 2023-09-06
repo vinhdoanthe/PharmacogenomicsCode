@@ -5,7 +5,7 @@ from .views import ProteinBrowser
 from . import views
 from django.conf.urls.static import static
 import os
-from Phar_project import settings
+from conf import settings
 
 
 urlpatterns = [

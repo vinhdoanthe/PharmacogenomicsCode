@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 from decouple import config
 
@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
+
+    "rest_framework",
+
     "protein.apps.ProteinConfig",
     "gene.apps.GeneConfig",
     "drug.apps.DrugConfig",
@@ -51,6 +54,8 @@ INSTALLED_APPS = [
     "common.apps.CommonConfig",
     "variant",
     "sitesearch",
+    "api",
+    "restapi",
 ]
 
 MIDDLEWARE = [
@@ -71,7 +76,7 @@ if DEBUG:
         'livereload.middleware.LiveReloadScript',
     ]
 
-ROOT_URLCONF = "Phar_project.urls"
+ROOT_URLCONF = "conf.urls"
 
 TEMPLATES = [
     {
@@ -159,4 +164,12 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "LOCATION": "unique-snowflake",
     }
+}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
 }
