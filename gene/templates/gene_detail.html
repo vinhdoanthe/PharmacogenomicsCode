@@ -37,12 +37,13 @@
                             <tr class="table-filter-dropdown">
                                 <th rowspan="2" style="text-align: left">Variant</th>
                                 <th rowspan="2">Transcript</th>
-                                <th rowspan="2">Primary</th>
+                                <th rowspan="2">Canonical</th>
                                 <th rowspan="2">Sequence<br>position</th>
                                 <th rowspan="2">Wildtype AA</th>
                                 <th rowspan="2">Mutant AA</th>
                                 <th rowspan="2">Codons</th>
                                 <th rowspan="2">Consequence</th>
+                                <!-- <th rowspan="2">Consequence2</th> -->
                                 <th rowspan="2">Mean <br> VEP scores</th>
                                 <th rowspan="2"><a id="show-all-vep-score" href="#">Show all<br> VEP Scores</a> </th>
                                 <th colspan="40">VEP scores from different algorithms <a href="#" id="vep-score-algorithms">Hide all</a> </th>
@@ -115,7 +116,7 @@
                                     <td class="align-left">{{ value.6|slice:"2:3" }}</td>
                                     <td class="align-left">{{ value.7 }}</td>
                                     <td class="align-left">{{ value.2 }}</td>
-                                    <td>{{ value|last }}</td>
+                                    <td class="align-left">{{ 'yang' }}</td>
                                     <td><a href="#" class="variant_statistics"
                                                     data-remote-url="{% url 'variant:get-plots' %}"
                                                     data-variant-marker="{{ value.0 }}" data-toggle="modal"
@@ -306,13 +307,13 @@
 
         function hideAllVepScoreColumns () {
             var table = $('#structures_scrollable').DataTable();
-            var start_col_index = 9
-            var end_col_index = 48
+            var start_col_index = 10
+            var end_col_index = 49
             for (col_index = start_col_index; col_index <= end_col_index; col_index++) {
                 var column = table.column(col_index);
                 column.visible(false);
             }
-            table.column(8).visible(true);
+            table.column(9).visible(true);
             var vep_table_header_inner = document.querySelector("#structures_scrollable_wrapper .dataTables_scroll .dataTables_scrollHeadInner")
             vep_table_header_inner.style.width = "100%";
             
@@ -325,13 +326,13 @@
 
         function showAllVepScoreColumns() {
             var table = $('#structures_scrollable').DataTable();
-            var start_col_index = 9
-            var end_col_index = 48
+            var start_col_index = 10
+            var end_col_index = 49
             for (col_index = start_col_index; col_index <= end_col_index; col_index++) {
                 var column = table.column(col_index);
                 column.visible(true);
             }
-            table.column(8).visible(false);
+            table.column(9).visible(false);
         }
     </script>
 

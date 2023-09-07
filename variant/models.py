@@ -83,6 +83,9 @@ class GenebassVariant(models.Model):
     markerID = models.ForeignKey(
         "variant.variant", on_delete=models.CASCADE
     )
+    gene_id = models.ForeignKey(
+        "gene.gene", on_delete=models.CASCADE, default="None"
+    )
     phenocode = models.ForeignKey(
         "variant.variantphenocode", on_delete=models.CASCADE, default="None")
     n_cases = models.FloatField()

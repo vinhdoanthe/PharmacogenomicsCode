@@ -2,7 +2,8 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from variant.models import GenebassVariant, Variant, VariantPhenocode
+from variant.models import GenebassVariant, Variant, VariantPhenocode, GenebassCategory
+from gene.models import Gene
 
 from optparse import make_option
 import logging
@@ -63,7 +64,7 @@ class Command(BaseCommand):
             filenames = [
                 fn
                 for fn in os.listdir(self.genebassvariantdata_data_dir)
-                if fn.endswith(".csv")
+                if fn.endswith("_REDUCE.csv")
             ]
             # print("checkpoint2")
             print(filenames)
@@ -102,9 +103,10 @@ class Command(BaseCommand):
                 AF_Cases = data[index: index + 1]["AF_Cases"].values[0]
                 AF_Controls = data[index: index + 1]["AF_Controls"].values[0]
                 Pvalue = data[index: index + 1]["Pvalue"].values[0]
+                genename = data[index: index + 1]["gene"].values[0]
 
                 try:
-                    print(filename, " , markerID = ", markerID)
+                    # print(filename, " , markerID = ", markerID)
                     v = Variant.objects.get(VariantMarker=markerID)
                 except Exception as e:
                     # self.logger.error(
@@ -116,9 +118,35 @@ class Command(BaseCommand):
 
                 # fetch variant phenocode
                 try:
-                    print(filename, ", phenocode = ", phenocode)
-                    p = VariantPhenocode.objects.get(phenocode=phenocode.title())
+                    # print(filename, ", phenocode = ", phenocode)
+                    p = VariantPhenocode.objects.get(phenocode=str(phenocode).title())
                 except VariantPhenocode.DoesNotExist:
+
+                    # self.logger.error(
+                    #     "VariantPhenocode not found for entry with phenocode {}".format(
+                    #         phenocode
+                    #     )
+                    # )
+                    continue
+
+                # fetch GenebassCategory
+                try:
+                    # print(filename, ", category = ", category)
+                    cate = GenebassCategory.objects.get(category_code=category)
+                except GenebassCategory.DoesNotExist:
+
+                    # self.logger.error(
+                    #     "VariantPhenocode not found for entry with phenocode {}".format(
+                    #         phenocode
+                    #     )
+                    # )
+                    continue
+
+                # fetch Gene
+                try:
+                    # print(filename, ", gene_id = ", gene_id)
+                    g = Gene.objects.get(genename=genename)
+                except Gene.DoesNotExist:
 
                     # self.logger.error(
                     #     "VariantPhenocode not found for entry with phenocode {}".format(
@@ -137,7 +165,7 @@ class Command(BaseCommand):
                     n_cases_females=n_cases_females,
                     n_cases_males=n_cases_males,
                     # coding_description=coding_description,
-                    category=category,
+                    category=cate,
                     AC=AC,
                     AF=AF,
                     BETA=BETA,
@@ -145,6 +173,7 @@ class Command(BaseCommand):
                     AF_Cases=AF_Cases,
                     AF_Controls=AF_Controls,
                     Pvalue=Pvalue,
+                    gene_id=g,
                 )
                 gb_variant.save()
                 print(index, " -- ", filename, " a record is saved")
