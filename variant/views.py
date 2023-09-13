@@ -121,7 +121,7 @@ def get_genebass_tables(request):
         'n_cases_both_sexes',
         'n_cases_females',
         'n_cases_males',
-        'category',
+        'category__category_description',
         'AC',
         'AF',
         'BETA',
