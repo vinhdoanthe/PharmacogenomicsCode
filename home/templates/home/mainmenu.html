@@ -25,6 +25,15 @@
             margin: 0;
             padding: 0px;
         }
+
+        #api-menu {
+            color: #777;
+            white-space: nowrap;
+        }
+        #api-menu:hover {
+            color: #333;
+        }
+
     </style>
 {% endblock addon_css %}
 
@@ -81,7 +90,7 @@
 
                 <!-- Link to APIs documentation -->
                 <li>
-                    <a href="{% url 'schema-swagger-ui' %}" target="_blank">{% trans 'APIs' %}</a>
+                    <a id="api-menu" href="{% url 'schema-swagger-ui' %}" target="_blank">{% trans 'APIs' %}</a>
                 </li>
 
             </ul>

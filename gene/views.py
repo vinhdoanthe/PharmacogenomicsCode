@@ -142,17 +142,16 @@ class GeneDetailBaseView(object):
                 'spt': 'splice_polypyrimidine_tract', 'sre': 'splice_region', '_sl': 'start_lost',
                 '_sr': 'start_retained', 'sga': 'stop_gained', 'sl_': 'stop_lost', 'sr_': 'stop_retained',
                 'syn': 'synonymous', 'H': 'high', 'M': 'Medium', 'L': 'Low'}
-    
-    
+
     def parse_marker_data(self, marker, vep_variant):
 
         def is_primary_ts(ts):
-                # Check if any row in the Gene model has the specified 'ts' in the 'primary_transcript' field
-                exists = Gene.objects.filter(primary_transcript=ts).exists()
-                if exists:
-                    return "YES"
-                else:
-                    return "NO"
+            # Check if any row in the Gene model has the specified 'ts' in the 'primary_transcript' field
+            exists = Gene.objects.filter(primary_transcript=ts).exists()
+            if exists:
+                return "YES"
+            else:
+                return "NO"
 
         data_subset = {}
         data_subset["Variant_marker"] = marker[0]
@@ -214,7 +213,6 @@ class GeneDetailBaseView(object):
         return data_subset
 
     def get_gene_detail_data(self, slug):
-        
 
         context = {}
         if slug is not None:
@@ -238,8 +236,9 @@ class GeneDetailBaseView(object):
                 for marker in marker_ID_data:
                     # Retrieve all VEP variants for each variant marker
                     vep_variants = VepVariant.objects.filter(
-                        #*: passing every element of a list to values_list rather than passing a list as one argument
-                        Variant_marker=marker).exclude(Protein_position__icontains='-').values_list(*self.list_necessary_columns)
+                        # *: passing every element of a list to values_list rather than passing a list as one argument
+                        Variant_marker=marker).exclude(Protein_position__icontains='-').values_list(
+                        *self.list_necessary_columns)
                     for vep_variant in vep_variants:
                         data_subset = self.parse_marker_data(marker, vep_variant)
                         table = table.append(data_subset, ignore_index=True)
@@ -249,15 +248,15 @@ class GeneDetailBaseView(object):
                 context = dict()
 
                 table_with_mean_vep_score = []
-                table_index=0
-                cleaned_value_index=0
+                table_index = 0
+                cleaned_value_index = 0
                 for data_row in table.to_numpy():
-                    table_index+=1
+                    table_index += 1
                     try:
                         cleaned_values = [x for x in data_row[10:-1] if str(x) != '']
                         if len(cleaned_values) != 0:
-                            cleaned_value_index+=1
-                            mean_vep_score = round(np.mean(cleaned_values),2)
+                            cleaned_value_index += 1
+                            mean_vep_score = round(np.mean(cleaned_values), 2)
                             table_with_mean_vep_score.append(np.append(data_row, mean_vep_score))
                     except Exception as e:
                         print("Error in calculating mean VEP score {0}".format(data_row[10:]))
@@ -287,14 +286,14 @@ class GeneDetailBaseView(object):
             context['gene'] = Gene.objects.filter(gene_id=slug).values_list("genename", flat=True)[0]
             context['geneID'] = slug
             amino_seq = Protein.objects.filter(geneID=slug).values_list("sequence", flat=True)[0]
-            amino_seq_num_list = list(range(1, len(amino_seq)+1))
+            amino_seq_num_list = list(range(1, len(amino_seq) + 1))
             context["amino_seq"] = amino_seq
             context["seq_length"] = len(amino_seq)
             protein_name = Protein.objects.filter(geneID=slug).values_list("uniprot_ID", flat=True)[0]
             context["protein_name"] = protein_name
             context["amino_seq_num_list"] = amino_seq_num_list
-            chunks = [{"chunk":amino_seq[i:i+10],"position":i+10} for i in range(0, len(amino_seq), 10)]
-            chunks[-1]["position"]=len(amino_seq)
+            chunks = [{"chunk": amino_seq[i:i + 10], "position": i + 10} for i in range(0, len(amino_seq), 10)]
+            chunks[-1]["position"] = len(amino_seq)
             context["chunks"] = chunks
             context["af_pdb"] = Protein.objects.filter(geneID=slug).values_list("af_pdb", flat=True)[0]
 
@@ -388,12 +387,14 @@ def filter_gene_detail_page(request, id):
     mean_vep_score = request.GET.get('mean_vep_score', 0.5)
     mean_vep_score = float(mean_vep_score)
     # Filter by mean_vep_score
-    list_vep_variants = VepVariant.objects.filter(Variant_marker__in=Variant.objects.filter(Gene_ID=id).values_list('VariantMarker',
-                                                                                                flat=True)
-                              ).exclude(Protein_position__contains="-").annotate(
-                                                                            protein_pos_int=Cast('Protein_position', IntegerField()),
-                                                                            mean_vep_score=(F('BayesDel_addAF_rankscore') + F('BayesDel_noAF_rankscore')) / 2
-    ).filter(mean_vep_score__gte=mean_vep_score).exclude(mean_vep_score=decimal.Decimal('NaN')).order_by('protein_pos_int')
+    list_vep_variants = VepVariant.objects.filter(
+        Variant_marker__in=Variant.objects.filter(Gene_ID=id).values_list('VariantMarker',
+                                                                          flat=True)
+        ).exclude(Protein_position__contains="-").annotate(
+        protein_pos_int=Cast('Protein_position', IntegerField()),
+        mean_vep_score=(F('BayesDel_addAF_rankscore') + F('BayesDel_noAF_rankscore')) / 2
+    ).filter(mean_vep_score__gte=mean_vep_score).exclude(mean_vep_score=decimal.Decimal('NaN')).order_by(
+        'protein_pos_int')
 
     return None
 
