@@ -145,27 +145,31 @@ class Command(BaseCommand):
             cate = GenebassCategory.objects.filter(category_code=str(category)).first()
             g = Gene.objects.filter(genename=str(genename)).first()
 
-            objects.append(
-                GenebassVariant(
-                    markerID=v,
-                    n_cases=n_cases,
-                    n_controls=n_controls,
-                    phenocode=p,
-                    n_cases_defined=n_cases_defined,
-                    n_cases_both_sexes=n_cases_both_sexes,
-                    n_cases_females=n_cases_females,
-                    n_cases_males=n_cases_males,
-                    category=cate,
-                    AC=AC,
-                    AF=AF,
-                    BETA=BETA,
-                    SE=SE,
-                    AF_Cases=AF_Cases,
-                    AF_Controls=AF_Controls,
-                    Pvalue=Pvalue,
-                    gene_id=g,
+            if not v:
+                print("Variant {} not found".format(markerID))
+                continue
+            else:
+                objects.append(
+                    GenebassVariant(
+                        markerID=v,
+                        n_cases=n_cases,
+                        n_controls=n_controls,
+                        phenocode=p,
+                        n_cases_defined=n_cases_defined,
+                        n_cases_both_sexes=n_cases_both_sexes,
+                        n_cases_females=n_cases_females,
+                        n_cases_males=n_cases_males,
+                        category=cate,
+                        AC=AC,
+                        AF=AF,
+                        BETA=BETA,
+                        SE=SE,
+                        AF_Cases=AF_Cases,
+                        AF_Controls=AF_Controls,
+                        Pvalue=Pvalue,
+                        gene_id=g,
+                    )
                 )
-            )
 
         print("number of objects to be created = {}".format(len(objects)))
 
