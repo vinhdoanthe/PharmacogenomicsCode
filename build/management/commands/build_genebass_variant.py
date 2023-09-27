@@ -1,15 +1,17 @@
-# build_genebass_variant.py
-from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
-
-from variant.models import GenebassVariant, Variant, VariantPhenocode, GenebassCategory
-from gene.models import Gene
-
-from optparse import make_option
 import logging
-import csv
 import os
+
+from django.conf import settings
+from django.core.management.base import BaseCommand
+
 import pandas as pd
+from gene.models import Gene
+from variant.models import (
+    GenebassCategory,
+    GenebassVariant,
+    Variant,
+    VariantPhenocode,
+)
 
 
 class Command(BaseCommand):
@@ -27,8 +29,7 @@ class Command(BaseCommand):
 
     # source file directory
     genebassvariantdata_data_dir = os.sep.join(
-        [settings.DATA_DIR, "genebass_variant_data/input_07_sep"])
-
+        [settings.DATA_DIR, "genebass_variant_data/new-data"])
 
     def handle(self, *args, **options):
         if options["filename"]:
@@ -59,9 +60,11 @@ class Command(BaseCommand):
         self.logger.info("CREATING GENEBASS VARIANT DATA")
 
         # print("checkpoint1")
-        list_of_done=['F2','LTA','SLC22A6','TH','DBH','TGM5','SLC25A6','DGKG','AKR1C2','TAAR1','CHRNA3','CHRNB4','CES1','TYMP','CD55','GP9',
-                'GJA1','POU2F2','FXN','CLU','WAS','XIAP','DAO','SREBF1','VCP','EPCAM','CAMK2G','NCOA5','PSMA1','PSMB6','RPS17','DCLK3',
-                'IRAK3','MAP3K15','FBXO41','USP14']
+        list_of_done = ['F2', 'LTA', 'SLC22A6', 'TH', 'DBH', 'TGM5', 'SLC25A6', 'DGKG', 'AKR1C2', 'TAAR1', 'CHRNA3',
+                        'CHRNB4', 'CES1', 'TYMP', 'CD55', 'GP9',
+                        'GJA1', 'POU2F2', 'FXN', 'CLU', 'WAS', 'XIAP', 'DAO', 'SREBF1', 'VCP', 'EPCAM', 'CAMK2G',
+                        'NCOA5', 'PSMA1', 'PSMB6', 'RPS17', 'DCLK3',
+                        'IRAK3', 'MAP3K15', 'FBXO41', 'USP14']
 
         # read source files
         if not filenames:
@@ -72,7 +75,7 @@ class Command(BaseCommand):
             ]
 
         # print("checkpoint2")
-        print("total files : ",len(filenames))
+        print("total files : ", len(filenames))
 
         for filename in filenames:
 
@@ -83,18 +86,32 @@ class Command(BaseCommand):
                                encoding="ISO-8859-1", sep=";")
             print(f"{filename} is processing, total records {len(data)}")
 
-            # Create settings.VEP_VARIANT_ITEMS_PER_IMPORT objects at a time
+            # Create settings.GB_VARIANT_ITEMS_PER_IMPORT objects at a time
             data_length = len(data)
             times = int(data_length / settings.GB_VARIANT_ITEMS_PER_IMPORT)
             for i in range(times):
-                print(f"Bulk creating {i * settings.GB_VARIANT_ITEMS_PER_IMPORT} to {(i + 1) * settings.VEP_VARIANT_ITEMS_PER_IMPORT}")
-                self.__bulk_create_GB_variant_records(data[i * settings.GB_VARIANT_ITEMS_PER_IMPORT: (i + 1) * settings.VEP_VARIANT_ITEMS_PER_IMPORT])
-            self.__bulk_create_GB_variant_records(data[times * settings.GB_VARIANT_ITEMS_PER_IMPORT: data_length])
+                self.__bulk_create_GB_variant_records(
+                    data[i * settings.GB_VARIANT_ITEMS_PER_IMPORT: (i + 1) * settings.GB_VARIANT_ITEMS_PER_IMPORT],
+                    start_index=i * settings.GB_VARIANT_ITEMS_PER_IMPORT,
+                    end_index=(i + 1) * settings.GB_VARIANT_ITEMS_PER_IMPORT,
+                )
+            self.__bulk_create_GB_variant_records(
+                data[times * settings.GB_VARIANT_ITEMS_PER_IMPORT: data_length],
+                start_index=times * settings.GB_VARIANT_ITEMS_PER_IMPORT,
+                end_index=data_length,
+            )
 
         print("End of GB Variant data import")
 
     @staticmethod
-    def __bulk_create_GB_variant_records(data):
+    def __bulk_create_GB_variant_records(data, start_index=0, end_index=0):
+        print("bulk create {} items".format(len(data)))
+        if start_index or end_index:
+            print("start index = {}, end index = {}".format(
+                start_index,
+                end_index,
+            ))
+
         objects = []
 
         for index, row in enumerate(data.iterrows()):
@@ -106,14 +123,14 @@ class Command(BaseCommand):
             phenocode = data[index: index + 1]["phenocode"].values[0]
 
             n_cases_defined = data[index: index +
-                                            1]["n_cases_defined"].values[0]
+                                          1]["n_cases_defined"].values[0]
             n_cases_both_sexes = data[index: index +
-                                                1]["n_cases_both_sexes"].values[0]
+                                             1]["n_cases_both_sexes"].values[0]
             n_cases_females = data[index: index +
-                                            1]["n_cases_females"].values[0]
+                                          1]["n_cases_females"].values[0]
             n_cases_males = data[index: index +
                                         1]["n_cases_males"].values[0]
-            category = data[index: index + 1]["category"].values[0] # refer to id of GenebassCategory model
+            category = data[index: index + 1]["category"].values[0]  # refer to id of GenebassCategory model
             AC = data[index: index + 1]["AC"].values[0]
             AF = data[index: index + 1]["AF"].values[0]
             BETA = data[index: index + 1]["BETA"].values[0]
@@ -123,75 +140,33 @@ class Command(BaseCommand):
             Pvalue = data[index: index + 1]["Pvalue"].values[0]
             genename = data[index: index + 1]["gene"].values[0]
 
-            try:
-                # print(filename, " , markerID = ", markerID)
-                v = Variant.objects.get(VariantMarker=markerID)
-            except Exception as e:
-                # self.logger.error(
-                #     "Error retrieving variant for entry with VariantMarker ID {markerID}: {error}".format(
-                #         markerID=markerID, error=str(e)
-                #     )
-                # )
-                continue
+            v = Variant.objects.filter(VariantMarker=str(markerID)).first()
+            p = VariantPhenocode.objects.filter(phenocode=str(phenocode)).first()
+            cate = GenebassCategory.objects.filter(category_code=str(category)).first()
+            g = Gene.objects.filter(genename=str(genename)).first()
 
-            # fetch variant phenocode
-            try:
-                # print(filename, ", phenocode = ", phenocode)
-                p = VariantPhenocode.objects.get(phenocode=str(phenocode).title())
-            except VariantPhenocode.DoesNotExist:
-
-                # self.logger.error(
-                #     "VariantPhenocode not found for entry with phenocode {}".format(
-                #         phenocode
-                #     )
-                # )
-                continue
-
-            # fetch GenebassCategory
-            try:
-                # print(filename, ", category = ", category)
-                cate = GenebassCategory.objects.get(category_code=category)
-            except GenebassCategory.DoesNotExist:
-
-                # self.logger.error(
-                #     "VariantPhenocode not found for entry with phenocode {}".format(
-                #         phenocode
-                #     )
-                # )
-                continue
-
-            # fetch Gene
-            try:
-                # print(filename, ", gene_id = ", gene_id)
-                g = Gene.objects.get(genename=genename)
-            except Gene.DoesNotExist:
-                print("Gene not found for entry with genename = ", genename)
-
-                continue
-
-            objects.append
-            (
+            objects.append(
                 GenebassVariant(
-                markerID=v,
-                n_cases=n_cases,
-                n_controls=n_controls,
-                phenocode=p,
-                n_cases_defined=n_cases_defined,
-                n_cases_both_sexes=n_cases_both_sexes,
-                n_cases_females=n_cases_females,
-                n_cases_males=n_cases_males,
-                # coding_description=coding_description,
-                category=cate,
-                AC=AC,
-                AF=AF,
-                BETA=BETA,
-                SE=SE,
-                AF_Cases=AF_Cases,
-                AF_Controls=AF_Controls,
-                Pvalue=Pvalue,
-                gene_id=g,
+                    markerID=v,
+                    n_cases=n_cases,
+                    n_controls=n_controls,
+                    phenocode=p,
+                    n_cases_defined=n_cases_defined,
+                    n_cases_both_sexes=n_cases_both_sexes,
+                    n_cases_females=n_cases_females,
+                    n_cases_males=n_cases_males,
+                    category=cate,
+                    AC=AC,
+                    AF=AF,
+                    BETA=BETA,
+                    SE=SE,
+                    AF_Cases=AF_Cases,
+                    AF_Controls=AF_Controls,
+                    Pvalue=Pvalue,
+                    gene_id=g,
                 )
             )
+
+        print("number of objects to be created = {}".format(len(objects)))
+
         GenebassVariant.objects.bulk_create(objects)
-
-
