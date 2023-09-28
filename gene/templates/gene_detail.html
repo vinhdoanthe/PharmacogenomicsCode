@@ -1,4 +1,4 @@
-{% extends "layouts/with_leftbar/base.html" %}
+{% extends "home/base.html" %}
 {% load static %}
 {% load color_range_for_variants %}
 {% csrf_token %}
@@ -34,9 +34,8 @@
                     <div id="structures_scrollable_table">
                         <table class="display compact text-nowrap" id="structures_scrollable">
                             <thead id="headers">
-                                <!-- First row of header  -->
-                                <tr class="table-filter-dropdown">
-                                    <th rowspan="2" style="text-align: left">Variant</th>
+                                <tr>
+                                    <th rowspan="2">Variant</th>
                                     <th rowspan="2">Transcript</th>
                                     <th rowspan="2">Canonical</th>
                                     <th rowspan="2">Sequence<br>position</th>
@@ -48,8 +47,8 @@
                                     <th rowspan="2"><a id="show-all-vep-score" href="#">Show all<br> VEP Scores</a> </th>
                                     <th colspan="40">VEP scores from different algorithms <a href="#" id="vep-score-algorithms">Hide all</a> </th>
                                 </tr>
-                                <!-- Second row of header (score block) -->
                                 <tr>
+                                    <!-- Score block -->
                                     <th>Polyphen2_</br>HDIV</th>
                                     <th>Polyphen2_</br>HVAR</th>
                                     <th>SIFT4G_</br>converted</th>
@@ -99,7 +98,6 @@
                                     <th>PhastCons</br>30way_</br>mammalian</th>
                                     <th>Phylo_</br>P30way_</br>mammalian</th>
                                 </tr>
-
                             </thead>
                             <tbody id='structures_scrollable_body'>
                             {% for value in array %}
@@ -115,7 +113,7 @@
                                     <td class="align-left">{{ value.6|slice:"2:3" }}</td>
                                     <td class="align-left">{{ value.7 }}</td>
                                     <td class="align-left">{{ value.2 }}</td>
-                                    <td class="align-left">{{ value | last }}</td>
+                                    <td class="align-left">{{ value|last }}</td>
                                     <td><a href="#" class="variant_statistics"
                                                     data-remote-url="{% url 'variant:get-plots' %}"
                                                     data-variant-marker="{{ value.0 }}" data-toggle="modal"
@@ -285,8 +283,6 @@
     <script>
         // Show/hide VEP score algorithms
         $(document).ready(function () {
-            //var table = $('#structures_scrollable').DataTable();
-            //table.column(8).visible(false);
 
             $('#vep-score-algorithms').on(
                 'click', function (e) {
@@ -477,14 +473,15 @@
                 column.visible(false);
             }
             table.column(9).visible(true);
-            var vep_table_header_inner = document.querySelector("#structures_scrollable_wrapper .dataTables_scroll .dataTables_scrollHeadInner")
-            vep_table_header_inner.style.width = "100%";
-            
-            var vep_table_header_inner_table = vep_table_header_inner.querySelector(".dataTable")
-            vep_table_header_inner_table.style.width = "100%";
 
-            var vep_table_body = document.querySelector("#structures_scrollable_wrapper .dataTables_scroll .dataTables_scrollBody .dataTable");
-            vep_table_body.style.width = "100%";
+            //var vep_table_header_inner = document.querySelector("#structures_scrollable_wrapper .dataTables_scroll .dataTables_scrollHeadInner")
+            //vep_table_header_inner.style.width = "100%";
+
+            //var vep_table_header_inner_table = vep_table_header_inner.querySelector(".dataTable")
+            //vep_table_header_inner_table.style.width = "100%";
+
+            //var vep_table_body = document.querySelector("#structures_scrollable_wrapper .dataTables_scroll .dataTables_scrollBody .dataTable");
+            //vep_table_body.style.width = "100%";
         }
 
         function showAllVepScoreColumns() {

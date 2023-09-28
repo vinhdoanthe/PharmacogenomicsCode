@@ -1,7 +1,7 @@
 from django.db import models
 
+from gene.models import Gene
 
-# Create your models here.
 
 class Variant(models.Model):
     VariantMarker = models.CharField(primary_key=True, max_length=255)
@@ -78,16 +78,27 @@ class VepVariant(models.Model):
     LINSIGHT_rankscore = models.FloatField()
 
 
+class GenebassCategory(models.Model):
+    category_code = models.IntegerField(primary_key=True)
+    category_description = models.TextField(null=True)
+
+
 class GenebassVariant(models.Model):
     gb_id = models.AutoField(auto_created=True, primary_key=True)
     markerID = models.ForeignKey(
-        "variant.variant", on_delete=models.CASCADE
+        Variant,
+        on_delete=models.CASCADE
     )
     gene_id = models.ForeignKey(
-        "gene.gene", on_delete=models.CASCADE, default="None"
+        Gene,
+        on_delete=models.CASCADE,
+        null=True,
     )
     phenocode = models.ForeignKey(
-        "variant.variantphenocode", on_delete=models.CASCADE, default="None")
+        VariantPhenocode,
+        on_delete=models.CASCADE,
+        null=True,
+    )
     n_cases = models.FloatField()
     n_controls = models.FloatField()
     n_cases_defined = models.FloatField()
@@ -96,7 +107,10 @@ class GenebassVariant(models.Model):
     n_cases_males = models.FloatField()
 
     category = models.ForeignKey(
-        "variant.genebasscategory", on_delete=models.CASCADE, default="None")
+        GenebassCategory,
+        on_delete=models.CASCADE,
+        null=True,
+    )
     AC = models.FloatField()
     AF = models.FloatField()
     BETA = models.FloatField()
@@ -104,10 +118,3 @@ class GenebassVariant(models.Model):
     AF_Cases = models.FloatField()
     AF_Controls = models.FloatField()
     Pvalue = models.FloatField()
-    # AC_calstat = models.FloatField()
-    # AF_calstat = models.FloatField()
-
-
-class GenebassCategory(models.Model):
-    category_code = models.IntegerField(primary_key=True)
-    category_description = models.TextField(null=True)
