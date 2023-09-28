@@ -1,0 +1,10 @@
+.info {
+    /* display: inline-block; */
+    font-size: 20px;
+    margin-left: 15px;
+    padding: 0 15px;
+}
+
+.fas.fa-info{
+    color: grey;
+}

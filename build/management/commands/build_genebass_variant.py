@@ -166,7 +166,6 @@ class Command(BaseCommand):
                 g = Gene.objects.get(genename=genename)
             except Gene.DoesNotExist:
                 print("Gene not found for entry with genename = ", genename)
-
                 continue
 
             objects.append

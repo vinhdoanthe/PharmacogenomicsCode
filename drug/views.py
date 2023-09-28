@@ -27,10 +27,13 @@ from protein.models import Protein
 from variant.models import Variant
 from django.core.cache import cache
 from django.views.decorators.cache import cache_page
+from django.template.loader import render_to_string
 
 # Create your views here.
 from django.http import JsonResponse
 from .models import Drug, DrugAtcAssociation
+
+app_name = 'drug'
 
 # Then in this view function, we add drugbank_id as a parameter
 def drug_atc_expansion(request, drugbank_id): #put a parameter drugbank_id here
@@ -417,3 +420,163 @@ def drug_interaction_detail(request, drugbank_id):
     print("-------------- context", context)
     # return render(request, '_drug_detail.html', context)
     return render(request, 'drug_atc_tabs.html', context)
+
+
+
+def atc_lookup(request):
+
+    group1s = AtcAnatomicalGroup.objects.all()
+    # Uppercase the names before returning
+    for group in group1s:
+        group.name = group.name.upper()
+
+    group2s = AtcTherapeuticGroup.objects.all()
+    # Uppercase the names before returning
+    for group in group2s:
+        group.name = group.name.upper()
+
+    context = {'group1s': group1s, 'group2s': group2s}
+    return render(request, 'atc_code_lookup.html', context)
+
+def format_atc_name(s):
+    s=s.replace('"','')
+    return s.upper()      
+
+
+def l2_atc_page_view(request):
+    group_id = request.GET.get('group_id')  # Retrieve group_id from the query parameter
+    group_name = request.GET.get('group_name')
+    group2s = AtcTherapeuticGroup.objects.all()
+    for group in group2s:
+        group.name = format_atc_name(group.name)
+    group3s = AtcPharmacologicalGroup.objects.all()
+    for group in group3s:
+        group.name = format_atc_name(group.name)
+    group4s = AtcChemicalGroup.objects.all()
+    for group in group4s:
+        group.name = format_atc_name(group.name)
+    group5s = AtcChemicalSubstance.objects.all()
+    for group in group5s:
+        group.name = format_atc_name(group.name)
+    context = {'group2s': group2s, 'group3s': group3s, 'group4s': group4s, 'group5s': group5s, "group_id": group_id, "group_name": group_name}
+    return render(request, 'l2_atc_page_view.html', context)
+
+
+
+@csrf_exempt  # Use this decorator for simplicity, but consider using a proper csrf token in production.
+def atc_search_view(request):
+    results = []
+    print("*****************: ", request.method)
+    if request.method == 'GET':
+        atc_code_inp = request.GET.get('atc_code_inp', '').strip()
+        atc_name_inp = request.GET.get('atc_name_inp', '').strip()
+        query_option = request.GET.get('query_option', '')
+
+        if atc_code_inp!="":
+            # Search "id" field in all models
+            print("branch in atc code, atc_code_inp = ", atc_code_inp)
+            if len(atc_code_inp)>7:
+                print("invalid atc_code_inp")
+            else:
+                if len(atc_code_inp)>5: #search for id length =7
+                    results += list(AtcChemicalSubstance.objects.filter(id__iexact=atc_code_inp).values('id', 'name'))
+                else:
+                    if len(atc_code_inp)==5: #search for id length =5
+                        results += list(AtcChemicalGroup.objects.filter(id__iexact=atc_code_inp).values('id', 'name'))
+                    else:
+                        if len(atc_code_inp)==4: #search for id length =5
+                            results += list(AtcPharmacologicalGroup.objects.filter(id__iexact=atc_code_inp).values('id', 'name'))
+                        else:
+                            if len(atc_code_inp)==3: #search for id length =5
+                                results += list(AtcTherapeuticGroup.objects.filter(id__iexact=atc_code_inp).values('id', 'name'))
+                            else:
+                                results += list(AtcAnatomicalGroup.objects.filter(id__iexact=atc_code_inp).values('id', 'name'))
+
+
+                    
+        if atc_name_inp!="":
+            if query_option == 'containing':
+                # Search "name" field in all models
+                print("branch in containing, atc_name_inp = ", atc_name_inp)
+                results += list(AtcAnatomicalGroup.objects.filter(name__icontains=atc_name_inp).values('id', 'name'))
+                results += list(AtcTherapeuticGroup.objects.filter(name__icontains=atc_name_inp).values('id', 'name'))
+                results += list(AtcPharmacologicalGroup.objects.filter(name__icontains=atc_name_inp).values('id', 'name'))
+                results += list(AtcChemicalGroup.objects.filter(name__icontains=atc_name_inp).values('id', 'name'))
+                results += list(AtcChemicalSubstance.objects.filter(name__icontains=atc_name_inp).values('id', 'name'))
+
+            elif query_option == 'startingwith':
+                # Search "id" field in all models
+                print("branch in startingwith, atc_name_inp = ", atc_name_inp)
+                results += list(AtcAnatomicalGroup.objects.filter(name__startswith=atc_name_inp).values('id', 'name'))
+                results += list(AtcTherapeuticGroup.objects.filter(name__startswith=atc_name_inp).values('id', 'name'))
+                results += list(AtcPharmacologicalGroup.objects.filter(name__startswith=atc_name_inp).values('id', 'name'))
+                results += list(AtcChemicalGroup.objects.filter(name__startswith=atc_name_inp).values('id', 'name'))
+                results += list(AtcChemicalSubstance.objects.filter(name__startswith=atc_name_inp).values('id', 'name'))
+
+        context = {"search_result": results, "atc_code_inp": atc_code_inp, "atc_name_inp":atc_name_inp}
+        print("context = ", context)
+        return render(request, 'atc_search_result.html', context)
+    return render(request, 'atc_search_result.html', {"results":results})
+
+
+
+def get_drug_atc_association(request):
+    atc_code = request.GET.get("atc_code")
+    #test ok
+    # print("*********** atc_code =", atc_code)
+
+    # Query the DrugAtcAssociation model and select related Drug fields
+    associations = DrugAtcAssociation.objects.filter(atc_id=atc_code).select_related('drug_id')
+
+    # Convert queryset to a list of dictionaries
+    associations_list = [{"drug_bankID": assoc.drug_id.drug_bankID, "name": assoc.drug_id.name, "description": assoc.drug_id.description} for assoc in associations]
+
+    # Create a JSON response with the data
+    response_data = {
+        "associations": associations_list,
+        "atc_code":atc_code,
+    }
+    #test ok
+    # print("associations_list: ", associations_list)
+
+    return JsonResponse(response_data)
+
+
+def get_drug_network(request):
+    drugbank_id = request.GET.get('drugbank_id')
+
+    try:
+        # Query the Drug model to get the drug object with the specified drug_bankID
+        drug = Drug.objects.get(drug_bankID=drugbank_id)
+
+        # Use select_related to retrieve related Interaction and Protein objects efficiently
+        interactions = Interaction.objects.filter(drug_bankID=drug)
+
+        # Create a list to store information
+        response_data = []
+
+        # Loop through the interactions to access related Protein objects
+        for interaction in interactions:
+            info = {}
+            protein_id = interaction.uniprot_ID_id
+            protein_obj = Protein.objects.get(uniprot_ID=protein_id)
+            info["uniProt_id"] = protein_obj.uniprot_ID
+            info["gene_name"] = protein_obj.genename
+            info["gene_id"] = protein_obj.geneID
+            info["protein_name"] = protein_obj.protein_name
+            info["protein_class"] = protein_obj.Protein_class
+            info["interaction_type"] = interaction.interaction_type
+            info["pubmed_ids"] = interaction.pubmed_ids
+
+            # Create a dictionary with the drug and related information
+            response_data.append(info)
+
+        # Wrap the response_data list in a dictionary with a key
+        data = {'data': response_data}
+
+        # Return JsonResponse with safe=False
+        return JsonResponse(data, safe=False)
+
+    except Drug.DoesNotExist:
+        return JsonResponse({"error": f"No drug with drug_bankID '{drugbank_id}' found."}, status=404)
+

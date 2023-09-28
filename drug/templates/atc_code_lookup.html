@@ -1,0 +1,210 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% csrf_token %}
+
+
+{% block addon_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'drug/css/atc_lookup.css' %}">
+
+
+
+    <style>
+
+
+            /* Add some basic styling for layout */
+
+            .atc-intro {
+                color: #000;
+            }
+
+            #atc-l1 {
+                margin-top: 30px;
+
+            }
+            .row {
+                display: flex;
+                justify-content: left;
+                align-items: center;
+                margin-left: 1px;
+                margin-bottom: 20px;
+                margin-top: 10px;
+            }
+
+            input[type="text"] {
+                padding: 5px;
+                /* margin-right: 10px; */
+            }
+
+            input[type="text"]:focus {
+                border-color: #007BFF; /* Change the border color when the input is in focus */
+            }
+
+            /* Style the placeholder text */
+            input[type="text"]::placeholder {
+                color: #999; /* Set the placeholder text color */
+            }
+
+            button {
+                padding: 5px 10px;
+            }
+
+            /* Define an array of colors */
+            .color-1 { color: #5733FF; }
+            .color-2 { color: #FF5733; }
+            .color-3 { color: #38b000; }
+            .color-4 { color: #a4161a; }
+            .color-5 { color: #ffbe0b; }
+            .color-6 { color: #495057; }
+            .color-7 { color: #f15bb5; }
+            .color-8 { color: #f95738; }
+            .color-9 { color: #336699; }
+            .color-10 { color: pink; }
+            .color-11 { color: #F24236; }
+            .color-12 { color: #6F7C12; }
+            .color-13 { color: #5D2E8C; }
+            .color-14 { color: #AB3428; }
+            .color-15 { color: #C200FB; }
+            /* Add more colors as needed */
+
+            #input-group{
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            #name-input {
+                display: flex; /* Use flexbox to arrange elements horizontally */
+                align-items: left; /* Center align the elements vertically */
+                flex-direction: column;
+            }
+
+            
+            #name-input select {
+                margin-top: 1px;
+                width: 80%;
+                border-radius: 2px;
+            }
+
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+{% autoescape off %}
+
+<div class="atc-intro">
+    <h1>ATC/DDD Index 2023</h1>
+    <div>
+        <p>
+            A searchable version of the complete ATC index with DDDs is available below. The search options enable you to find ATC codes and DDDs for substance name <br>
+            and/or ATC levels. In your search result you may choose to show or hide the text from the Guidelines for ATC classification and DDD assignment linked to <br>
+            the ATC level. The text in the Guidelines will give information related to the background for the ATC and DDD assignment.
+        </p>
+    </div>
+    
+    <h2 style="margin-top: 10px;">Search query</h2>
+</div>
+
+<div class="row">
+    <form method="GET">
+        <div id="input-group">
+            <input id="atc_code_query" type="text" style="height:80%;" placeholder="ATC code">
+            <div><span>or</span></div>
+            <div id="name-input">
+                <input id="atc_name_query" type="text" placeholder="name">
+                <!-- Dropdown List -->
+                <select id="queryOption">
+                    <option value="containing">containing query</option>
+                    <option value="startingwith">starting with query</option>
+                </select>
+            </div>
+            <button type="submit" style="height:80%; font-weight: 600;" id='search'>Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="atc-intro">
+    <h2>ATC code</h2>
+    <ul>
+        <li>All ATC levels are searchable.</li>
+        <li>A search will result in showing the exact substance or level and all ATC levels above (up to 1st ATC level).</li>
+    </ul>
+</div>
+<table id="atc-l1">
+    <!-- <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+    </thead> -->
+    <tbody>
+        {% for group in group1s %}
+            <tr>
+                <td style="margin: 0 10px; display: block; font-weight:400; font-size: 18px;" class="color-{{forloop.counter}}" >{{ group.id }}</td>
+                <td><a href="{% url 'l2_atc_page_view' %}?group_id={{ group.id }}&group_name={{ group.name }}" target="_blank">{{ group.name }} </a><a href="#" class="info"><i class="fas fa-info"></i>
+                </a></td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="2">No data available</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endautoescape %}
+{% endblock %}
+
+
+{% block addon_js %}
+<script>
+    $(document).ready(function() {
+    function performSearch() {
+        // Get user input
+        var atc_code_inp = $("#atc_code_query").val();
+        var atc_name_inp = $("#atc_name_query").val();
+        var query_option = $("#queryOption").val();
+
+        // Determine whether to use GET or POST based on your needs
+        var method = "GET"; // or "POST" depending on the view's requirements
+
+        // Make an AJAX request to the Django view
+        $.ajax({
+            url: "{% url 'atc_search_view' %}", // Replace with the actual URL
+            method: method,
+            data: {
+                'atc_code_inp': atc_code_inp,
+                'atc_name_inp': atc_name_inp,
+                'query_option': query_option
+            },
+            success: function(data) {
+                // Handle the returned data (e.g., display it on the page)
+                console.log(data);
+                // You can update the page with the search results here
+                // Open the response data in a new tab
+                var newWindow = window.open('', '_blank');
+                newWindow.document.write(data);
+            },
+            error: function(error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    // Handle the form submission when the "Search" button is clicked
+    $("#search").click(function() {
+        performSearch();
+    });
+
+    // Handle the form submission when the form is submitted
+    $("form").submit(function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+        performSearch(); // Call the search function
+    });
+    });
+
+</script>
+{% endblock %}
