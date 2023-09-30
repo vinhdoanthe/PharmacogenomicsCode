@@ -1,3 +1,13 @@
+.row {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-left: 1px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+
 .info {
     /* display: inline-block; */
     font-size: 20px;
@@ -7,4 +17,35 @@
 
 .fas.fa-info{
     color: grey;
+}
+
+/* CSS for styling the tree */
+ul.tree {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+ul.tree ul {
+    display: none;
+}
+
+li {
+    list-style-type: none;
+    margin: 5px; /* Adjust this value as needed */
+}
+
+/* Hover style for list items */
+li a:hover {
+    color: black; /* Change the text color to black when hovered */
+    cursor: pointer; /* Change the cursor to a pointer */
+}
+li a {
+    padding: 4px;
+}
+
+.desc {
+    display: inline-block;
+    text-decoration-color: #a7a2a0;
+    color: #f17c0e;
+    font-weight: bold;
 }

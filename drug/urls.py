@@ -11,6 +11,7 @@ urlpatterns = [
     path('l2_atc_page_view/', views.l2_atc_page_view, name='l2_atc_page_view'),
     path('get_drug_atc_association/', views.get_drug_atc_association, name='get-drug-atc-association'),
     path('get_drug_network/', views.get_drug_network, name='get-drug-network'),
+    path('get-atc-sub-levels/', views.get_atc_sub_levels, name='get-atc-sub-levels'),
     path('drugbrowser', views.drugbrowser, name='drugbrowser'),  # load all the drugs - cached but still slow - might need to remove
     path('drugstatistic', (DrugStatistics.as_view()), name='drug'),  # okie but with dummy data
     path('drug/autocomplete', (SelectionAutocomplete), name='autocomplete'),

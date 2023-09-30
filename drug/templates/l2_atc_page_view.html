@@ -9,39 +9,8 @@
 
 
 <style>
-        /* CSS for styling the tree */
-        ul.tree {
-            list-style-type: none;
-            padding-left: 20px;
-        }
-
-        ul.tree ul {
-            display: none;
-        }
-
-        li {
-            list-style-type: none;
-            margin: 5px; /* Adjust this value as needed */
-        }
-
-        /* Hover style for list items */
-        li a:hover {
-            color: black; /* Change the text color to black when hovered */
-            cursor: pointer; /* Change the cursor to a pointer */
-        }
-        li a {
-            padding: 4px;
-        }
-
         .expanded {
             display: block;
-        }
-
-        .desc {
-            display: inline-block;
-            text-decoration-color: #a7a2a0;
-            color: #f17c0e;
-            font-weight: bold;
         }
 
        /* styles.css */
@@ -255,7 +224,6 @@
                             alert('AJAX Error:', error);
                         }
                     })
-                    
                 });
                 
                 function list_associated_drugs(response){
@@ -286,6 +254,7 @@
                         
                         right_panel_text.innerHTML="Drugs associated with "+response.atc_code;
                         var right_panel_content = document.createElement("div");
+                        right_panel_content.id = "atc_right_table";
                         right_panel_content.style.marginRight = '30px';
                         right_panel_content.innerHTML = tableHtml;
                         right_panel.appendChild(right_panel_text);
@@ -298,37 +267,78 @@
                     }
                 }
         });        
-        
     </script>
-
 
     <!-- script for showing network associated with a drug -->
     <script>
-        function drug_network(e){
-                // $(e).preventDefault();
-                // Add the 'clicked-link' class to the clicked link
-                $(e).addClass('drug_network');
-                let drugbank_id = $(e).data('drugbank_id');
-                let url = $(e).data('remote-url');
-                
-                $.ajax(
-                    {
-                        url: url,
-                        type: "GET",
-                        data: {
-                            'drugbank_id': drugbank_id,
-                        },
-                        success: function (response) {
-                            alert("ajax response successfully");
-                            list_associated_drug_network(response);
-                        },
-                        error: function (xhr, status, error) {
-                            alert('AJAX Error:', error);
-                        }
-                    })
-                    
-                function list_associated_drug_network(response){
+        function drug_network(e)
+        {
+            // $(e).preventDefault();
+            // Add the 'clicked-link' class to the clicked link
+            $(e).addClass('drug_network');
+            let drugbank_id = $(e).data('drugbank_id');
+            let url = $(e).data('remote-url');
+            
+            $.ajax(
+                {
+                    url: url,
+                    type: "GET",
+                    data: {
+                        'drugbank_id': drugbank_id,
+                    },
+                    success: function (response) {
+                        draw_drug_network(response);
+                    },
+                    error: function (xhr, status, error) {
+                        alert('AJAX Error:', error);
+                    }
+                })
+
+            // Function to generate an HTML table from JSON data
+            function generateTable(data) 
+            {
+                var table = document.createElement('table');
+                var thead = table.createTHead();
+                var tbody = table.createTBody();
+
+                // Create table headers from the first object in the data
+                var headerRow = thead.insertRow();
+                for (var key in data[0]) {
+                    var th = document.createElement('th');
+                    th.textContent = key;
+                    headerRow.appendChild(th);
                 }
+
+                // Create table rows and cells from the JSON data
+                data.forEach(function (item) {
+                    var row = tbody.insertRow();
+                    for (var key in item) {
+                    var cell = row.insertCell();
+                    cell.textContent = item[key];
+                    }
+                });
+                return table;
             }
+                    
+            function draw_drug_network(response){
+                var right_panel = document.getElementById('atc_right');
+                var right_panel_network = document.createElement("div");
+                right_panel_network.id = "atc_right_network";
+                right_panel_network.style.backgroundColor = "violet";
+                right_panel_network.style.height="800px";
+                right_panel_network.style.marginRight = '30px';
+                right_panel_network.style.marginTop = '30px';
+
+                // Generate the table and append it to the div element
+                var drugNetworkData = response.drug_network_data;
+
+                var table = generateTable(drugNetworkData);
+                right_panel_network.appendChild(table);
+
+                right_panel.appendChild(right_panel_network);
+            }
+        };
+        
+            
     </script>
 {% endblock %}

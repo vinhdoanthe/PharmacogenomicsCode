@@ -491,9 +491,6 @@ def atc_search_view(request):
                                 results += list(AtcTherapeuticGroup.objects.filter(id__iexact=atc_code_inp).values('id', 'name'))
                             else:
                                 results += list(AtcAnatomicalGroup.objects.filter(id__iexact=atc_code_inp).values('id', 'name'))
-
-
-                    
         if atc_name_inp!="":
             if query_option == 'containing':
                 # Search "name" field in all models
@@ -512,9 +509,10 @@ def atc_search_view(request):
                 results += list(AtcPharmacologicalGroup.objects.filter(name__startswith=atc_name_inp).values('id', 'name'))
                 results += list(AtcChemicalGroup.objects.filter(name__startswith=atc_name_inp).values('id', 'name'))
                 results += list(AtcChemicalSubstance.objects.filter(name__startswith=atc_name_inp).values('id', 'name'))
-
-        context = {"search_result": results, "atc_code_inp": atc_code_inp, "atc_name_inp":atc_name_inp}
-        print("context = ", context)
+        
+        for rs in results:
+            rs["name"] = format_atc_name(rs["name"])
+        context = {"query_option":query_option, "search_result": results, "atc_code_inp": atc_code_inp, "atc_name_inp":atc_name_inp}
         return render(request, 'atc_search_result.html', context)
     return render(request, 'atc_search_result.html', {"results":results})
 
@@ -522,8 +520,6 @@ def atc_search_view(request):
 
 def get_drug_atc_association(request):
     atc_code = request.GET.get("atc_code")
-    #test ok
-    # print("*********** atc_code =", atc_code)
 
     # Query the DrugAtcAssociation model and select related Drug fields
     associations = DrugAtcAssociation.objects.filter(atc_id=atc_code).select_related('drug_id')
@@ -536,9 +532,6 @@ def get_drug_atc_association(request):
         "associations": associations_list,
         "atc_code":atc_code,
     }
-    #test ok
-    # print("associations_list: ", associations_list)
-
     return JsonResponse(response_data)
 
 
@@ -572,7 +565,8 @@ def get_drug_network(request):
             response_data.append(info)
 
         # Wrap the response_data list in a dictionary with a key
-        data = {'data': response_data}
+        data = {'drug_network_data': response_data}
+        print("data", data)
 
         # Return JsonResponse with safe=False
         return JsonResponse(data, safe=False)
@@ -580,3 +574,56 @@ def get_drug_network(request):
     except Drug.DoesNotExist:
         return JsonResponse({"error": f"No drug with drug_bankID '{drugbank_id}' found."}, status=404)
 
+
+def retrieving_anatomical_group (atc_code):
+    return list(AtcAnatomicalGroup.objects.filter(id__iexact=atc_code).values('id', 'name'))
+def retrieving_therapeutic_group (atc_code):
+    return list(AtcTherapeuticGroup.objects.filter(id__startswith=atc_code).values('id', 'name'))
+def retrieving_pharmacological_group (atc_code):
+    return list(AtcPharmacologicalGroup.objects.filter(id__startswith=atc_code).values('id', 'name'))
+def retrieving_chemical_group (atc_code):
+    return list(AtcChemicalGroup.objects.filter(id__startswith=atc_code).values('id', 'name'))
+def retrieving_chemical_substance (atc_code):
+    return list(AtcChemicalSubstance.objects.filter(id__startswith=atc_code).values('id', 'name'))
+
+def get_atc_sub_levels(request):
+    atc_code = request.GET.get("atc_code");
+    data = {'atc_code': atc_code}
+    if len(atc_code)==1:
+        data = {"anatomical_group": retrieving_anatomical_group (atc_code), "therapeutic_group": retrieving_therapeutic_group (atc_code),
+                "pharmacological_group": retrieving_pharmacological_group (atc_code), "chemical_group": retrieving_chemical_group (atc_code), 
+                "chemical_substance": retrieving_chemical_substance (atc_code)}
+    if len(atc_code)==3:
+        data = {"therapeutic_group": retrieving_therapeutic_group (atc_code),
+                "pharmacological_group": retrieving_pharmacological_group (atc_code), "chemical_group": retrieving_chemical_group (atc_code), 
+                "chemical_substance": retrieving_chemical_substance (atc_code)}
+    if len(atc_code)==4:
+        data = {"pharmacological_group": retrieving_pharmacological_group (atc_code), "chemical_group": retrieving_chemical_group (atc_code), 
+                "chemical_substance": retrieving_chemical_substance (atc_code)}
+    if len(atc_code)==5:
+        data = {"chemical_group": retrieving_chemical_group (atc_code), 
+                "chemical_substance": retrieving_chemical_substance (atc_code)}
+    if len(atc_code)==7:
+        data = {"chemical_substance": retrieving_chemical_substance (atc_code)}
+
+    #re-organize the data
+    reorganized_data = {}
+
+    # Loop through each element in the original data
+    for group_type, group_list in data.items():
+        # Create a dictionary to hold the grouped elements
+        grouped_elements = {}
+        
+        # Loop through the elements in the group_list
+        for element in group_list:
+            # Extract the element ID
+            element_id = element['id']
+            
+            # Add the element to the grouped_elements dictionary
+            grouped_elements[element_id] = element
+        
+        # Add the grouped_elements to the reorganized_data using the group_type as the key
+        reorganized_data[group_type] = grouped_elements
+    reorganized_data["atc_code"] = atc_code
+    # print("data : ", reorganized_data)
+    return JsonResponse(reorganized_data, safe=False)

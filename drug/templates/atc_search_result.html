@@ -4,126 +4,75 @@
 
 
 {% block addon_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'drug/css/atc_lookup.css' %}">
 
-<style>
+    <style>
 
-
-    /* Add some basic styling for layout */
-
-    .atc-intro {
-        color: #000;
-    }
-
-    #atc-l1 {
-        margin-top: 30px;
-
-    }
-    .row {
-        display: flex;
-        justify-content: left;
-        align-items: center;
-        margin-left: 1px;
-        margin-bottom: 20px;
-        margin-top: 10px;
-    }
-
-    input[type="text"] {
-        padding: 5px;
-        /* margin-right: 10px; */
-    }
-
-    input[type="text"]:focus {
-        border-color: #007BFF; /* Change the border color when the input is in focus */
-    }
-
-    /* Style the placeholder text */
-    input[type="text"]::placeholder {
-        color: #999; /* Set the placeholder text color */
-    }
-
-    button {
-        padding: 5px 10px;
-    }
-
-    /* Define an array of colors */
-    .color-1 { color: #5733FF; }
-    .color-2 { color: #FF5733; }
-    .color-3 { color: #38b000; }
-    .color-4 { color: #a4161a; }
-    .color-5 { color: #ffbe0b; }
-    .color-6 { color: #495057; }
-    .color-7 { color: #f15bb5; }
-    .color-8 { color: #f95738; }
-    .color-9 { color: #336699; }
-    .color-10 { color: pink; }
-    .color-11 { color: #F24236; }
-    .color-12 { color: #6F7C12; }
-    .color-13 { color: #5D2E8C; }
-    .color-14 { color: #AB3428; }
-    .color-15 { color: #C200FB; }
-    /* Add more colors as needed */
-
-    #input-group{
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-    }
-
-    #name-input {
-        display: flex; /* Use flexbox to arrange elements horizontally */
-        align-items: left; /* Center align the elements vertically */
-        flex-direction: column;
-    }
-
-    
-    #name-input select {
-        margin-top: 1px;
-        width: 80%;
-        border-radius: 2px;
-    }
-
-</style>
-
+        #new_search a{
+            color: #f17c0e;
+            text-decoration: underline;
+            text-decoration-color: grey;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-{% autoescape off %}
-
-<div class="atc-intro">
-    <h1>ATC/DDD Index 2023</h1>
-    <div>
-        <p>
-            A searchable version of the complete ATC index with DDDs is available below. The search options enable you to find ATC codes and DDDs for substance name <br>
-            and/or ATC levels. In your search result you may choose to show or hide the text from the Guidelines for ATC classification and DDD assignment linked to <br>
-            the ATC level. The text in the Guidelines will give information related to the background for the ATC and DDD assignment.
-        </p>
-    </div>
-    
-    <h2 style="margin-top: 10px;">Search query</h2>
-</div>
-
-<div class="row">
-    <form>
-        <div id="input-group">
-            <input id="atc_code_query" type="text" style="height:80%;" placeholder="ATC code">
-            <div><span>or</span></div>
-            <div id="name-input">
-                <input id="atc_name_query" type="text" placeholder="name">
-                <!-- Dropdown List -->
-                <select id="queryOption">
-                    <option value="containing">containing query</option>
-                    <option value="startingwith">starting with query</option>
-                </select>
-            </div>
-            <button type="submit" style="height:80%; font-weight: 600;">Search</button>
+    {% autoescape off %}
+        <div class="row">
+                <div id="new_search">
+                    <a href="{% url 'atc_lookup' %}" style="margin-left: 550px;" >New search</a>
+                </div>
         </div>
-    </form>
-</div>
 
-<p>ATC code: {{ atc_code_inp }}</p>
-<p>ATC name query: {{ atc_name_inp }}</p>
-<p>search_result: {{ search_result }}</p>
+        {% if atc_name_inp %}
+            <p>Found {{ search_result|length }} entries {{query_option}} '{{ atc_name_inp }}'.</p>
+        {% endif %}
+        <div id="query_result">
+            <ul class="tree">
+                {% for rs in search_result %}
+                    <li>
+                        {{ rs.id }}<a href="#" class="desc atc_sub_levels"
+                        data-remote-url="{% url 'get-atc-sub-levels' %}"
+                        data-atc-code="{{ rs.id }}" 
+                        data-target="#query_result">{{ rs.name }} </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
 
-{% endautoescape %}
+        <p>{{data}}</p>
+    {% endautoescape %}
+{% endblock %}
+
+{% block addon_js %}
+    <script>
+        $('.atc_sub_levels').click(function (e) {
+            e.preventDefault();
+            let atc_code = $(this).data('atc-code');
+            let url = $(this).data('remote-url');
+            
+            // Pass the clicked element as an argument to handleAjaxResponse
+            handleAjaxResponse(this, url, atc_code);
+        });
+
+        function handleAjaxResponse(clickedElement, url, atc_code) {
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: {
+                    'atc_code': atc_code,
+                },
+                success: function (response) {
+                    // Append sub unordered list to the clicked element
+                    var subList = '<ul><li>Subitem 1</li><li>Subitem 2</li></ul>';
+                    $(clickedElement).append(subList);
+                },
+                error: function (xhr, status, error) {
+                    alert('AJAX Error:', error);
+                }
+            });
+}
+
+    </script>
 {% endblock %}

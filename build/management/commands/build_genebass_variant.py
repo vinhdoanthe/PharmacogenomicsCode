@@ -1,6 +1,5 @@
 import logging
 import os
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
@@ -12,7 +11,6 @@ from variant.models import (
     Variant,
     VariantPhenocode,
 )
-
 
 class Command(BaseCommand):
     help = "Build Genebass Variant Data"
@@ -29,7 +27,7 @@ class Command(BaseCommand):
 
     # source file directory
     genebassvariantdata_data_dir = os.sep.join(
-        [settings.DATA_DIR, "genebass_variant_data/new-data"])
+        [settings.DATA_DIR, "genebass_variant_data/input_07_sep"])
 
     def handle(self, *args, **options):
         if options["filename"]:
