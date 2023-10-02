@@ -72,9 +72,9 @@ table.dataTable.compact thead th.rightborder {
     border-right: 1px solid;
 }
 
-#structures_scrollable tr td {
-    margin: 10px 0 0 0;
-}
+/*#structures_scrollable tr td {*/
+/*    margin: 10px 0 0 0;*/
+/*}*/
 
 /*.yadcf-filter-range {*/
 /*    grid-auto-columns: auto;*/
@@ -170,10 +170,10 @@ table.dataTable.compact thead th.rightborder {
     margin-left: 10px;
 }
 
-#structures_scrollable_table {
-    margin-top: 60px;
-    max-width: 100%;
-}
+/*#structures_scrollable_table {*/
+/*    margin-top: 60px;*/
+/*    max-width: 100%;*/
+/*}*/
 
 /* #structures_scrollable_table tr td.color5 {
     margin-right: 10px;
@@ -188,20 +188,20 @@ td.color-value {
 }
 
 
-.gene-table-container {
-    padding-top: 0;
-    font-size: 14px;
-    white-space: nowrap;
-    overflow-y:hidden;
-    width: 100%
-}
+/*.gene-table-container {*/
+/*    padding-top: 0;*/
+/*    font-size: 14px;*/
+/*    white-space: nowrap;*/
+/*    overflow-y:hidden;*/
+/*    width: 100%*/
+/*}*/
 
 table.th.td {
     text-align: left;
 }
 
 #structures_scrollable {
-    width: 100%;
+    /*width: 100%;*/
     margin-top: 10px;
     font-size: 12px;
     margin-left: 0;

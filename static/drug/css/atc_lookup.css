@@ -15,7 +15,7 @@
     padding: 0 15px;
 }
 
-.fas.fa-info{
+.fas.fa-info {
     color: grey;
 }
 
@@ -39,6 +39,7 @@ li a:hover {
     color: black; /* Change the text color to black when hovered */
     cursor: pointer; /* Change the cursor to a pointer */
 }
+
 li a {
     padding: 4px;
 }
@@ -48,4 +49,112 @@ li a {
     text-decoration-color: #a7a2a0;
     color: #f17c0e;
     font-weight: bold;
+}
+
+/* Add some basic styling for layout */
+.atc-intro {
+    color: #000;
+}
+
+#atc-l1 {
+    margin-top: 30px;
+}
+
+input[type="text"] {
+    padding: 5px;
+}
+
+input[type="text"]:focus {
+    border-color: #007BFF; /* Change the border color when the input is in focus */
+}
+
+/* Style the placeholder text */
+input[type="text"]::placeholder {
+    color: #999; /* Set the placeholder text color */
+}
+
+button {
+    padding: 5px 10px;
+}
+
+/* Define an array of colors */
+.color-1 {
+    color: #5733FF;
+}
+
+.color-2 {
+    color: #FF5733;
+}
+
+.color-3 {
+    color: #38b000;
+}
+
+.color-4 {
+    color: #a4161a;
+}
+
+.color-5 {
+    color: #ffbe0b;
+}
+
+.color-6 {
+    color: #495057;
+}
+
+.color-7 {
+    color: #f15bb5;
+}
+
+.color-8 {
+    color: #f95738;
+}
+
+.color-9 {
+    color: #336699;
+}
+
+.color-10 {
+    color: pink;
+}
+
+.color-11 {
+    color: #F24236;
+}
+
+.color-12 {
+    color: #6F7C12;
+}
+
+.color-13 {
+    color: #5D2E8C;
+}
+
+.color-14 {
+    color: #AB3428;
+}
+
+.color-15 {
+    color: #C200FB;
+}
+
+/* Add more colors as needed */
+
+#input-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+#name-input {
+    display: flex; /* Use flexbox to arrange elements horizontally */
+    align-items: left; /* Center align the elements vertically */
+    flex-direction: column;
+}
+
+
+#name-input select {
+    margin-top: 1px;
+    width: 80%;
+    border-radius: 2px;
 }

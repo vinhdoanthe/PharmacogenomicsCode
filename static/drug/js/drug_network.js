@@ -71,8 +71,26 @@ function readInteractionJSON() {
 
 
 window.onload = function () {
-    readDrugJSON();
+    //readDrugJSON();
+    getDrugJsonData(drugBankId);
 };
+
+function getDrugJsonData(drugBankId) {
+    // Call to Server to get the data
+    // drug_xlsxData
+    // protein_xlsxData
+    // interaction_xlsxData
+    var url = '/get-drug-network'
+    $.ajax({
+        type: 'GET',
+        url: url + '?drugbank_id=' + drugBankId,
+    }, function (data) {
+        console.log(data);
+    })
+
+    // call process data
+    //processData();
+}
 
 var exportButton = document.getElementById('exportButton');
 exportButton.addEventListener('click', function () {
