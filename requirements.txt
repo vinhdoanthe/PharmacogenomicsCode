@@ -23,8 +23,8 @@ gunicorn==20.1.0
 django-debug-toolbar==4.0.0
 pycodestyle==2.10.0
 djlint==1.25.0
-django-livereload-server==0.4
 django-select2==8.1.2
 djangorestframework==3.14.0
 drf-yasg
 drf-yasg[validation]
+newrelic==9.1.0

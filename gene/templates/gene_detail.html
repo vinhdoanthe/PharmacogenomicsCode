@@ -18,232 +18,232 @@
 
 {% block content %}
     {% autoescape off %}
-        <div class="row">
-            <div class="col-md-2" style="background-color: rgba(224, 225, 221, 0.3); height: inherit;">
-                <p style="font-size: 17px; display: block; margin-bottom: 20px;"><strong>Gene name:</strong> <span style="color: #337ab7">{{gene}} ({{geneID}})</span></p>
-                {% include '_filter.html' with transcripts=transcripts consequences=consequences variants=variants %}
-            </div>
-            <div class="col-md-10" >
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div id="gene-2d-chart" style="height: inherit;"></div>
-                    </div>
+        <div>
+        <div class="col-md-2" style="background-color: rgba(224, 225, 221, 0.3); height: inherit;">
+            <p style="font-size: 17px; display: block; margin-bottom: 20px;"><strong>Gene name:</strong> <span
+                    style="color: #337ab7">{{ gene }} ({{ geneID }})</span></p>
+            {% include '_filter.html' with transcripts=transcripts consequences=consequences variants=variants %}
+        </div>
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="gene-2d-chart" style="height: inherit;"></div>
                 </div>
-                <div class="gene-table-container">
-                    {% include '_buttons.html' %}
-                    <div id="structures_scrollable_table">
-                        <table class="display compact text-nowrap" id="structures_scrollable">
-                            <thead id="headers">
-                                <tr>
-                                    <th rowspan="2">Variant</th>
-                                    <th rowspan="2">Transcript</th>
-                                    <th rowspan="2">Canonical</th>
-                                    <th rowspan="2">Sequence<br>position</th>
-                                    <th rowspan="2">Wildtype AA</th>
-                                    <th rowspan="2">Mutant AA</th>
-                                    <th rowspan="2">Codons</th>
-                                    <th rowspan="2">Consequence</th>
-                                    <th rowspan="2">Mean <br> VEP scores</th>
-                                    <th rowspan="2"><a id="show-all-vep-score" href="#">Show all<br> VEP Scores</a> </th>
-                                    <th colspan="40">VEP scores from different algorithms <a href="#" id="vep-score-algorithms">Hide all</a> </th>
-                                </tr>
-                                <tr>
-                                    <!-- Score block -->
-                                    <th>Polyphen2_</br>HDIV</th>
-                                    <th>Polyphen2_</br>HVAR</th>
-                                    <th>SIFT4G_</br>converted</th>
-                                    <th>SIFT_</br>converted</th>
+            </div>
+            <div class="gene-table-container">
+                {% include '_buttons.html' %}
+                <div id="structures_scrollable_table">
+                    <table class="display compact text-nowrap" id="structures_scrollable">
+                        <thead id="headers">
+                        <tr>
+                            <th rowspan="2">Variant</th>
+                            <th rowspan="2">Transcript</th>
+                            <th rowspan="2">Canonical</th>
+                            <th rowspan="2">Sequence<br>position</th>
+                            <th rowspan="2">Wildtype AA</th>
+                            <th rowspan="2">Mutant AA</th>
+                            <th rowspan="2">Codons</th>
+                            <th rowspan="2">Consequence</th>
+                            <th rowspan="2">Mean <br> VEP scores</th>
+                            <th rowspan="2"><a id="show-all-vep-score" href="#">Show all<br> VEP Scores</a></th>
+                            <th colspan="40">VEP scores from different algorithms <a href="#" id="vep-score-algorithms">Hide
+                                all</a></th>
+                        </tr>
+                        <tr>
+                            <!-- Score block -->
+                            <th>Polyphen2_</br>HDIV</th>
+                            <th>Polyphen2_</br>HVAR</th>
+                            <th>SIFT4G_</br>converted</th>
+                            <th>SIFT_</br>converted</th>
 
-                                    <th>BayesDel_</br>addAF</th>
-                                    <th>BayesDel_</br>noAF</th>
-                                    <th>CADD_</br>raw</th>
-                                    <th>ClinPred</th>
-                                    <th>DANN</th>
+                            <th>BayesDel_</br>addAF</th>
+                            <th>BayesDel_</br>noAF</th>
+                            <th>CADD_</br>raw</th>
+                            <th>ClinPred</th>
+                            <th>DANN</th>
 
-                                    <th>DEOGEN2</th>
-                                    <th>Eigen_PC_</br>raw_coding</th>
-                                    <th>Eigen_raw_</br>coding</th>
-                                    <th>FATHMM_</br>converted</th>
-                                    <th>GERP_RS</th>
+                            <th>DEOGEN2</th>
+                            <th>Eigen_PC_</br>raw_coding</th>
+                            <th>Eigen_raw_</br>coding</th>
+                            <th>FATHMM_</br>converted</th>
+                            <th>GERP_RS</th>
 
-                                    <th>GM12878_</br>fitCons</th>
-                                    <th>Geno</br>Canyon</th>
-                                    <th>H1_hESC_</br>fitCons</th>
-                                    <th>HUVEC_</br>fitCons</th>
-                                    <th>LIST_S2</th>
+                            <th>GM12878_</br>fitCons</th>
+                            <th>Geno</br>Canyon</th>
+                            <th>H1_hESC_</br>fitCons</th>
+                            <th>HUVEC_</br>fitCons</th>
+                            <th>LIST_S2</th>
 
-                                    <th>LRT_</br>converted</th>
-                                    <th>M_CAP</th>
-                                    <th>MPC</th>
-                                    <th>MVP</th>
-                                    <th>MetaLR</th>
+                            <th>LRT_</br>converted</th>
+                            <th>M_CAP</th>
+                            <th>MPC</th>
+                            <th>MVP</th>
+                            <th>MetaLR</th>
 
-                                    <th>MetaRNN</th>
-                                    <th>MetaSVM</th>
-                                    <th>MutPred</th>
-                                    <th>Mutation</br>Assessor</th>
-                                    <th>Mutation</br>Taster_</br>converted</th>
+                            <th>MetaRNN</th>
+                            <th>MetaSVM</th>
+                            <th>MutPred</th>
+                            <th>Mutation</br>Assessor</th>
+                            <th>Mutation</br>Taster_</br>converted</th>
 
-                                    <th>PROVEAN_</br>converted</th>
-                                    <th>PrimateAI</th>
-                                    <th>REVEL</th>
+                            <th>PROVEAN_</br>converted</th>
+                            <th>PrimateAI</th>
+                            <th>REVEL</th>
 
-                                    <th>SiPhy_</br>29way_</br>logOdds</th>
-                                    <th>VEST4</th>
-                                    <th>bStatistic</br>converted</th>
+                            <th>SiPhy_</br>29way_</br>logOdds</th>
+                            <th>VEST4</th>
+                            <th>bStatistic</br>converted</th>
 
-                                    <th>Fathmm_</br>MKL_coding</th>
-                                    <th>Fathmm_XF</br>_coding</th>
-                                    <th>Integrated_</br>fitCons</th>
-                                    <th>PhastCons</br>30way_</br>mammalian</th>
-                                    <th>Phylo_</br>P30way_</br>mammalian</th>
-                                </tr>
-                            </thead>
-                            <tbody id='structures_scrollable_body'>
-                            {% for value in array %}
-                                <tr class="data-row">
-                                    <td class="align-left"><a href="#" class="variants-table-row"
-                                                              data-remote-url="{% url 'variant:get-genebass-tables' %}"
-                                                              data-variant-marker="{{ value.0 }}" data-toggle="modal"
-                                                              data-target="#genebassModal">{{ value.0 }}</a></td>
-                                    <td class="align-left">{{ value.1 }}</td>
-                                    <td class="align-left">{{ value.50 }}</td>
-                                    <td class="align-left">{{ value.5 }}</td>
-                                    <td class="align-left">{{ value.6|slice:":1" }}</td>
-                                    <td class="align-left">{{ value.6|slice:"2:3" }}</td>
-                                    <td class="align-left">{{ value.7 }}</td>
-                                    <td class="align-left">{{ value.2 }}</td>
-                                    <td class="align-left">{{ value|last }}</td>
-                                    <td><a href="#" class="variant_statistics"
-                                                    data-remote-url="{% url 'variant:get-plots' %}"
-                                                    data-variant-marker="{{ value.0 }}" data-toggle="modal"
-                                                    data-target="#variantPlots">Show variant's VEP statistics</a></td>
-                                        
+                            <th>Fathmm_</br>MKL_coding</th>
+                            <th>Fathmm_XF</br>_coding</th>
+                            <th>Integrated_</br>fitCons</th>
+                            <th>PhastCons</br>30way_</br>mammalian</th>
+                            <th>Phylo_</br>P30way_</br>mammalian</th>
+                        </tr>
+                        </thead>
+                        <tbody id='structures_scrollable_body'>
+                        {% for value in array %}
+                            <tr class="data-row">
+                                <td class="align-left"><a href="#" class="variants-table-row"
+                                                          data-remote-url="{% url 'variant:get-genebass-tables' %}"
+                                                          data-variant-marker="{{ value.0 }}" data-toggle="modal"
+                                                          data-target="#genebassModal">{{ value.0 }}</a></td>
+                                <td class="align-left">{{ value.1 }}</td>
+                                <td class="align-left">{{ value.50 }}</td>
+                                <td class="align-left">{{ value.5 }}</td>
+                                <td class="align-left">{{ value.6|slice:":1" }}</td>
+                                <td class="align-left">{{ value.6|slice:"2:3" }}</td>
+                                <td class="align-left">{{ value.7 }}</td>
+                                <td class="align-left">{{ value.2 }}</td>
+                                <td class="align-left">{{ value|last }}</td>
+                                <td><a href="#" class="variant_statistics"
+                                       data-remote-url="{% url 'variant:get-plots' %}"
+                                       data-variant-marker="{{ value.0 }}" data-toggle="modal"
+                                       data-target="#variantPlots">Show variant's VEP statistics</a></td>
 
-                                    {% render_variant_values_in_color_ranges value.36 %} <!-- Polyphen2 HDIV-->
-                                    {% render_variant_values_in_color_ranges value.37 %} <!-- Polyphen2 HVAR-->
-                                    {% render_variant_values_in_color_ranges value.40 %} <!-- SIFT4G converted-->
-                                    {% render_variant_values_in_color_ranges value.41 %} <!-- SIFT converted-->
 
-                                    {% render_variant_values_in_color_ranges value.10 %}
-                                    {% render_variant_values_in_color_ranges value.11 %}
-                                    {% render_variant_values_in_color_ranges value.12 %}
-                                    {% render_variant_values_in_color_ranges value.13 %}
-                                    {% render_variant_values_in_color_ranges value.14 %}
-                                    {% render_variant_values_in_color_ranges value.15 %}
-                                    {% render_variant_values_in_color_ranges value.16 %}
-                                    {% render_variant_values_in_color_ranges value.17 %}
-                                    {% render_variant_values_in_color_ranges value.18 %}
-                                    {% render_variant_values_in_color_ranges value.19 %}
-                                    {% render_variant_values_in_color_ranges value.20 %}
-                                    {% render_variant_values_in_color_ranges value.21 %}
-                                    {% render_variant_values_in_color_ranges value.22 %}
-                                    {% render_variant_values_in_color_ranges value.23 %}
-                                    {% render_variant_values_in_color_ranges value.24 %}
-                                    {% render_variant_values_in_color_ranges value.25 %}
-                                    {% render_variant_values_in_color_ranges value.26 %}
-                                    {% render_variant_values_in_color_ranges value.27 %}
-                                    {% render_variant_values_in_color_ranges value.28 %}
-                                    {% render_variant_values_in_color_ranges value.29 %}
-                                    {% render_variant_values_in_color_ranges value.30 %}
-                                    {% render_variant_values_in_color_ranges value.31 %}
-                                    {% render_variant_values_in_color_ranges value.32 %}
-                                    {% render_variant_values_in_color_ranges value.33 %}
-                                    {% render_variant_values_in_color_ranges value.34 %}
-                                    {% render_variant_values_in_color_ranges value.35 %}
-                                    {% render_variant_values_in_color_ranges value.38 %}
-                                    {% render_variant_values_in_color_ranges value.39 %}
-                                    {% render_variant_values_in_color_ranges value.42 %}
-                                    {% render_variant_values_in_color_ranges value.43 %}
-                                    {% render_variant_values_in_color_ranges value.44 %}
-                                    {% render_variant_values_in_color_ranges value.45 %}
-                                    {% render_variant_values_in_color_ranges value.46 %}
-                                    {% render_variant_values_in_color_ranges value.47 %}
-                                    {% render_variant_values_in_color_ranges value.48 %}
-                                    {% render_variant_values_in_color_ranges value.49 %}
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        <br/>
-                    </div>
+                                {% render_variant_values_in_color_ranges value.36 %} <!-- Polyphen2 HDIV-->
+                                {% render_variant_values_in_color_ranges value.37 %} <!-- Polyphen2 HVAR-->
+                                {% render_variant_values_in_color_ranges value.40 %} <!-- SIFT4G converted-->
+                                {% render_variant_values_in_color_ranges value.41 %} <!-- SIFT converted-->
 
-                    <div class="col-sm-12" id="gene-3d-chart" style="padding: 0px; margin-bottom: 30px;">
-                        {% include "_primary_seq.html" %}
-                        <div class="col-sm-3" style="padding: 0px;"> 
-                            <p style="font-size:16px; padding-left:0; margin-left:0; color:#337ab7;">3D structure:</p>
-                            <div id="filter_3d">
-                                <div id="filter_3d_row1">
-                                    <div id="filter_3d_source">
-                                        <p>Source:</p>
-                                        <select id="sourceSelect" name="sourceSelect">
-                                            <option value="pdb">PDB</option>
-                                            <option value="af2">AlphaFold2</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div id="filter_3d_row2">
-                                    <div id="filter_chain">
-                                        <p>Chain:</p>
-                                        <select id="chainSelect" name="chain">
-                                            <option value="all" selected="selected">All</option>
-                                            <!-- <option value="B">B</option> -->
-                                        </select>
-                                    </div>
-                                    <div id="filter_3d_color">
-                                        <p>Color:</p>
-                                        <select id="colorSelect" name="color">
-                                            <option value="spectrum" selected="selected">Spectrum</option>
-                                            <option value="grey">Grey</option>
-                                        </select>
-                                    </div>
-                                    <div id="filter_3d_source">
-                                        <p>2nd structure:</p>
-                                        <select id="secondStructSelect" name="secondStructSelect">
-                                            <option value="all" selected="selected">All</option>
-                                            <option value="a">Alpha-helix</option>
-                                            <option value="b">Beta-strand</option>
-                                            <option value="c">Coil</option>
-                                            <option value="l">Loop</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div id="filter_3d_row3">
-                                    <div id="filter_3d_variant">
-                                        <p>Variant:</p>
-                                        <select id="visibilitySelect" name="variant">
-                                            <option value="hide">Hide</option>
-                                            <option value="show">Show</option>
-                                        </select>
-                                    </div>
-                                    <div id="filter_3d_resi_label">
-                                        <p>Residue label:</p>
-                                        <select id="resiLabelSelect" name="resiLabel">
-                                            <option value="hide">Hide</option>
-                                            <option value="show">Show</option>
-                                        </select>
-                                    </div>
-                                    <div id="filter_3d_style">
-                                        <p>Style:</p>
-                                        <select id="styleSelect" name="styleSelect">
-                                            <option value="cartoon">Cartoon</option>
-                                            <option value="label">Label</option>
-                                            <option value="stick">Stick</option>
-                                            <option value="line">Line</option>
-                                        </select>
-                                    </div>
-                                </div>
+                                {% render_variant_values_in_color_ranges value.10 %}
+                                {% render_variant_values_in_color_ranges value.11 %}
+                                {% render_variant_values_in_color_ranges value.12 %}
+                                {% render_variant_values_in_color_ranges value.13 %}
+                                {% render_variant_values_in_color_ranges value.14 %}
+                                {% render_variant_values_in_color_ranges value.15 %}
+                                {% render_variant_values_in_color_ranges value.16 %}
+                                {% render_variant_values_in_color_ranges value.17 %}
+                                {% render_variant_values_in_color_ranges value.18 %}
+                                {% render_variant_values_in_color_ranges value.19 %}
+                                {% render_variant_values_in_color_ranges value.20 %}
+                                {% render_variant_values_in_color_ranges value.21 %}
+                                {% render_variant_values_in_color_ranges value.22 %}
+                                {% render_variant_values_in_color_ranges value.23 %}
+                                {% render_variant_values_in_color_ranges value.24 %}
+                                {% render_variant_values_in_color_ranges value.25 %}
+                                {% render_variant_values_in_color_ranges value.26 %}
+                                {% render_variant_values_in_color_ranges value.27 %}
+                                {% render_variant_values_in_color_ranges value.28 %}
+                                {% render_variant_values_in_color_ranges value.29 %}
+                                {% render_variant_values_in_color_ranges value.30 %}
+                                {% render_variant_values_in_color_ranges value.31 %}
+                                {% render_variant_values_in_color_ranges value.32 %}
+                                {% render_variant_values_in_color_ranges value.33 %}
+                                {% render_variant_values_in_color_ranges value.34 %}
+                                {% render_variant_values_in_color_ranges value.35 %}
+                                {% render_variant_values_in_color_ranges value.38 %}
+                                {% render_variant_values_in_color_ranges value.39 %}
+                                {% render_variant_values_in_color_ranges value.42 %}
+                                {% render_variant_values_in_color_ranges value.43 %}
+                                {% render_variant_values_in_color_ranges value.44 %}
+                                {% render_variant_values_in_color_ranges value.45 %}
+                                {% render_variant_values_in_color_ranges value.46 %}
+                                {% render_variant_values_in_color_ranges value.47 %}
+                                {% render_variant_values_in_color_ranges value.48 %}
+                                {% render_variant_values_in_color_ranges value.49 %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <br/>
+                </div>
+            </div>
+            {% include "_primary_seq.html" %}
+            <div id="gene-3d-chart" style="padding: 0px; margin-bottom: 30px;">
+                <div class="col-sm-3" style="padding: 0px;">
+                    <p style="font-size:16px; padding-left:0; margin-left:0; color:#337ab7;">3D structure:</p>
+                    <div id="filter_3d">
+                        <div id="filter_3d_row1">
+                            <div id="filter_3d_source">
+                                <p>Source:</p>
+                                <select id="sourceSelect" name="sourceSelect">
+                                    <option value="pdb">PDB</option>
+                                    <option value="af2">AlphaFold2</option>
+                                </select>
                             </div>
                         </div>
-                        
-                        <div id="structure_3D" class="col-sm-9" >
-                            {% include '_3d_view.html' %}
+                        <div id="filter_3d_row2">
+                            <div id="filter_chain">
+                                <p>Chain:</p>
+                                <select id="chainSelect" name="chain">
+                                    <option value="all" selected="selected">All</option>
+                                    <!-- <option value="B">B</option> -->
+                                </select>
+                            </div>
+                            <div id="filter_3d_color">
+                                <p>Color:</p>
+                                <select id="colorSelect" name="color">
+                                    <option value="spectrum" selected="selected">Spectrum</option>
+                                    <option value="grey">Grey</option>
+                                </select>
+                            </div>
+                            <div id="filter_3d_source">
+                                <p>2nd structure:</p>
+                                <select id="secondStructSelect" name="secondStructSelect">
+                                    <option value="all" selected="selected">All</option>
+                                    <option value="a">Alpha-helix</option>
+                                    <option value="b">Beta-strand</option>
+                                    <option value="c">Coil</option>
+                                    <option value="l">Loop</option>
+                                </select>
+                            </div>
                         </div>
-
+                        <div id="filter_3d_row3">
+                            <div id="filter_3d_variant">
+                                <p>Variant:</p>
+                                <select id="visibilitySelect" name="variant">
+                                    <option value="hide">Hide</option>
+                                    <option value="show">Show</option>
+                                </select>
+                            </div>
+                            <div id="filter_3d_resi_label">
+                                <p>Residue label:</p>
+                                <select id="resiLabelSelect" name="resiLabel">
+                                    <option value="hide">Hide</option>
+                                    <option value="show">Show</option>
+                                </select>
+                            </div>
+                            <div id="filter_3d_style">
+                                <p>Style:</p>
+                                <select id="styleSelect" name="styleSelect">
+                                    <option value="cartoon">Cartoon</option>
+                                    <option value="label">Label</option>
+                                    <option value="stick">Stick</option>
+                                    <option value="line">Line</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
+
+                <div id="structure_3D" class="col-sm-9">
+                    {% include '_3d_view.html' %}
+                </div>
+
             </div>
+
             <!-- The genebass modal -->
             <div class="modal fade" id="genebassModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
                  aria-hidden="true">
@@ -320,7 +320,7 @@
                 )
             })
 
-            $('.data-row').click( function (e) {
+            $('.data-row').click(function (e) {
                 // XU LY CLICK VAO LINK VARIANT STATISTIC THI HANDLE SU KIEN
                 if ($(e.target).attr('class').includes('variant_statistics')) {
                     e.preventDefault();
@@ -446,14 +446,14 @@
             // Iterate over the color-coded text spans
             colorCodedSpans.forEach((span, index) => {
                 // Calculate the absolute position of the character
-                const absolutePosition = index+1;
+                const absolutePosition = index + 1;
 
                 // Add a data attribute to the span to store the absolute position
                 span.setAttribute("data-absolutePosition", absolutePosition);
 
             });
 
-            $("a span.color-coded-text").on("click", function(e){
+            $("a span.color-coded-text").on("click", function (e) {
                     e.preventDefault();
                     let position = e.target.dataset.absoluteposition;
                     let labelText = e.target.textContent;
@@ -464,7 +464,7 @@
             );
         })
 
-        function hideAllVepScoreColumns () {
+        function hideAllVepScoreColumns() {
             var table = $('#structures_scrollable').DataTable();
             var start_col_index = 10
             var end_col_index = 49
@@ -528,7 +528,7 @@
 
             var piePagina = "</table></body></html>";
             var tabla = encabezado + header + excel_content + piePagina;
-            var myBlob =  new Blob( [tabla] , {type:'application/vnd.ms-excel'});
+            var myBlob = new Blob([tabla], {type: 'application/vnd.ms-excel'});
             var url = window.URL.createObjectURL(myBlob);
             var a = document.createElement("a");
             document.body.appendChild(a);
@@ -536,7 +536,9 @@
             a.download = "DrugBrowserData.xls";
             a.click();
 
-            setTimeout(function() {window.URL.revokeObjectURL(url);},0);
+            setTimeout(function () {
+                window.URL.revokeObjectURL(url);
+            }, 0);
         });
 
         // Ham xu ly export modal genebass table
@@ -570,7 +572,7 @@
 
             var piePagina = "</table></body></html>";
             var tabla = encabezado + header + excel_content + piePagina;
-            var myBlob =  new Blob( [tabla] , {type:'application/vnd.ms-excel'});
+            var myBlob = new Blob([tabla], {type: 'application/vnd.ms-excel'});
             var url = window.URL.createObjectURL(myBlob);
             var a = document.createElement("a");
             document.body.appendChild(a);
@@ -578,7 +580,9 @@
             a.download = "DrugBrowserData.xls";
             a.click();
 
-            setTimeout(function() {window.URL.revokeObjectURL(url);},0);
+            setTimeout(function () {
+                window.URL.revokeObjectURL(url);
+            }, 0);
         });
 
         <!-- Script for ploting the 2D gene viewer -->
@@ -734,7 +738,7 @@
         }
 
         // return 3 list of transcript, variant, consequence corresponding to new mean VEP inputs
-        function get_updated_select_values(){
+        function get_updated_select_values() {
 
             let filter_values = get_updated_filter_params();
             let list_transcripts_options = [];
@@ -767,7 +771,7 @@
             };
         }
 
-        function get_filtered_data_for_redrawing_chart(){
+        function get_filtered_data_for_redrawing_chart() {
 
             let filter_values = get_updated_filter_params();
             let filtered_list_vep_variants_pos = [];
@@ -798,8 +802,8 @@
             }
         }
 
-        function update_selection(){
-            values=get_updated_select_values();
+        function update_selection() {
+            values = get_updated_select_values();
             // UPDATE_FILTER_PARAMS FOR TRANSCRIPT SELECT
             var $trans = $('#transcript-select').select2();
             $trans.empty(); // remove old options
@@ -943,16 +947,17 @@
                 },
                 x0: "Total Bill"
             }]
-        
+
             var layout = {
                 title: "",
                 yaxis: {
                     zeroline: false
                 }
             }
-        
+
             Plotly.newPlot('variantPlots_content', data, layout);
         }
+
         function redraw_genebass_modal() {
             let genebass_table = $("#genebass-tables")
             genebass_table.show()
@@ -985,7 +990,7 @@
             //column_filters = column_filters.concat(createYADCFfilters(3, 1, "multi_select", "select2", "Select", false, null, null));
 
             yadcf.init(
-                genebass_variant_table, 
+                genebass_variant_table,
                 //column_filters, 
                 [
                     {
@@ -995,8 +1000,8 @@
                     },
                 ],
                 {
-                cumulative_filtering: false
-                } 
+                    cumulative_filtering: false
+                }
             );
 
             gray_scale_table(genebass_table);
@@ -1011,7 +1016,7 @@
         let positionsToColor = [...new Set(list_vep_variants_pos)];
 
         viewer_bkup = viewer;
-        
+
         // Count the number of chains
         const chains = new Set();
         const atoms = viewer.getModel().selectedAtoms({});
@@ -1019,70 +1024,74 @@
             const atom = atoms[i];
             chains.add(atom.chain);
         }
-        
+
         const chainSelect = document.getElementById('chainSelect');
         const chainArray = Array.from(chains); // Convert the set to an array for easier manipulation
         chainArray.sort(); // Sort the chains in alphabetical order (optional)
-        for (const chain of chainArray) 
-        {
+        for (const chain of chainArray) {
             const option = document.createElement("option");
             option.value = chain;
             option.textContent = chain;
             chainSelect.appendChild(option);
         }
-        
-        chainSelect.addEventListener('change',  (event) => {
+
+        chainSelect.addEventListener('change', (event) => {
             var selectedChain = chainSelect.value;
-            
+
             if (selectedChain !== "") {
-                viewer.setStyle({}, {cartoon: {color:'grey', opacity:0.5}});
-                viewer.addStyle({chain: selectedChain}, {cartoon: {color:'spectrum' , opacity:1}});
+                viewer.setStyle({}, {cartoon: {color: 'grey', opacity: 0.5}});
+                viewer.addStyle({chain: selectedChain}, {cartoon: {color: 'spectrum', opacity: 1}});
             }
             viewer.render();
         });
 
-        let colorVariantPosition = function(atom, color1, color2) 
-        {
+        let colorVariantPosition = function (atom, color1, color2) {
             // Check if the current residue position is in the list
             if (positionsToColor.includes(atom.resi)) {
-                return color1; 
+                return color1;
             } else {
-                return color2; 
+                return color2;
             }
         };
-       
+
         const resiLabelSelect = document.getElementById('resiLabelSelect');
         let toremoveLabel = null;
-        resiLabelSelect.addEventListener('change',  (event) => {
+        resiLabelSelect.addEventListener('change', (event) => {
             const selectedResiVisibility = event.target.value;
             if (selectedResiVisibility === 'hide') {
-                if (toremoveLabel!= null){
+                if (toremoveLabel != null) {
                     viewer.removeLabel(toremoveLabel);
                     toremoveLabel = null;
                 }
             } else {
-                toremoveLabel = viewer.addResLabels({hetflag:false}, {font: 'Arial', fontSize: 6,  fontColor:'black',showBackground:false, screenOffset: {x:0,y:0}});
+                toremoveLabel = viewer.addResLabels({hetflag: false}, {
+                    font: 'Arial',
+                    fontSize: 6,
+                    fontColor: 'black',
+                    showBackground: false,
+                    screenOffset: {x: 0, y: 0}
+                });
             }
             viewer.render();
         });
-        
+
         const visibilitySelect = document.getElementById('visibilitySelect');
-        visibilitySelect.addEventListener('change',  (event) => {
+        visibilitySelect.addEventListener('change', (event) => {
             const selectedvisibility = event.target.value;
             if (selectedvisibility === 'hide') {
-                viewer.setStyle({}, {cartoon: { color: "spectrum" } });
+                viewer.setStyle({}, {cartoon: {color: "spectrum"}});
             } else {
-                viewer.setStyle({}, {cartoon: {color:'grey', thickness:0.5}});
+                viewer.setStyle({}, {cartoon: {color: 'grey', thickness: 0.5}});
                 // viewer.setStyle({resi: positionsToColor}, {cartoon: {color:'green', thickness:1.0}});  
                 // viewer.addStyle({resi: positionsToColor}, {stick: {colorscheme:'greenCarbon'}});  
                 // viewer.addStyle({resi: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]}, {stick: {colorscheme:'greenCarbon'}});  
-                viewer.addStyle({resi: [5, 10, 15, 20, 25, 30, 35, 40]}, {stick: {colorscheme:'greenCarbon'}});  
+                viewer.addStyle({resi: [5, 10, 15, 20, 25, 30, 35, 40]}, {stick: {colorscheme: 'greenCarbon'}});
             }
             viewer.render();
         });
 
         var colorSelect = document.getElementById('colorSelect');
-        colorSelect.addEventListener('change',  (event) => {
+        colorSelect.addEventListener('change', (event) => {
             const selectedColor = event.target.value;
             if (selectedColor === 'grey') {
                 viewer.setStyle({}, {cartoon: {color: 'grey'}});
@@ -1090,8 +1099,8 @@
                 viewer.setStyle({}, {cartoon: {color: 'spectrum'}});
                 for (const option of visibilitySelect.options) {
                     if (option.value === "hide") {
-                    option.selected = true;
-                    break;
+                        option.selected = true;
+                        break;
                     }
                 }
             }
@@ -1099,7 +1108,7 @@
         });
 
         const sourceSelect = document.getElementById('sourceSelect');
-        sourceSelect.addEventListener('change',  (event) => {
+        sourceSelect.addEventListener('change', (event) => {
             const sourceSelect = event.target.value;
             if (sourceSelect === 'pdb') {
             } else {
@@ -1109,7 +1118,7 @@
 
         // Add a label for a specific residue at position "nth"
         function addLabelForResidueNth(nth, labelText, labelOptions) {
-            const labels = viewer.addResLabels({ resi: nth }, labelOptions);
+            const labels = viewer.addResLabels({resi: nth}, labelOptions);
             return labels;
         }
 

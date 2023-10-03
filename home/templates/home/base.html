@@ -29,9 +29,8 @@
 
 </head>
 <body>
-{% include 'home/mainmenu.html' %}
-
 <div class="container-fluid" id="content">
+    {% include 'home/mainmenu.html' %}
     <div id="gpcrdb_alert_placeholder"></div>
     {% block content %}{% endblock %}
 </div>

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 
+import newrelic.agent as newrelic_agent
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,7 +24,8 @@ DATA_DIR = os.path.join(BASE_DIR, 'data')
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("SECRET_KEY", default="django-insecure-hv1(e0r@v4n4m6gqdz%dn(60o=dsy8&@0_lbs8p-v3u^bs4)xl", cast=str)
+SECRET_KEY = config("SECRET_KEY", default="django-insecure-hv1(e0r@v4n4m6gqdz%dn(60o=dsy8&@0_lbs8p-v3u^bs4)xl",
+                    cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -68,14 +70,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
-if DEBUG:
-    INSTALLED_APPS += [
-        "livereload",
-    ]
-    MIDDLEWARE += [
-        'livereload.middleware.LiveReloadScript',
-    ]
 
 ROOT_URLCONF = "conf.urls"
 
@@ -127,7 +121,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -138,7 +131,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -156,7 +148,7 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-INTERNAL_IPS = ["127.0.0.1",]
+INTERNAL_IPS = ["127.0.0.1", ]
 
 VEP_VARIANT_ITEMS_PER_IMPORT = config("VEP_VARIANT_ITEMS_PER_IMPORT", default=100000, cast=int)
 GB_VARIANT_ITEMS_PER_IMPORT = config("GB_VARIANT_ITEMS_PER_IMPORT", default=100000, cast=int)
@@ -175,3 +167,8 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+ENABLE_NEW_RELIC = config('ENABLE_NEW_RELIC', default=False)
+
+if ENABLE_NEW_RELIC:
+    newrelic_agent.initialize('newrelic.ini', 'development')

@@ -1,8 +1,8 @@
 import decimal
+import random
 import warnings
 
 from django.core.cache import cache
-import random
 from django.db.models import (
     F,
     IntegerField,
@@ -218,6 +218,7 @@ class GeneDetailBaseView(object):
         if slug is not None:
             if cache.get("variant_data_" + slug) is not None:
                 table_with_protein_pos_int = cache.get("variant_data_" + slug)
+                print("cache hit")
             else:
                 browser_columns = self.browser_columns
 
@@ -259,25 +260,18 @@ class GeneDetailBaseView(object):
                             mean_vep_score = round(np.mean(cleaned_values), 2)
                             table_with_mean_vep_score.append(np.append(data_row, mean_vep_score))
                     except Exception as e:
-                        print("Error in calculating mean VEP score {0}".format(data_row[10:]))
-                        print("-------------------")
-                        print(e)
+                        pass
+
                 table_with_protein_pos_int = []
                 for data_row in table_with_mean_vep_score:
                     try:
                         data_row[5] = int(data_row[5])  # protein position
-                        # BELOW CODE LINE IS FOR MOCK DATA PURPOSE
-                        # primary = bool(random.getrandbits(1))
-                        # data_row = np.append(data_row, [primary])
-
                         table_with_protein_pos_int.append(data_row)
                     except Exception as e:
-                        print("Error in converting protein position to int {0}".format(data_row[5]))
-                        print("-------------------")
-                        print(e)
+                        pass
 
                 cache.set("variant_data_" + slug, table_with_protein_pos_int, 60 * 60)
-            # print("table_with_protein_pos_int : ", table_with_protein_pos_int) 
+
             context['array'] = table_with_protein_pos_int
             context['length'] = len(table_with_protein_pos_int)
             context["name_dic"] = self.name_dic
@@ -326,7 +320,7 @@ class GeneDetailBrowser(
         return context
 
 
-class genebassVariantListView(TemplateView):
+class GenebassVariantListView(TemplateView):
     template_name = "genebass/variant_list.html"
 
     def get_context_data(self, **kwargs):
