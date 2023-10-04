@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     "rest_framework",
     "drf_yasg",
+    "django_filters",
 
     "protein.apps.ProteinConfig",
     "gene.apps.GeneConfig",

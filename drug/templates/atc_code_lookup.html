@@ -28,7 +28,7 @@
         <div class="row">
             <form method="GET">
                 <div id="input-group">
-                    <input id="atc_code_query" type="text" style="height:80%;" placeholder="ATC code">
+                    <input id="atc_code_query" type="text"  placeholder="ATC code">
                     <div><span>or</span></div>
                     <div id="name-input">
                         <input id="atc_name_query" type="text" placeholder="name">
@@ -38,37 +38,25 @@
                             <option value="startingwith">starting with query</option>
                         </select>
                     </div>
-                    <button type="submit" style="height:80%; font-weight: 600;" id='search'>Search</button>
+                    <button type="submit" id='search'>Search</button>
                 </div>
             </form>
         </div>
 
         <div class="atc-intro">
             <h2>ATC code</h2>
-            <ul>
-                <li>All ATC levels are searchable.</li>
-                <li>A search will result in showing the exact substance or level and all ATC levels above (up to 1st ATC
-                    level).
-                </li>
-            </ul>
+            <div>
+                <p>All ATC levels are searchable.
+                    A search will result in showing the exact substance or level and all ATC levels above (up to 1st ATC level).</p>
+            </div>
         </div>
-        <table id="atc-l1">
-            <tbody>
-            {% for group in group1s %}
-                <tr>
-                    <td style="margin: 0 10px; display: block; font-weight:400; font-size: 18px;"
-                        class="color-{{ forloop.counter }}">{{ group.id }}</td>
-                    <td><a href="{% url 'atc-detail-view' %}?group_id={{ group.id }}&group_name={{ group.name }}"
-                           target="_blank">{{ group.name }} </a><a href="#" class="info"><i class="fas fa-info"></i>
-                    </a></td>
-                </tr>
+        <div id="atc-l1">
+            {% for group in atc_groups %}
+                <p><a href="{% url 'atc-detail-view' %}?group_id={{ group.id }}" target="_blank">{{ group.id }}: {{ group.name }}</a></p>
             {% empty %}
-                <tr>
-                    <td colspan="2">No data available</td>
-                </tr>
+                <p>No data available</p>
             {% endfor %}
-            </tbody>
-        </table>
+        </div>
     {% endautoescape %}
 {% endblock %}
 

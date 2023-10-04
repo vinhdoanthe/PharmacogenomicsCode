@@ -1,0 +1,73 @@
+<div id="atc_left" class="col-4">
+    <!-- show data in level 1 -->
+    <ul class="tree">
+        <li>{{ group_id }} - <a href="#" class="desc">{{ group_name }}</a>
+
+            <!-- show data in level 2 -->
+            <ul>
+                {% for g2 in group2s %}
+                    {% if g2.parent_id == group_id %}
+                        <li>
+                            {{ g2.id }} - <a href="#" class="desc">{{ g2.name }} </a>
+                            <!-- show data in level 3 -->
+                            <ul>
+                                {% for g3 in group3s %}
+                                    {% if g3.parent_id == g2.id %}
+                                        <li>
+                                            {{ g3.id }} -<a href="#" class="desc"> {{ g3.name }} </a>
+                                            <!-- show data in level 4 -->
+                                            <ul>
+                                                {% for g4 in group4s %}
+                                                    {% if g4.parent_id == g3.id %}
+                                                        <li>
+                                                            {{ g4.id }} -<a href="#"
+                                                                            class="desc"> {{ g4.name }} </a>
+                                                            <!-- show data in level 5 -->
+                                                            <ul>
+                                                                {% for g5 in group5s %}
+                                                                    {% if g5.parent_id == g4.id %}
+                                                                        <li>
+                                                                            {{ g5.id }} -<a href="#"
+                                                                                            class="desc"> {{ g5.name }} </a><a
+                                                                                href="#"
+                                                                                class="info drug-atc-association"
+                                                                                data-remote-url="{% url 'get-drug-atc-association' %}"
+                                                                                data-atc-code="{{ g5.id }}"
+                                                                                data-target="#atc_right"><i
+                                                                                class="fas fa-info"></i></a>
+                                                                        </li>
+                                                                    {% endif %}
+                                                                {% empty %}
+                                                                    <li>
+                                                                        No data available
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% endif %}
+                                                {% empty %}
+                                                    <li>
+                                                        No data available
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endif %}
+                                {% empty %}
+                                    <li>
+                                        No data available
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                {% empty %}
+                    <li>
+                        No data available
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+</div>
+

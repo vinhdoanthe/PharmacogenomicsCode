@@ -2,11 +2,9 @@
 {% load static %}
 {% csrf_token %}
 
-
 {% block addon_css %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'drug/css/atc_lookup.css' %}">
-
 
     <style>
         .expanded {
@@ -85,8 +83,6 @@
         #atc_left::-webkit-scrollbar-thumb:hover {
             background: rgb(85, 85, 85, 0.4); /* Color of the thumb on hover */
         }
-
-
     </style>
 {% endblock %}
 
@@ -94,78 +90,7 @@
     {% autoescape off %}
 
         <div class="grid-container">
-            <div id="atc_left" class="col-4">
-                <!-- show data in level 1 -->
-                <ul class="tree">
-                    <li>{{ group_id }} - <a href="#" class="desc">{{ group_name }}</a>
-
-                        <!-- show data in level 2 -->
-                        <ul>
-                            {% for g2 in group2s %}
-                                {% if g2.parent_id == group_id %}
-                                    <li>
-                                        {{ g2.id }} - <a href="#" class="desc">{{ g2.name }} </a>
-                                        <!-- show data in level 3 -->
-                                        <ul>
-                                            {% for g3 in group3s %}
-                                                {% if g3.parent_id == g2.id %}
-                                                    <li>
-                                                        {{ g3.id }} -<a href="#" class="desc"> {{ g3.name }} </a>
-                                                        <!-- show data in level 4 -->
-                                                        <ul>
-                                                            {% for g4 in group4s %}
-                                                                {% if g4.parent_id == g3.id %}
-                                                                    <li>
-                                                                        {{ g4.id }} -<a href="#"
-                                                                                        class="desc"> {{ g4.name }} </a>
-                                                                        <!-- show data in level 5 -->
-                                                                        <ul>
-                                                                            {% for g5 in group5s %}
-                                                                                {% if g5.parent_id == g4.id %}
-                                                                                    <li>
-                                                                                        {{ g5.id }} -<a href="#"
-                                                                                                        class="desc"> {{ g5.name }} </a><a
-                                                                                            href="#"
-                                                                                            class="info drug-atc-association"
-                                                                                            data-remote-url="{% url 'get-drug-atc-association' %}"
-                                                                                            data-atc-code="{{ g5.id }}"
-                                                                                            data-target="#atc_right"><i
-                                                                                            class="fas fa-info"></i></a>
-                                                                                    </li>
-                                                                                {% endif %}
-                                                                            {% empty %}
-                                                                                <li>
-                                                                                    No data available
-                                                                                </li>
-                                                                            {% endfor %}
-                                                                        </ul>
-                                                                    </li>
-                                                                {% endif %}
-                                                            {% empty %}
-                                                                <li>
-                                                                    No data available
-                                                                </li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                    </li>
-                                                {% endif %}
-                                            {% empty %}
-                                                <li>
-                                                    No data available
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
-                                {% endif %}
-                            {% empty %}
-                                <li>
-                                    No data available
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+        {% include 'atc_detail/left_navigation.html' %}
             <div id="atc_right" class="col-8">
                 <!-- block for showing tables -->
 
@@ -301,14 +226,10 @@
 
             </div>
         </div>
-
-
     {% endautoescape %}
 {% endblock %}
 
-
 {% block addon_js %}
-
     <script>
         // JavaScript for toggling the visibility of nested lists
         document.querySelectorAll('.tree .desc').forEach(function (el) {
@@ -410,46 +331,6 @@
 
     <!-- script for showing network associated with a drug -->
     <script>
-        {% comment %}
-        $(document).ready(function () {
-            $('.associated_drug').on('click', function (e) {
-                e.preventDefault();
-                $.ajax({
-                    url: "{% url 'get-drug-network-frame' %}",
-                    type: "GET",
-                    data: {
-                        'drugbank_id': this.data('drugbank_id'),
-                    },
-                    success: function (response) {
-                        $("#atc_right").append(response);
-                    },
-                    error: function (xhr, status, error) {
-                        alert('AJAX Error:', error);
-                    }
-                })
-
-            });
-
-        })
-        {% endcomment %}
-
-        function drawDrugNetwork(e) {
-            //$(e).preventDefault();
-            $.ajax({
-                url: "{% url 'get-drug-network-frame' %}",
-                type: "GET",
-                data: {
-                    'drugbank_id': $(e).data('drugbank_id'),
-                },
-                success: function (response) {
-                    $("#atc_right").append(response);
-                },
-                error: function (xhr, status, error) {
-                    alert('AJAX Error:', error);
-                }
-            })
-        }
-
         function drug_network(e) {
             // $(e).preventDefault();
             // Add the 'clicked-link' class to the clicked link
@@ -515,7 +396,5 @@
                 right_panel.appendChild(right_panel_network);
             }
         };
-
-
     </script>
 {% endblock %}

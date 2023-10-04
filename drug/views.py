@@ -16,8 +16,10 @@ from django.shortcuts import (
 )
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 
+from django_filters.views import FilterView
+from drug.filters import AtcAnatomicalGroupFilter
 from drug.models import (
     AtcAnatomicalGroup,
     AtcChemicalGroup,
@@ -437,18 +439,33 @@ def drug_interaction_detail(request, drugbank_id):
     return render(request, 'drug_atc_tabs.html', context)
 
 
+class AtcAnatomicalGroupListView(FilterView, ListView):
+    template_name = 'atc_anatomical_group_list.html'
+    filterset_class = AtcAnatomicalGroupFilter
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_queryset(self):
+        return AtcAnatomicalGroup.objects.all()
+
+
 def atc_lookup(request):
-    group1s = AtcAnatomicalGroup.objects.all()
+    atc_groups = AtcAnatomicalGroup.objects.all()
     # Uppercase the names before returning
-    for group in group1s:
+    for group in atc_groups:
         group.name = group.name.upper()
 
-    group2s = AtcTherapeuticGroup.objects.all()
-    # Uppercase the names before returning
-    for group in group2s:
-        group.name = group.name.upper()
+    # group2s = AtcTherapeuticGroup.objects.all()
+    # # Uppercase the names before returning
+    # for group in group2s:
+    #     group.name = group.name.upper()
 
-    context = {'group1s': group1s, 'group2s': group2s}
+    context = {
+        'atc_groups': atc_groups,
+        # 'group2s': group2s
+    }
     return render(request, 'atc_code_lookup.html', context)
 
 

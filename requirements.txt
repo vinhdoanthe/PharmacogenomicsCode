@@ -28,3 +28,4 @@ djangorestframework==3.14.0
 drf-yasg
 drf-yasg[validation]
 newrelic==9.1.0
+django-filter
