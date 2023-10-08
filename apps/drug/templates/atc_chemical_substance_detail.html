@@ -1,0 +1,27 @@
+{% extends "home/base.html" %}
+{% load static i18n %}
+{% load django_tables2 %}
+{% csrf_token %}
+
+{% block addon_css %}
+    <link rel="stylesheet" href="{% static 'css/font-awesome/6.0.0-beta3/all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'drug/css/atc_lookup.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% autoescape off %}
+        <h1>{{ object.id }} - {{ object.name }}</h1>
+        <div>
+            <h3>{% trans 'List of Drugs associated with ATC' %}</h3>
+            <!-- Display list of drugs associated with the ATC code -->
+            {% render_table table %}
+        </div>
+        <div>
+            <!-- Display drug network -->
+        </div>
+    {% endautoescape %}
+{% endblock %}
+
+{% block addon_js %}
+
+{% endblock %}

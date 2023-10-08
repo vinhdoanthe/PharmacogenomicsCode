@@ -1,8 +1,6 @@
 from django.urls import path, re_path
-from django.views.decorators.cache import cache_page
 from .views import SelectionAutocomplete, DrugStatistics
 from . import views
-from .views import search_drugs, drug_atc_expansion, atc_lookup, atc_detail_view, atc_search_view, get_drug_atc_association, get_drug_network
 
 urlpatterns = [
     path('search_drugs', views.search_drugs, name='search_drugs'),
@@ -18,4 +16,5 @@ urlpatterns = [
     path('drug/autocomplete', (SelectionAutocomplete), name='autocomplete'),
     path('drug/<str:drugbank_id>/', views.drug_atc_expansion, name='drug_detail'),  # still ok but template does not have much info
     path('get-drug-network-frame', views.get_drug_network_frame, name='get-drug-network-frame'),
+    path('atc/<str:pk>/', views.AtcChemicalSubstanceDetailView.as_view(), name='atc_detail_view'),
 ]

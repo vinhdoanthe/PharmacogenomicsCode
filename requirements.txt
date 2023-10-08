@@ -29,3 +29,4 @@ drf-yasg
 drf-yasg[validation]
 newrelic==9.1.0
 django-filter
+django-tables2

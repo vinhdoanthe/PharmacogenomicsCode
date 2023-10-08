@@ -16,9 +16,11 @@ from django.shortcuts import (
 )
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView
 
 from django_filters.views import FilterView
+from django_tables2 import SingleTableMixin
+
 from drug.filters import AtcAnatomicalGroupFilter
 from drug.models import (
     AtcAnatomicalGroup,
@@ -35,6 +37,7 @@ from .models import (
     Drug,
     DrugAtcAssociation,
 )
+from .tables import DrugTable
 
 app_name = 'drug'
 
@@ -447,9 +450,9 @@ class AtcAnatomicalGroupListView(FilterView, ListView):
         context = super().get_context_data(**kwargs)
         return context
 
-    def get_queryset(self):
-        return AtcAnatomicalGroup.objects.all()
-
+    # def get_queryset(self):
+    #     return AtcAnatomicalGroup.objects.all()
+    #
 
 def atc_lookup(request):
     atc_groups = AtcAnatomicalGroup.objects.all()
@@ -476,7 +479,7 @@ def format_atc_name(s):
 
 def atc_detail_view(request):
     group_id = request.GET.get('group_id')  # Retrieve group_id from the query parameter
-    group_name = request.GET.get('group_name')
+    # group_name = request.GET.get('group_name')
     group2s = AtcTherapeuticGroup.objects.all()
     for group in group2s:
         group.name = format_atc_name(group.name)
@@ -489,8 +492,14 @@ def atc_detail_view(request):
     group5s = AtcChemicalSubstance.objects.all()
     for group in group5s:
         group.name = format_atc_name(group.name)
-    context = {'group2s': group2s, 'group3s': group3s, 'group4s': group4s, 'group5s': group5s, "group_id": group_id,
-               "group_name": group_name}
+    context = {
+        'group2s': group2s,
+        'group3s': group3s,
+        'group4s': group4s,
+        'group5s': group5s,
+        "group_id": group_id,
+        # "group_name": group_name,
+    }
     return render(request, 'atc_detail_view.html', context)
 
 
@@ -695,3 +704,21 @@ def get_drug_network_frame(request):
         template_name='viz_index1_v3.html',
         context=context,
     )
+
+
+class AtcChemicalSubstanceDetailView(DetailView, SingleTableMixin):
+    model = AtcChemicalSubstance
+    template_name = 'atc_chemical_substance_detail.html'
+    table_class = DrugTable
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['table'] = DrugTable(self.get_table_data())
+        return context
+
+    def get_table_data(self):
+        return Drug.objects.filter(
+            drug_bankID__in=DrugAtcAssociation.objects.filter(
+                atc_id=self.object.id
+            ).values_list('drug_id__drug_bankID', flat=True)
+        )
